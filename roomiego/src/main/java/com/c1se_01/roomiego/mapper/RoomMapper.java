@@ -29,6 +29,11 @@ public interface RoomMapper {
         Optional.ofNullable(dto.getNumBedrooms()).ifPresent(entity::setNumBedrooms);
         Optional.ofNullable(dto.getNumBathrooms()).ifPresent(entity::setNumBathrooms);
         Optional.ofNullable(dto.getAvailableFrom()).ifPresent(entity::setAvailableFrom);
-        Optional.ofNullable(dto.getStatus()).ifPresent(entity::setStatus);
+        Optional.ofNullable(dto.getIsRoomAvailable()).ifPresent(entity::setIsRoomAvailable);
+        Optional.ofNullable(dto.getCity()).ifPresent(entity::setCity);
+        Optional.ofNullable(dto.getDistrict()).ifPresent(entity::setDistrict);
+        Optional.ofNullable(dto.getWard()).ifPresent(entity::setWard);
+        Optional.ofNullable(dto.getStreet()).ifPresent(entity::setStreet);
+        Optional.ofNullable(dto.getAddressDetails()).ifPresent(entity::setAddressDetails);
     }
 }
