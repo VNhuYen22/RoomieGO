@@ -1,0 +1,90 @@
+.navbar {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Logo nằm giữa, các link sát vào logo */
+    height: 100px;
+    padding: 0 20px;
+    background:url('../assets/beach.jpg');
+    background-size: cover;
+    background-position: center; /* Căn giữa */
+    background-repeat: no-repeat;
+    position: sticky;
+    top: 0;
+    /* width: 100%; */
+    z-index: 1000;
+    border-bottom-right-radius:30px  ;
+    border-bottom-left-radius:30px  ;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Left & Right Side sát vào Logo */
+.leftside, .rightside {
+    display: flex;
+    gap: 50px; /* Giảm khoảng cách giữa các link */
+}
+
+/* Logo ở giữa */
+.center {
+    display: flex;
+    justify-content: center;
+    margin: 0 15px; /* Tạo khoảng cách nhỏ giữa logo và các links */
+}
+
+.center img {
+    width: 50px; /* Điều chỉnh kích thước logo */
+    height: auto;
+}
+
+/* Style cho link */
+.rightside a, .leftside a {
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.rightside a:hover, .leftside a:hover {
+    color: yellow;
+}
+
+/* 📌 RESPONSIVE CHO MÀN HÌNH NHỎ */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Chuyển thành dạng cột */
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .leftside, .rightside {
+        flex-direction: column; /* Xếp link thành cột */
+        align-items: center;
+        gap: 50px;
+    }
+
+    .center {
+        margin: 10px 0;
+    }
+
+    .center img {
+        width: 40px; /* Giảm kích thước logo */
+    }
+}
+@media (min-width: 1920px) {
+    .navbar {
+      height: 150px; /* Increase height for larger screens */
+      padding: 20px 40px; /* Increase padding for larger screens */
+    }
+  
+    .leftside, .rightside {
+      gap: 100px; /* Increase gap between links for larger screens */
+    }
+  
+    .center img {
+      width: 80px; /* Increase logo size for larger screens */
+    }
+  
+    .rightside a, .leftside a {
+      font-size: 28px; /* Increase font size for larger screens */
+    }
+  }
+

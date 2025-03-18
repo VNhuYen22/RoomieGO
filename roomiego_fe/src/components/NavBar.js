@@ -1,0 +1,28 @@
+import React  from "react";
+import Logo from "../assets/beach.jpg";
+import { Link } from "react-router-dom";
+import "../styles/Navbar.css";
+function Navbar() {
+  
+  return (
+    <div className="navbar">
+      <div className="leftside">
+        <Link to="/home"> Home </Link>
+        <Link to="/about"> About </Link>
+        <Link to="/newsletter"> Newsletter </Link>
+      </div>
+      <div className="center">
+        <img src={Logo} alt="" />
+      </div>
+      <div className="rightside">
+        <Link to="/rooms"> Rooms </Link>
+        <Link to="/services"> Services </Link>
+        <Link to="/pricing"> Pricing </Link>
+      </div>
+    
+    </div>
+
+  );
+}
+
+export default Navbar;
