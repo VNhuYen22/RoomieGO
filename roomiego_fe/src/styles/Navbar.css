@@ -2,18 +2,18 @@
     display: flex;
     align-items: center; /* Căn giữa theo chiều dọc */
     justify-content: center; /* Logo nằm giữa, các link sát vào logo */
-    height: 100px;
+    height: 10vh;
     padding: 0 20px;
     background:url('../assets/beach.jpg');
     background-size: cover;
     background-position: center; /* Căn giữa */
     background-repeat: no-repeat;
-    position: sticky;
+    /* position: sticky;
     top: 0;
     /* width: 100%; */
-    z-index: 1000;
-    border-bottom-right-radius:30px  ;
-    border-bottom-left-radius:30px  ;
+    /* z-index: 1000; */ 
+    /* border-bottom-right-radius:30px  ;
+    border-bottom-left-radius:30px  ; */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -71,7 +71,7 @@
 }
 @media (min-width: 1920px) {
     .navbar {
-      height: 150px; /* Increase height for larger screens */
+      height: 50px; /* Increase height for larger screens */
       padding: 20px 40px; /* Increase padding for larger screens */
     }
   
