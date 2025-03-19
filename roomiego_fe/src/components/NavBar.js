@@ -15,7 +15,7 @@ function Navbar() {
         <img src={Logo} alt="" />
       </div>
       <div className="rightside">
-        <Link to="/rooms"> Rooms </Link>
+        <Link to="/room"> Rooms </Link>
         <Link to="/services"> Services </Link>
         <Link to="/pricing"> Pricing </Link>
       </div>

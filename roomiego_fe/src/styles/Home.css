@@ -1,0 +1,90 @@
+/* #app {
+  height: 100%;
+}
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
+} */
+.home {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  height: 100vh;
+}
+.home-content {
+  text-align: left;
+  width: 556px;
+}
+
+.home-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.home-content .highlight {
+  color: #00bfa6;
+}
+
+.home-content p {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+}
+.home-arrow  {
+  background: #ff5a5f;
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 15px;
+  cursor: pointer;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+;
+}
+.home-arrow:hover {
+  box-shadow: 0 0.5rem 1rem rgba(194, 116, 116, 0.1);
+  transform: translateX(10px); /* Move the card up */
+ 
+}
+.home-arrow_icon {
+  
+  width: 20px;
+  height: 20px;
+}
+.swiper {
+  width: 60%;
+  height: 70%;
+  
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  box-shadow :0 4px 8px rgb(0 0 0 / 32%);
+  display: block;
+  width: 70%;
+  height: 100%;
+  object-fit: cover;
+}

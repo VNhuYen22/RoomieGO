@@ -2,10 +2,11 @@ import React from "react";
 import "../styles/Body.css";
 import { Link } from "react-router-dom";
 import room1 from "../assets/room1.jpeg";
+
 const Body = () => {
   return (
     <div className="body">
-      <Link to="/">
+      <Link to="/" className="card-link">
         <div className="card">
           <div className="card-header">
             <img src={room1} alt="Sydney" className="card-image" />
@@ -15,7 +16,7 @@ const Body = () => {
             </div>
           </div>
           <div className="card-body">
-            <img src={room1} alt="" className="car-image_body" />
+            <img src={room1} alt="" className="card-image_body" />
             <h2>$3,300 / mo</h2>
             <p>Entire Place · 1 Bedroom · Apartment</p>
             <p>Jun 1, 2025 - 12 Months</p>
@@ -23,7 +24,7 @@ const Body = () => {
           </div>
         </div>
       </Link>
-      <Link to="/">
+      <Link to="/" className="card-link">
         <div className="card">
           <div className="card-header">
             <img src={room1} alt="Sydney" className="card-image" />
@@ -33,7 +34,7 @@ const Body = () => {
             </div>
           </div>
           <div className="card-body">
-            <img src={room1} alt="" className="car-image_body" />
+            <img src={room1} alt="" className="card-image_body" />
             <h2>$3,300 / mo</h2>
             <p>Entire Place · 1 Bedroom · Apartment</p>
             <p>Jun 1, 2025 - 12 Months</p>
