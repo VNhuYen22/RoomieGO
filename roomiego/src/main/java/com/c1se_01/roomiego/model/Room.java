@@ -1,8 +1,11 @@
 package com.c1se_01.roomiego.model;
 
+import com.c1se_01.roomiego.enums.Status;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -56,8 +59,8 @@ public class Room {
     @Column(name = "available_from")
     private Date availableFrom;
 
-    @Column(name = "is_room_available")
-    private Boolean isRoomAvailable;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
@@ -75,19 +78,4 @@ public class Room {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Roommate> roommates;
-
-    @Column(name = "city")
-    private String city;
-
-    @Column(name = "district")
-    private String district;
-
-    @Column(name = "ward")
-    private String ward;
-
-    @Column(name = "street")
-    private String street;
-
-    @Column(name = "address_details")
-    private String addressDetails;
 }
