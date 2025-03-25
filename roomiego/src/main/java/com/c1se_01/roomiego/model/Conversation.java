@@ -7,41 +7,38 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "conversations")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "sender_id", nullable = false)
-    private User sender;
+    @JoinColumn(name = "user1_id", nullable = false)
+    private User user1;
 
     @ManyToOne
-    @JoinColumn(name = "receiver_id", nullable = false)
-    private User receiver;
+    @JoinColumn(name = "user2_id", nullable = false)
+    private User user2;
 
-    @Column(columnDefinition = "TEXT")
-    private String message;
+    @Column(nullable = false)
+    private Date createdAt = new Date();
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "sent_at", updatable = false)
-    private Date sentAt = new Date();
-
-    @ManyToOne
-    @JoinColumn(name = "conversation_id", nullable = false)
-    private Conversation conversation;
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+    private List<Message> messages = new ArrayList<>();
 }
