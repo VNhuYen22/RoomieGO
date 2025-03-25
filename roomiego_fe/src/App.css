@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 .App {
@@ -16,3 +17,340 @@ body {
 h1, h2, h3, h4, h5, h6, p, a, li, input, button {
     font-family: 'Roboto', sans-serif;
 }
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f3f4f6;
+
+  .login-box {
+    display: flex;
+    width: 750px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+    .login-image {
+      flex: 1;
+      position: relative;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .overlay {
+        position: absolute;
+        bottom: 0;
+        background: rgba(102, 99, 99, 0.438);
+        color: #1e1aac;
+        text-align: center;
+        width: 100%;
+        padding: 0px;
+      }
+    }
+
+    .login-form {
+      flex: 1;
+      padding: 30px;
+      
+      h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+        label {
+          font-weight: bold;
+          display: block;
+        }
+        input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+      }
+
+      .forgot-password a {
+        color: rgb(0, 72, 239);
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .login-btn {
+        background: #2f1acb;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+      }
+      .login-btn:hover {
+        background: #ea580c;
+      }
+      
+
+      .back-btn {
+        margin-top: 10px;
+        background: gray;
+        color: white;
+      }
+    }
+  }
+}
+/* sadadadadddddddddddddddddddddddddddđ */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+}
+
+.login-box {
+  display: flex;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 75%;
+  max-width: 900px;
+}
+
+.login-image {
+  width: 50%;
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.login-form-container {
+  width: 50%;
+  padding: 2rem;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input-field:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+
+
+
+
+.create-account {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.create-account-link {
+  color: #1f2937;
+  text-decoration: none;
+}
+
+.create-account-link:hover {
+  text-decoration: underline;
+}
+
+  
+/*asdawdadasdad/
+/* CreateAccount.css */
+body {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Container chính */
+  .create-account-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  /* Hộp chứa form */
+  .create-account-box {
+    display: flex;
+    max-width: 900px;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  /* Phần hình ảnh bên trái */
+  .create-account-image {
+    display: none;
+  }
+  @media (min-width: 800px) {
+    .create-account-image {
+      display: flex;
+      width: 150%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+  }
+  .create-account-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    font-weight: bold;
+    color: #1e3a8a;
+  }
+  
+  /* Phần form */
+  .create-account-form {
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .create-account-form h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Input Field */
+  .input-group {
+    margin-bottom: 15px;
+  }
+  .input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+  }
+  .input-group input:focus {
+    border-color: #1e40af;
+  }
+  
+  /* Nút đăng ký */
+  .register-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    background: #2f1acb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .register-btn:hover {
+    background: #ea580c;
+  }
+  
+  /* Điều khoản */
+  .terms {
+    font-size: 12px;
+    text-align: center;
+    color: #666;
+  }
+  .terms a {
+    color: #1e40af;
+    text-decoration: none;
+  }
+  .terms a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Link đăng nhập */
+  .login-link {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  .login-link a {
+    color: #1e40af;
+    text-decoration: none;
+  }
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  
+
+/* sdasaaaaaaaaaaddddddddddddddddddddddddddddddddddđ*/
+

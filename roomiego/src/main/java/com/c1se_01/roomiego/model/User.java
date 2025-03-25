@@ -2,6 +2,7 @@ package com.c1se_01.roomiego.model;
 
 import com.c1se_01.roomiego.enums.Gender;
 import com.c1se_01.roomiego.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +73,16 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Roommate> roommates;
+
+    // Quan hệ với Conversation (một user có thể có nhiều cuộc trò chuyện)
+    @JsonIgnore
+    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL)
+    private List<Conversation> conversationsAsUser1 = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
+    private List<Conversation> conversationsAsUser2 = new ArrayList<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

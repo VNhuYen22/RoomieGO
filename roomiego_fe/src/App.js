@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import "./App.css";
 import Navbar from "./components/NavBar";
 import Home from "./pages/Home";
@@ -21,6 +22,21 @@ function App() {
         <Footer />
       </Router>
     </div>
+=======
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/change-password" element={<ChangePassword />} /> */}
+        <Route path="./pages/Login.js" element={<Login />} />
+      </Routes>
+    </Router>
+>>>>>>> 15b3c45329f754a3ff919b0b44ec1b3c0c43d70e
   );
 }
 
