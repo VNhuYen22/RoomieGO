@@ -9,16 +9,16 @@ function Navbar() {
       <div className="leftside">
         <Link to="/home"> Home </Link>
         <Link to="/about"> About </Link>
-        <Link to="/newsletter"> Newsletter </Link>
+        <Link to="/room"> Rooms </Link>
       </div>
       <div className="center">
         <img src={Logo} alt="" />
       </div>
-      <div className="rightside">
+      {/* <div className="rightside">
         <Link to="/room"> Rooms </Link>
         <Link to="/services"> Services </Link>
         <Link to="/pricing"> Pricing </Link>
-      </div>
+      </div> */}
     
     </div>
 

@@ -1,12 +1,62 @@
 .body {
   
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
-    padding: 20px;
     min-height: calc(100vh - 100px); /* Ensure the body takes up at least the full height of the viewport minus the footer height */
   }
+  /* FILTER-ROOM  */
+  .filter-section {
+    float: left;
+    width: 250px;
+    height: 350px; /* Chiều rộng cố định cho bộ lọc */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+  }
   
+  .filter-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-group label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #666;
+  }
+  
+  .filter-group input,
+  .filter-group select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .filter-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .filter-button:hover {
+    background-color: #0056b3;
+  }
+  /* CARD-ROOM */
   .card-link {
     text-decoration: none; /* Remove underline from links */
     color: inherit; /* Inherit text color */
