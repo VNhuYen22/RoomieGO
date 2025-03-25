@@ -41,7 +41,7 @@ body {
   margin-top: 1rem;
 }
 .home-arrow  {
-  background: #ff5a5f;
+  background: #007bff;
   color: #fff;
   border: none;
   padding: 1rem 2rem;
@@ -49,10 +49,11 @@ body {
   border-radius: 15px;
   cursor: pointer;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-  transition: all 0.3s;
+  transition: all 0.4s;
 ;
 }
 .home-arrow:hover {
+  background-color: #0056b3;
   box-shadow: 0 0.5rem 1rem rgba(194, 116, 116, 0.1);
   transform: translateX(10px); /* Move the card up */
  
