@@ -1,4 +1,3 @@
-import react from 'react';
 
 const MessageSkeleton = () => {
     // Create an array of 6 items for skeleton messages
