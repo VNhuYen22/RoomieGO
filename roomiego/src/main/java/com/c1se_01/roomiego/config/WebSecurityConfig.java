@@ -33,9 +33,9 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request-> request.requestMatchers("/auth/**", "/public/**").permitAll()
-                        .requestMatchers("/admin/**").hasAnyAuthority("OWNER")
-                        .requestMatchers("/user/**").hasAnyAuthority("RENTER")
-                        .requestMatchers("/adminuser/**").hasAnyAuthority("OWNER", "RENTER")
+                        .requestMatchers("/owner/**").hasAnyAuthority("OWNER")
+                        .requestMatchers("/renter/**").hasAnyAuthority("RENTER")
+                        .requestMatchers("/renterowner/**").hasAnyAuthority("OWNER", "RENTER")
                         .anyRequest().authenticated())
                 .sessionManagement(manager->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
