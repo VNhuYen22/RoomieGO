@@ -65,7 +65,7 @@
 @media (max-width: 768px) {
   .footer {
     flex-direction: column; /* Stack the footer sections vertically on smaller screens */
-    padding: 10px;
+    padding-left: 10px;
   }
 
   .right-side ul {
@@ -80,7 +80,7 @@
   /* Responsive design */
   @media (max-width: 1920px) {
     .footer {
-      padding: 20px; /* Adjust padding for larger screens */
+      padding-left: 20px; /* Adjust padding for larger screens */
     }
   
     .left-side h3 {
