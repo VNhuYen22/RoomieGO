@@ -1,6 +1,5 @@
 package com.c1se_01.roomiego.dto;
 
-import com.c1se_01.roomiego.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +22,11 @@ public class RoomDTO {
     private Integer numBedrooms;
     private Integer numBathrooms;
     private Date availableFrom;
-    private Status status;
+    private Boolean isRoomAvailable;
     private Long ownerId;
+    private String city;
+    private String district;
+    private String ward;
+    private String street;
+    private String addressDetails;
 }
