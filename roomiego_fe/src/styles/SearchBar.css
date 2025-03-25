@@ -48,24 +48,22 @@
 }
 
 .search-bar .search-top button {
-  background-color: #ff5a5f;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 1.25rem;
   padding: 0.8rem 2rem;
   cursor: pointer;
- 
+ box-shadow: 0 0.5rem 1rem rgba(194, 116, 116, 0.1);
 }
-
 .search-bar .search-top button:hover {
-  background-color: #e14b4f;
+  background-color: #0056b3;
 }
 
 .search-bar .search-top ul li {
   display: flex;
   align-items: center;
   margin-right: 2rem;
-  
 }
 
 .search-bar .search-top ul li img {
@@ -82,7 +80,7 @@
     flex-direction: column;
     padding: 1rem;
     width: 90vw;
-    height: auto;
+    height: 40vh;
   }
 
   .search-bar .search-top ul {
