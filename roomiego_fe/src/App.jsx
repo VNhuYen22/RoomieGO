@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 
 import SettingsPage from "./pages/SettingsPage";
 import Chatbox from "./pages/Chatbox";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
 import { useThemeStore } from "./store/useThemeStore";
 import { useEffect } from "react";
