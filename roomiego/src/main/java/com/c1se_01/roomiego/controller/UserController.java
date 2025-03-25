@@ -32,24 +32,24 @@ public class UserController {
         return ResponseEntity.ok(authenticationService.refreshToken(req));
     }
 
-    @GetMapping("/admin/get-all-users")
+    @GetMapping("/owner/get-all-users")
     public ResponseEntity<UserDto> getAllUsers(){
         return ResponseEntity.ok(authenticationService.getAllUsers());
 
     }
 
-    @GetMapping("/admin/get-users/{userId}")
+    @GetMapping("/owner/get-users/{userId}")
     public ResponseEntity<UserDto> getUSerByID(@PathVariable long userId){
         return ResponseEntity.ok(authenticationService.getUsersById(userId));
 
     }
 
-    @PutMapping("/admin/update/{userId}")
+    @PutMapping("/owner/update/{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Integer userId, @RequestBody User reqres){
         return ResponseEntity.ok(authenticationService.updateUser(userId, reqres));
     }
 
-    @GetMapping("/adminuser/get-profile")
+    @GetMapping("/renterowner/get-profile")
     public ResponseEntity<UserDto> getMyProfile(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -57,7 +57,7 @@ public class UserController {
         return  ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @DeleteMapping("/admin/delete/{userId}")
+    @DeleteMapping("/owner/delete/{userId}")
     public ResponseEntity<UserDto> deleteUSer(@PathVariable long userId){
         return ResponseEntity.ok(authenticationService.deleteUser(userId));
     }
