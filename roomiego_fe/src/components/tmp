@@ -1,0 +1,123 @@
+<div className="home">
+      <div className="home-content">
+        <h1>
+          Go from <span className="highlight">solo</span> to{" "}
+          <span className="highlight">social</span>, in just a few taps!
+        </h1>
+        <p>Join Linkups to explore and hang out with travellers.</p>
+      </div>
+      <div className="container_home">
+        
+            <div className="home_card">
+              <img src={room3} alt="" />
+              <div className="card-content">
+                <h3>Morning Yoga</h3>
+                <p>Sunday | Beach</p>
+                <p>+4 coming</p>
+                <button>Join</button>
+              </div>
+            </div>
+          
+            <div className="home_card">
+              <img src={room3} alt="" />
+              <div className="card-content">
+                <h3>Morning Yoga</h3>
+                <p>Sunday | Beach</p>
+                <p>+4 coming</p>
+                <button>Join</button>
+              </div>
+            </div>
+         
+            <div className="home_card">
+              <img src={room3} alt="" />
+              <div className="card-content">
+                <h3>Morning Yoga</h3>
+                <p>Sunday | Beach</p>
+                <p>+4 coming</p>
+                <button>Join</button>
+              </div>
+            </div>
+         
+      </div>
+    </div>
+    <!-- ////////////////////////////////////////////// -->
+    .home {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        height: 100vh;
+      }
+      
+      .home-left, .home-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .home-content {
+        text-align: left;
+        width: 556px;
+      }
+      
+      .home-content h1 {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      
+      .home-content .highlight {
+        color: #00bfa6;
+      }
+      
+      .home-content p {
+        font-size: 1.25rem;
+        margin-top: 1rem;
+      }
+      
+      .container_home {
+        display: flex;
+        gap: 0; /* Remove the gap between cards */
+      }
+      
+      .home_card {
+        background-color: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        width: 300px;
+        margin-right: -1px; /* Adjust the margin to remove the gap */
+      }
+      
+      .home_card img {
+        width: 100%;
+        height: auto;
+      }
+      
+      .card-content {
+        padding: 1rem;
+      }
+      
+      .card-content h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .card-content p {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .card-content button {
+        background-color: #ff5a5f;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+      
+      .card-content button:hover {
+        background-color: #e14b4f;
+      }
