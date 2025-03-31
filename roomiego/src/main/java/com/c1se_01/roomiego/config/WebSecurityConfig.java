@@ -33,7 +33,7 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request-> request.requestMatchers("/auth/**", "/public/**").permitAll()
-                        .requestMatchers("/owner/**").hasAnyAuthority("OWNER")
+                        .requestMatchers("/owner/**", "/api/**").hasAnyAuthority("OWNER")
                         .requestMatchers("/renter/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/renterowner/**").hasAnyAuthority("OWNER", "RENTER")
                         .anyRequest().authenticated())
