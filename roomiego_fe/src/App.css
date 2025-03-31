@@ -335,6 +335,57 @@ body {
 /* sdasaaaaaaaaaaddddddddddddddddddddddddddddddddddđ*/
 
 
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
 
+/* Modal content */
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
 
+/* Filter buttons */
+.filter-button {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filter-button.active {
+  border-color: #dc2626;
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Apply button */
+.apply-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #dc2626;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.apply-button:hover {
+  background-color: #b91c1c;
+}
 
