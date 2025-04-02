@@ -16,11 +16,12 @@ import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
+import MapComponent from "./components/MapComponent";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
-  const location = useLocation(); // ✅ Sử dụng được vì App đã nằm trong BrowserRouter (index.js)
+  const location = useLocation(); // Get the current route
 
   console.log({ onlineUsers });
 
@@ -37,8 +38,11 @@ const App = () => {
       </div>
     );
 
-  // Xác định route hiển thị Navbarchatbox
+  // Define routes where Navbarchatbox should be visible
   const showNavbarchatbox = ["/chatbox", "/settings"].includes(location.pathname);
+
+  // Define routes where Footer should not be visible
+  const hideFooter = ["/maps"].includes(location.pathname);
 
   return (
     <div data-theme={theme}>
@@ -59,10 +63,11 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/chatbox" element={<Chatbox />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/maps" element={<MapComponent />} />
       </Routes>
 
+      {!hideFooter && <Footer />} {/* Conditionally render Footer */}
       <Toaster />
-      <Footer />
     </div>
   );
 };
