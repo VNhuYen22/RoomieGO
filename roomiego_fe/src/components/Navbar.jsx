@@ -7,7 +7,7 @@ function Navbar() {
   return (
     <div className="navbar">
       <div className="leftside">
-        <Link to="/home"> Home </Link>
+        <Link to="/"> Home </Link>
         <Link to="/about"> About </Link>
         <Link to="/room"> Rooms </Link>
       </div>
