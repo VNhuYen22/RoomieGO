@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Roommate Matcher</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; }
+    input, select, textarea { width: 100%; margin: 6px 0; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h2>Thông tin Roommate</h2>
+  <form action="/submit" method="post">
+    <label>Giới tính:</label>
+    <select name="gender">
+      <option value="Nam">Nam</option>
+      <option value="Nữ">Nữ</option>
+    </select>
+
+    <label>Năm sinh:</label>
+    <input type="number" name="yob" required>
+
+    <label>Quê quán:</label>
+    <input type="text" name="hometown" required>
+
+    <label>Nghề nghiệp:</label>
+    <input type="text" name="job" required>
+
+    <label>Sở thích:</label>
+    <input type="checkbox" name="hobbies" value="pets"> Nuôi thú cưng
+    <input type="checkbox" name="hobbies" value="smoke"> Hút thuốc
+
+    <label>Mô tả thêm:</label>
+    <textarea name="more" rows="4" maxlength="500"></textarea>
+
+    <br><br>
+    <button type="submit">Tìm người phù hợp</button>
+  </form>
+
+  {% if match %}
+    <hr>
+    <h3>Người phù hợp nhất:</h3>
+    <pre>{{ match | tojson(indent=2) }}</pre>
+  {% endif %}
+</body>
+</html>
