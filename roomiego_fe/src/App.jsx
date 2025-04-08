@@ -17,6 +17,8 @@ import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
 import MapComponent from "./components/MapComponent";
+import Storage from "./components/Invoices/Storage";
+import InvoiceForm from "./components/Invoices/InvoiceForm";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -42,7 +44,10 @@ const App = () => {
   const showNavbarchatbox = ["/chatbox", "/settings"].includes(location.pathname);
 
   // Define routes where Footer should not be visible
-  const hideFooter = ["/maps"].includes(location.pathname);
+  const hideFooter = ["/maps","/test1"].includes(location.pathname);
+
+  // Define routes where SearchBar should not be visible
+  const hideSearchBar = ["/invoices","/maps","/test1"].includes(location.pathname);
 
   return (
     <div data-theme={theme}>
@@ -51,7 +56,7 @@ const App = () => {
       ) : (
         <>
           <Navbar />
-          <SearchBar />
+          {!hideSearchBar && <SearchBar />} {/* Conditionally render SearchBar */}
         </>
       )}
 
@@ -64,6 +69,8 @@ const App = () => {
         <Route path="/chatbox" element={<Chatbox />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/maps" element={<MapComponent />} />
+        <Route path="/invoices" element={<Storage />} />
+        <Route path="/test1" element={<InvoiceForm />} />
       </Routes>
 
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
