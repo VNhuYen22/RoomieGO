@@ -34,8 +34,8 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**", "/public/**", "/api/markers").permitAll() // ✅ Cho phép API này truy cập công khai
-                        .requestMatchers("/owner/**").hasAnyAuthority("OWNER")
-                        .requestMatchers("/renter/**").hasAnyAuthority("RENTER")
+                        .requestMatchers("/owner/**", "/api/rooms/**").hasAnyAuthority("OWNER")
+                        .requestMatchers("/renter/**", "/api/roommates/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/renterowner/**").hasAnyAuthority("OWNER", "RENTER")
                         .anyRequest().authenticated()
                 )

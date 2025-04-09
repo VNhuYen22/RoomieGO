@@ -1,0 +1,39 @@
+[
+  {
+    "gender": "Nữ",
+    "yob": 2002,
+    "hometown": "Quảng Nam",
+    "job": "văn phòng",
+    "hobbies": "Nuôi thú cưng, thức khuya",
+    "more": "Ngăn nắp, sạch sẽ, gọn gàng",
+    "userId": 5
+  },
+  {
+    "gender": "Nam",
+    "yob": 2002,
+    "hometown": "Quảng Ngãi",
+    "job": "công nhân",
+    "hobbies": "Hút thuốc",
+    "more": "biết nấu ăn",
+    "userId": 6
+  },
+  {
+    "gender": "Nam",
+    "yob": 2005,
+    "hometown": "Bình Định",
+    "job": "sinh viên",
+    "hobbies": "Nuôi thú cưng",
+    "more": "Ngăn nắp, sạch sẽ",
+    "userId": 7
+  },
+  {
+    "gender": "Nam",
+    "yob": 2000,
+    "hometown": "Quảng Nam",
+    "job": "công nhân",
+    "hobbies": [
+      "pets"
+    ],
+    "more": "gọn gàng"
+  }
+]
