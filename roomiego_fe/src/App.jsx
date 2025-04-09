@@ -19,6 +19,7 @@ import Navbar from "./components/Navbar";
 import MapComponent from "./components/MapComponent";
 import Storage from "./components/Invoices/Storage";
 import InvoiceForm from "./components/Invoices/InvoiceForm";
+import RoommateForm from "./components/RoommateForm/RoommateForm";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -47,7 +48,7 @@ const App = () => {
   const hideFooter = ["/maps","/test1"].includes(location.pathname);
 
   // Define routes where SearchBar should not be visible
-  const hideSearchBar = ["/invoices","/maps","/test1"].includes(location.pathname);
+  const hideSearchBar = ["/invoices","/maps","/test1","/roommates"].includes(location.pathname);
 
   return (
     <div data-theme={theme}>
@@ -71,6 +72,7 @@ const App = () => {
         <Route path="/maps" element={<MapComponent />} />
         <Route path="/invoices" element={<Storage />} />
         <Route path="/test1" element={<InvoiceForm />} />
+        <Route path="/roommates" element={<RoommateForm />} />
       </Routes>
 
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
