@@ -72,6 +72,7 @@ public class User implements UserDetails {
     private List<Contract> contracts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Roommate> roommates;
 
     // Quan hệ với Conversation (một user có thể có nhiều cuộc trò chuyện)
