@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import './RoommateForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const RoommateForm = () => {
+  const navigate = useNavigate();
   // Khởi tạo state cho form data với các giá trị mặc định
   const [formData, setFormData] = useState({
     sex: "Nam", // Giới tính mặc định là Nam
@@ -9,7 +11,8 @@ const RoommateForm = () => {
     hometown: "", // Quê quán
     job: "", // Nghề nghiệp
     hobbies: [], // Sở thích (là một mảng)
-    more: "", // Mô tả thêm
+    more: "",
+    userId: "", // Mô tả thêm
   });
 
   // State để lưu trữ kết quả match từ API
@@ -39,28 +42,74 @@ const RoommateForm = () => {
 
   // Hàm xử lý sự kiện submit form
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Ngăn chặn hành vi mặc định của form (reload trang)
-
-    // Kết nối API để tìm người phù hợp
+    e.preventDefault();
+  
     try {
-      const response = await fetch("/submit", { // Gửi POST request đến endpoint /submit
-        method: "POST",
-        headers: { "Content-Type": "application/json" }, // Thiết lập header để báo cho server biết đang gửi dữ liệu JSON
-        body: JSON.stringify(formData), // Chuyển đổi formData thành chuỗi JSON và gửi đi
+      const dataToSend = {
+        gender: formData.sex,
+        yob: formData.dob,
+        hometown: formData.hometown,
+        job: formData.job,
+        hobbies: formData.hobbies.join(', '),
+        more: formData.more,
+        userId: formData.userId ? parseInt(formData.userId) : null,
+ // đảm bảo là số
+      };
+  
+      console.log('Payload being sent:', dataToSend);
+  
+      const createResponse = await fetch('http://localhost:8080/api/roommates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
       });
-
-      // Kiểm tra nếu response trả về lỗi
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  
+      if (!createResponse.ok) {
+        throw new Error(`Create roommates failed: ${createResponse.status}`);
       }
-
-      const result = await response.json(); // Đọc dữ liệu JSON từ response
-      setMatch(result.match); // Cập nhật state match với kết quả trả về từ API
+  
+      const createResult = await createResponse.json();
+      console.log('Roommate created:', createResult);
+  
+      // Step 2: Call Export to file JSON API
+      const exportResponse = await fetch('http://localhost:8080/api/roommates', {
+        method: 'GET',
+      });
+  
+      if (!exportResponse.ok) {
+        throw new Error(`Export to file JSON failed: ${exportResponse.status}`);
+      }
+  
+      const exportResult = await exportResponse.json();
+      console.log('Export result:', exportResult);
+  
+      // Step 3: Call Submit search roommates API
+      const formDataToSend = new FormData();
+      formDataToSend.append('gender', formData.sex);
+      formDataToSend.append('yob', formData.dob);
+      formDataToSend.append('hometown', formData.hometown);
+      formDataToSend.append('job', formData.job);
+      formData.hobbies.forEach(hobby => formDataToSend.append('hobbies', hobby));
+      formDataToSend.append('more', formData.more);
+  
+      const submitResponse = await fetch('http://127.0.0.1:8000/submit', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+  
+      if (!submitResponse.ok) {
+        throw new Error(`Submit search roommates failed: ${submitResponse.status}`);
+      }
+  
+      const responseJson = await submitResponse.json(); // Đảm bảo API trả về JSON
+      setMatch(responseJson); // Lưu kết quả JSON vào state
+      navigate('/match', { state: { match: responseJson } });
     } catch (error) {
-      console.error("Có lỗi xảy ra khi gọi API:", error);
-      // Xử lý lỗi, ví dụ: hiển thị thông báo cho người dùng
+      console.error('Error during API calls:', error);
     }
   };
+  
+  
 
   return (
     <div className="roommate-form">
@@ -131,18 +180,19 @@ const RoommateForm = () => {
           value={formData.more}
           onChange={handleChange}
         />
+        <label>User ID:</label>
+        <input
+          type="number"
+          name="userId"
+          value={formData.userId}
+          onChange={handleChange}
+          required
+        />
+
 
         <button type="submit">Tìm người phù hợp</button>
       </form>
 
-      {/* Hiển thị kết quả match nếu có */}
-      {match && (
-        <>
-          <hr />
-          <h3>Người phù hợp nhất:</h3>
-          <pre>{JSON.stringify(match, null, 2)}</pre> {/* Hiển thị kết quả dưới dạng JSON có format */}
-        </>
-      )}
     </div>
   );
 };
