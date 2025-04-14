@@ -2,17 +2,33 @@ import React, { useState, useEffect } from "react";
 import moment from "moment"; // Import moment.js
 import "./Storage.css"; // Import CSS styles for the component
 
+/**
+ * Component hiển thị chi tiết hóa đơn.
+ * 
+ * @param {string} invoiceId - ID của hóa đơn cần hiển thị.
+ * @param {function} onClose - Hàm đóng modal.
+ * @param {array} invoices - Danh sách hóa đơn.
+ */
 const InvoiceDetails = ({ invoiceId, onClose, invoices }) => {
-  const [invoice, setInvoice] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [invoice, setInvoice] = useState(null); // Trạng thái hóa đơn hiện tại
+  const [loading, setLoading] = useState(true); // Trạng thái đang tải
 
   useEffect(() => {
     console.log("Fetching details for Invoice ID:", invoiceId);
 
+    /**
+     * Hàm lấy chi tiết hóa đơn dựa trên ID.
+     * 
+     * @param {string} id - ID của hóa đơn.
+     */
     const fetchInvoiceDetails = async (id) => {
       setLoading(true);
 
       // Tìm hóa đơn trong danh sách invoices dựa trên invoiceId
+      // **Ghi chú:** Ở đây bạn nên gọi API để lấy dữ liệu hóa đơn nếu không có sẵn trong danh sách invoices.
+      // Ví dụ:
+      // const response = await fetch(`https://example.com/api/invoices/${id}`);
+      // const foundInvoice = await response.json();
       const foundInvoice = invoices.find((invoice) => invoice.id === id);
 
       if (foundInvoice) {
@@ -46,7 +62,6 @@ const InvoiceDetails = ({ invoiceId, onClose, invoices }) => {
         <h2>Chi Tiết Hóa Đơn</h2>
 
         <div className="invoice-header">
-          
           <p>Địa chỉ: {invoice.address || "Chưa nhập địa chỉ"}</p>
           <p>Ngày lập: {moment(invoice.date).format("DD/MM/YYYY") || "Chưa chọn ngày"}</p>
         </div>
