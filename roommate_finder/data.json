@@ -27,13 +27,13 @@
     "userId": 7
   },
   {
-    "gender": "Nam",
+    "gender": "Nữ",
     "yob": 2000,
     "hometown": "Quảng Nam",
     "job": "công nhân",
     "hobbies": [
       "pets"
     ],
-    "more": "gọn gàng"
+    "more": ""
   }
 ]
