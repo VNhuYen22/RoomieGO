@@ -4,6 +4,7 @@ import com.c1se_01.roomiego.dto.RoommateDTO;
 import com.c1se_01.roomiego.dto.RoommateResponseDTO;
 import com.c1se_01.roomiego.service.RoommateService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class RoomateController {
     private final RoommateService roommateService;
 
     @PostMapping
-    public ResponseEntity<RoommateResponseDTO> createRoommate(@RequestBody RoommateDTO dto) {
+    public ResponseEntity<RoommateResponseDTO> createRoommate(@Valid @RequestBody RoommateDTO dto) {
         RoommateResponseDTO responseDTO = roommateService.createRoommate(dto);
         return ResponseEntity.ok(responseDTO);
     }
@@ -41,7 +42,7 @@ public class RoomateController {
         String jsonContent = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(roommates);
 
         // Đường dẫn file muốn lưu
-        String filePath = "E:/RoomieGO/roommate_finder/data.json"; // dùng dấu "/" cho tương thích đa nền tảng
+        String filePath = "D:/RoomieGO//roommate_finder/data.json"; // dùng dấu "/" cho tương thích đa nền tảng
 
         // Ghi nội dung vào file
         File file = new File(filePath);

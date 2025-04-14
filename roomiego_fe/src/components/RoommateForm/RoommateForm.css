@@ -1,0 +1,113 @@
+.roommate-form {
+    font-family: Arial, sans-serif; /* Thay đổi font chữ */
+    max-width: 600px; /* Điều chỉnh độ rộng tối đa */
+    margin: 20px auto; /* Căn giữa và tạo khoảng cách trên dưới */
+    padding: 20px; /* Thêm padding để nội dung không sát viền */
+    border: 1px solid #ccc; /* Thêm viền */
+    border-radius: 5px; /* Bo tròn góc */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ */
+}
+
+.roommate-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.roommate-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.roommate-form input[type="text"],
+.roommate-form input[type="number"],
+.roommate-form select,
+.roommate-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước phần tử */
+    font-size: 16px; /* Tăng kích thước chữ */
+}
+
+.roommate-form select {
+    height: 40px; /* Điều chỉnh chiều cao cho select */
+}
+
+.roommate-form textarea {
+    height: 100px; /* Điều chỉnh chiều cao cho textarea */
+}
+
+.checkbox-group {
+    margin-bottom: 15px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: normal;
+}
+
+.roommate-form button {
+    background-color: #5cb85c; /* Màu xanh lá cây */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.roommate-form button:hover {
+    background-color: #449d44; /* Màu xanh lá cây đậm hơn khi hover */
+}
+
+/* CSS cho thông báo lỗi */
+.error-message {
+    color: red;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+/* MatchDetails.css */
+.roommate-form-container{
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+.match-details-container {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .match-details-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .match-details-container div {
+    margin-bottom: 15px;
+  }
+  
+  .match-details-container p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .match-details-container strong {
+    font-weight: bold;
+    color: #333;
+    margin-right: 5px;
+  }
+  
