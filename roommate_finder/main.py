@@ -3,17 +3,24 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from matcher import match_roommate
 import json
 import os
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # hoặc ["*"] nếu là dev
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 DATA_FILE = "data.json"
-
-
 # Load candidates từ file
 def load_candidates():
     if not os.path.exists(DATA_FILE):
@@ -35,7 +42,9 @@ async def show_form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
 
-@app.post("/submit", response_class=HTMLResponse)
+
+
+@app.post("/submit", response_class=JSONResponse)
 async def submit_form(
         request: Request,
         gender: str = Form(...),
@@ -58,9 +67,4 @@ async def submit_form(
     best_match = match_roommate(user, candidates) if candidates else None
     save_candidate(user)
 
-    return templates.TemplateResponse("form.html", {
-        "request": request,
-        "user": user,
-        "match": best_match
-    })
-
+    return best_match  # Trả về dữ liệu JSON
