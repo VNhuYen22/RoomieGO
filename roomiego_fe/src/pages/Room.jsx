@@ -23,7 +23,7 @@ function Room() {
         return res.json();
       })
       .then((data) => {
-        setRooms(data.data); // giả định { status, message, data }
+        setRooms(data.data); // Giả định { status, message, data }
         setLoading(false);
       })
       .catch((err) => {
@@ -96,8 +96,9 @@ function Room() {
           <Link to="/ResultRoom" className="card-link" key={room.id}>
             <div className="card">
               <div className="card-header">
+                {/* Hiển thị ảnh đầu tiên trong imageUrls */}
                 <img
-                  src={getValidImageUrl(room.imageUrl)}
+                  src={getValidImageUrl(room.imageUrls[0])}  // Lấy ảnh đầu tiên trong mảng imageUrls
                   alt={room.title}
                   className="card-image"
                   onError={(e) => {
@@ -106,14 +107,29 @@ function Room() {
                 />
                 <div className="card-info">
                   <h3>{room.title}</h3>
-                  <span>{room.availableDate}</span>
+                  <span>{new Date(room.availableFrom).toLocaleDateString()}</span>
                 </div>
               </div>
               <div className="card-body">
                 <h2>${room.price} / mo</h2>
                 <p>{room.description}</p>
-                <p>{room.rentalPeriod}</p>
+                <p>{room.roomSize} m²</p>
                 <p>{room.location}</p>
+                
+                {/* Hiển thị tất cả các ảnh trong imageUrls */}
+                <div className="additional-images">
+                  {Array.from(new Set(room.imageUrls)).map((url, index) => (  // Sử dụng Set để loại bỏ URL trùng lặp
+                    <img
+                      key={index}
+                      src={getValidImageUrl(url)} 
+                      alt={`${room.title} additional ${index}`}
+                      className="additional-room-image"
+                      onError={(e) => {
+                        e.target.src = getValidImageUrl(""); // Fallback to random default image if error occurs
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </Link>
