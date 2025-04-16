@@ -72,8 +72,12 @@ const RoommateForm = () => {
       console.log('Roommate created:', createResult);
   
       // Step 2: Call Export to file JSON API
-      const exportResponse = await fetch('http://localhost:8080/api/roommates', {
+      const exportResponse = await fetch('http://localhost:8080/api/roommates/export-to-file', {
         method: 'GET',
+        headers: {
+          'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0NTVAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDQ4MTIwMjksImV4cCI6MTc0NDg5ODQyOX0.KBn4vajCZEpH6AnUpGUV4mUvDfWsz4FfYEOPAgJYYAw2qTDESJD6Xbh7GBrhqx3tLy4kVT6E-wmyuvaAzg6M-Q`, // Thêm header Authorization với token
+          'Content-Type': 'application/json', // Thêm Content-Type nếu cần thiết
+        },
       });
   
       if (!exportResponse.ok) {
@@ -154,8 +158,8 @@ const RoommateForm = () => {
             <input
               type="checkbox"
               name="hobbies"
-              value="pets"
-              checked={formData.hobbies.includes("pets")}
+              value="Nuôi thú cưng"
+              checked={formData.hobbies.includes("Nuôi thú cưng")}
               onChange={handleChange}
             />
             Nuôi thú cưng
@@ -164,8 +168,8 @@ const RoommateForm = () => {
             <input
               type="checkbox"
               name="hobbies"
-              value="smoke"
-              checked={formData.hobbies.includes("smoke")}
+              value="Hút thuốc"
+              checked={formData.hobbies.includes("Hút thuốc")}
               onChange={handleChange}
             />
             Hút thuốc
