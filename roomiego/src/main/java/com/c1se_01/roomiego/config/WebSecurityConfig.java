@@ -33,7 +33,7 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**").permitAll() // ✅ Cho phép API này truy cập công khai
+                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file").permitAll() // ✅ Cho phép API này truy cập công khai
                         .requestMatchers("/owner/**", "/api/rooms/**").hasAnyAuthority("OWNER")
                         .requestMatchers("/renter/**", "/api/roommates/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/renterowner/**").hasAnyAuthority("OWNER", "RENTER")
