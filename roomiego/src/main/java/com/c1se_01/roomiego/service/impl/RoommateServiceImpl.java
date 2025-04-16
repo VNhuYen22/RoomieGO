@@ -9,9 +9,12 @@ import com.c1se_01.roomiego.repository.RoommateRepository;
 import com.c1se_01.roomiego.repository.UserRepository;
 import com.c1se_01.roomiego.service.RoommateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,15 @@ public class RoommateServiceImpl implements RoommateService {
 
     @Override
     public List<RoommateResponseDTO> getAllRoommates() {
-        return roommateMapper.toResponseDTOs(roommateRepository.findAll());
+        List<RoommateResponseDTO> roommateList = roommateMapper.toResponseDTOs(roommateRepository.findAll());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (Objects.nonNull(user)) {
+            roommateList.removeIf(roommate ->
+                    user.getId().equals(roommate.getUserId())
+            );
+        }
+        return roommateList;
     }
 }
