@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/roommates")
@@ -34,21 +36,24 @@ public class RoomateController {
     }
 
     @GetMapping("/export-to-file")
-    public ResponseEntity<String> exportRoommatesToFile() throws IOException {
+    public ResponseEntity<Map<String, Object>> exportRoommatesToFile() throws IOException {
         List<RoommateResponseDTO> roommates = roommateService.getAllRoommates();
 
-        // Chuyển list sang chuỗi JSON
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonContent = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(roommates);
 
-        // Đường dẫn file muốn lưu
-        String filePath = "D:/RoomieGO//roommate_finder/data.json"; // dùng dấu "/" cho tương thích đa nền tảng
-
-        // Ghi nội dung vào file
+        String filePath = "D:/RoomieGO/roommate_finder/data.json";
         File file = new File(filePath);
-        file.getParentFile().mkdirs(); // tạo folder nếu chưa có
+        file.getParentFile().mkdirs();
         Files.write(file.toPath(), jsonContent.getBytes(StandardCharsets.UTF_8));
 
-        return ResponseEntity.ok("Exported roommates to file: " + filePath);
+        // ✅ Trả về JSON
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Exported roommates to file");
+        response.put("filePath", filePath);
+
+        return ResponseEntity.ok(response);
     }
+
 }

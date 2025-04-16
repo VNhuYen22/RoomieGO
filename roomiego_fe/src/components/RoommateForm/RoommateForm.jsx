@@ -72,7 +72,7 @@ const RoommateForm = () => {
       console.log('Roommate created:', createResult);
   
       // Step 2: Call Export to file JSON API
-      const exportResponse = await fetch('http://localhost:8080/api/roommates', {
+      const exportResponse = await fetch('http://localhost:8080/api/roommates/export-to-file', {
         method: 'GET',
       });
   
@@ -81,7 +81,7 @@ const RoommateForm = () => {
       }
   
       const exportResult = await exportResponse.json();
-      console.log('Export result:', exportResult);
+      console.log('Export result:', exportResult.message, exportResult.filePath);
   
       // Step 3: Call Submit search roommates API
       const formDataToSend = new FormData();

@@ -17,7 +17,11 @@ const MatchDetails = () => {
                     <p><strong>Năm sinh:</strong> {match.yob}</p>
                     <p><strong>Quê quán:</strong> {match.hometown}</p>
                     <p><strong>Nghề nghiệp:</strong> {match.job}</p>
-                    <p><strong>Sở thích:</strong> {match.hobbies ? match.hobbies.join(', ') : ''}</p>
+                    <p>Sở thích: {
+                        Array.isArray(match.hobbies)
+                            ? match.hobbies.join(', ')
+                            : match.hobbies
+                        }</p>
                     <p><strong>Mô tả thêm:</strong> {match.more}</p>
                 </div>
             )}
