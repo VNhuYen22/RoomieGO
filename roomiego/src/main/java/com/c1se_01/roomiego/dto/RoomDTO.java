@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -29,4 +30,6 @@ public class RoomDTO {
     private String ward;
     private String street;
     private String addressDetails;
+    private List<String> imageUrls;
+
 }
