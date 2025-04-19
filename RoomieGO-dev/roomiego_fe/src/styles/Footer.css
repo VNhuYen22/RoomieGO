@@ -1,0 +1,114 @@
+.footer {
+  display: flex;
+  justify-content: space-between; /* Space between left and right sections */
+  align-items: center; /* Center the content vertically */
+  width: 100%; /* Make the footer occupy the entire width */
+  background-color: black;
+  color: white;
+  padding: 10px; /* Reduce padding */
+  bottom: 0; /* Fix the footer at the bottom */
+}
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content within each section */
+}
+
+.left-side h3 {
+  font-size: 14px; /* Reduce font size */
+  margin-bottom: 5px; /* Reduce margin */
+}
+
+.left-side input {
+  padding: 8px; /* Reduce padding */
+  font-size: 12px; /* Reduce font size */
+  margin-bottom: 5px;
+  border-radius: 5px 0px 0px 10px;
+  border: none;
+}
+
+.left-side .button {
+  padding: 8px 16px; /* Reduce padding */
+  font-size: 12px; /* Reduce font size */
+  border: none;
+  background-color: #087cf0;
+  color: black;
+  cursor: pointer;
+}
+
+.right-side ul {
+  display: flex;
+  flex-wrap: wrap; /* Allow the items to wrap into multiple rows */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center; /* Center the items horizontally */
+  max-width: 500px; /* Set a maximum width for the container */
+}
+
+.right-side li {
+  flex: 1 1 45%; /* Allow the items to take up 45% of the container width */
+  margin: 5px 5px; /* Add some margin for spacing */
+}
+
+.right-side a {
+  text-decoration: none;
+  color: white;
+  font-size: 12px; /* Reduce font size */
+}
+
+.right-side a:hover {
+  text-decoration: underline;
+}
+  /* Responsive design */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column; /* Stack the footer sections vertically on smaller screens */
+    padding-left: 10px;
+  }
+
+  .right-side ul {
+    justify-content: center; /* Center the items horizontally */
+  }
+
+  .right-side li {
+    flex: 1 1 100%; /* Make the items take up the full width on smaller screens */
+    margin: 5px 0; /* Adjust margin for spacing */
+  }
+}
+  /* Responsive design */
+  @media (max-width: 1920px) {
+    .footer {
+      padding-left: 20px; /* Adjust padding for larger screens */
+    }
+  
+    .left-side h3 {
+      font-size: 24px; /* Adjust font size for larger screens */
+      margin-bottom: 20px;/* Adjust margin for larger screens */
+      margin-right: 20px;
+    }
+  
+    .left-side input {
+      padding: 12px; /* Adjust padding for larger screens */
+      font-size: 16px; /* Adjust font size for larger screens */
+    }
+  
+    .left-side .button {
+      padding: 12px 24px; /* Adjust padding for larger screens */
+      font-size: 16px; /* Adjust font size for larger screens */
+    }
+  
+    .right-side ul {
+      max-width: 700px; /* Adjust max width for larger screens */
+    }
+  
+    .right-side li {
+      flex: 1 1 40%; /* Adjust flex basis for larger screens */
+      margin: 8px 16px; /* Adjust margin for larger screens */
+    }
+  
+    .right-side a {
+      font-size: 16px; /* Adjust font size for larger screens */
+    }
+  }

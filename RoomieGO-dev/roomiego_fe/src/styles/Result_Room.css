@@ -1,0 +1,331 @@
+.result-room {
+  padding: 2rem; /* Thay đổi từ 20px thành 2rem */
+}
+
+.breadcrumb {
+  font-size: 0.875rem; /* Thay đổi từ 14px thành 0.875rem */
+  color: #888;
+  margin-bottom: 0.625rem; /* Thay đổi từ 10px thành 0.625rem */
+}
+
+.hotel-title {
+  font-size: 1.75rem; /* Thay đổi từ 28px thành 1.75rem */
+  font-weight: bold;
+  margin: 0.625rem 0; /* Thay đổi từ 10px thành 0.625rem */
+}
+
+.hotel-location {
+  font-size: 1rem; /* Thay đổi từ 16px thành 1rem */
+  color: #555;
+  /* Thay đổi từ 20px thành 1.25rem */
+}
+
+.image-gallery {
+  display: flex;
+  gap: 0.625rem; /* Thay đổi từ 10px thành 0.625rem */
+  margin-bottom: 1.25rem;
+  
+   /* Thay đổi từ 20px thành 1.25rem */
+}
+
+.main-image img {
+  width: 47vw; /* Thay đổi từ 730px thành 50vw */
+  height: 64vh; /* Thay đổi từ 400px thành 40vh */
+  object-fit: cover;
+  border-radius: 0.5rem; /* Thay đổi từ 8px thành 0.5rem */
+}
+
+.side-images {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem; /* Thay đổi từ 10px thành 0.625rem */
+  float: right;
+}
+
+.side-images img {
+  width: 27vw; /* Thay đổi từ 350px thành 24vw */
+  height: 31vh; /* Thay đổi từ 200px thành 20vh */
+  object-fit: cover;
+  border-radius: 0.5rem; /* Thay đổi từ 8px thành 0.5rem */
+}
+
+/* Container for about-place and detail_price-booking */
+.detail-room {
+  display: flex;
+  
+  justify-content: space-between;
+  gap: 1.25rem; /* Thay đổi từ 20px thành 1.25rem */
+  margin-top: 1.25rem; /* Thay đổi từ 20px thành 1.25rem */
+}
+
+/* About this place section */
+.detail_about-place {
+  flex: 1;
+  padding: 0.625rem; /* Thay đổi từ 10px thành 0.625rem */
+  border-right: 0.0625rem solid #ddd; /* Thay đổi từ 1px thành 0.0625rem */
+  
+}
+
+/* Booking section */
+.detail_price-booking {
+   /* Thay đổi từ 1px thành 0.0625rem */
+  flex: 1;
+  padding: 0.625rem; /* Thay đổi từ 10px thành 0.625rem */
+  text-align: center;
+}
+
+.detail_price-booking h4 {
+  margin-bottom: 0.625rem; /* Thay đổi từ 10px thành 0.625rem */
+}
+
+.detail_price-booking span {
+  font-size: 1.25rem; /* Thay đổi từ 20px thành 1.25rem */
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 0.9375rem; /* Thay đổi từ 15px thành 0.9375rem */
+}
+
+.detail_price-booking button {
+  padding: 0.625rem 3.25rem; /* Thay đổi từ 10px 20px thành 0.625rem 1.25rem */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.3125rem; /* Thay đổi từ 5px thành 0.3125rem */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  animation: popEffect 1s ease infinite alternate; /* Thêm hiệu ứng pop */
+  box-shadow: 1px 4px rgb(0 0 0 / 22%);
+}
+
+.detail_price-booking button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+@keyframes popEffect {
+  0% {
+    transform: scale(1); /* Kích thước ban đầu */
+  }
+  50% {
+    transform: scale(1.05); /* Phóng to nhẹ */
+  }
+  100% {
+    transform: scale(1); /* Quay lại kích thước ban đầu */
+  }
+}
+
+/* Contact Information Container */
+.contact-information {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align content to the left */
+  width: 25%; /* Adjust width as needed */
+  padding: 1rem; /* Thay đổi từ 20px thành 1rem */
+  border: #888 0.0625rem solid; /* Thay đổi từ 1px thành 0.0625rem */
+  border-radius: 0.5rem; /* Thay đổi từ 8px thành 0.5rem */
+}
+
+/* Avatar Section */
+.contact-avatar {
+  flex: 1; /* Chiếm 1 phần của container */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.contact-avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.contact-avatar span {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Details Section */
+.contact-details {
+  flex: 1; /* Chiếm 2 phần của container */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Khoảng cách giữa các nút */
+}
+.contact-infor_chatnow {
+  padding: 0.625rem 3.25rem; /* Thay đổi từ 10px 20px thành 0.625rem 1.25rem */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.3125rem; /* Thay đổi từ 5px thành 0.3125rem */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  animation: popEffect 1s ease infinite alternate; /* Thêm hiệu ứng pop */
+  box-shadow: 1px 4px rgb(0 0 0 / 22%);
+}
+
+.contact-buttons button {
+  width: 150px;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow:   1px 4px rgb(0 0 0 / 22%);
+}
+
+.contact-buttons button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.posting-date {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+.hotel-location li{
+  margin-bottom: 20px;
+}
+/* review  */
+.reviews-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #ffff;
+}
+.hotel-details {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd; 
+  border-radius: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.hotel-details li {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 6px;
+ 
+}
+
+.hotel-details li strong {
+  width: 120px;
+  flex-shrink: 0;
+}
+.reviews-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Rating Summary */
+.rating-summary {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.rating-overview {
+  flex: 1;
+  text-align: center;
+}
+
+.rating-overview h3 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.rating-overview .stars {
+  font-size: 1.5rem;
+  color: #f39c12;
+  margin-bottom: 0.5rem;
+}
+
+.rating-overview p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.rating-breakdown {
+  flex: 2;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.rating-bar span {
+  width: 20%;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.rating-bar .bar {
+  width: 80%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-left: 0.5rem;
+}
+
+.rating-bar .bar .fill {
+  height: 100%;
+  background-color: #007bff;
+  border-radius: 5px;
+}
+
+/* Individual Reviews */
+.review {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.review img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.review-content {
+  flex: 1;
+}
+
+.review-content h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.review-content .stars {
+  font-size: 1rem;
+  color: #f39c12;
+  margin-bottom: 0.5rem;
+}
+
+.review-content p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.review-time {
+  font-size: 0.8rem;
+  color: #999;
+  margin-left: 1rem;
+}
