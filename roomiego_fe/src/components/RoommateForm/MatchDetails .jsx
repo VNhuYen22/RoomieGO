@@ -14,15 +14,18 @@ const MatchDetails = () => {
             {match && (
                 <div>
                     <p><strong>Giới tính:</strong> {match.gender}</p>
-                    <p><strong>Năm sinh:</strong> {match.yob}</p>
                     <p><strong>Quê quán:</strong> {match.hometown}</p>
+                    <p><strong>Thành Phố:</strong> {match.city}</p>
+                    <p><strong>Quận:</strong> {match.district}</p>
+                    <p><strong>Năm sinh:</strong> {match.yob}</p>
                     <p><strong>Nghề nghiệp:</strong> {match.job}</p>
-                    <p>Sở thích: {
+                    <p><strong>Sở thích: {
                         Array.isArray(match.hobbies)
                             ? match.hobbies.join(', ')
                             : match.hobbies
-                        }</p>
+                        }</strong></p>
                     <p><strong>Mô tả thêm:</strong> {match.more}</p>
+                    <p><strong>Ảnh phòng:</strong> {match.rateImage}</p>
                 </div>
             )}
         </div>
