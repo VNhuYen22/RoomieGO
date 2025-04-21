@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,11 +39,12 @@ public class RoommateServiceImpl implements RoommateService {
 
     @Override
     public List<RoommateResponseDTO> getAllRoommates() {
-        List<RoommateResponseDTO> roommateList = roommateMapper.toResponseDTOs(roommateRepository.findAll());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email).orElse(null);
+        List<RoommateResponseDTO> roommateList = new ArrayList<>();
         if (Objects.nonNull(user)) {
+            roommateList = roommateMapper.toResponseDTOs(roommateRepository.findAllByGender(String.valueOf(user.getGender())));
             roommateList.removeIf(roommate ->
                     user.getId().equals(roommate.getUserId())
             );
