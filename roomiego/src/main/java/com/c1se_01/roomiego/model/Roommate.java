@@ -27,10 +27,19 @@ public class Roommate {
     private String gender;
 
     @Column
-    private Integer yob;
+    private String hometown;
 
     @Column
-    private String hometown;
+    private String city;
+
+    @Column
+    private String district;
+
+    @Column
+    private Integer rateImage;
+
+    @Column
+    private Integer yob;
 
     @Column
     private String job;
