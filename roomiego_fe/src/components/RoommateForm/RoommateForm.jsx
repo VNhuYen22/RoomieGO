@@ -6,11 +6,14 @@ const RoommateForm = () => {
   const navigate = useNavigate();
   // Khởi tạo state cho form data với các giá trị mặc định
   const [formData, setFormData] = useState({
-    sex: "Nam", // Giới tính mặc định là Nam
-    dob: "", // Năm sinh
+    sex: "Nam", // Giới tính mặc định là Nam, lấy từ token , từ token => user => gender
     hometown: "", // Quê quán
+    city: "", // Nơi bạn muốn thuê (thành phố)
+    district: "", // Nơi bạn muốn thuê (quận)
+    dob: "", // Năm sinh
     job: "", // Nghề nghiệp
     hobbies: [], // Sở thích (là một mảng)
+    rateImage: "", // Mức đọ sạch sẽ
     more: "",
     userId: "", // Mô tả thêm
   });
@@ -30,6 +33,11 @@ const RoommateForm = () => {
           ? [...prev.hobbies, value] // Thêm value vào mảng hobbies
           : prev.hobbies.filter((h) => h !== value), // Ngược lại, lọc bỏ value khỏi mảng hobbies
       }));
+    } else if (type === "radio") {
+      setFormData((prev) => ({
+        ...prev,
+        rateImage: value, // Cập nhật giá trị duy nhất cho hobbies
+      }));
     }
     // Nếu không phải checkbox
     else {
@@ -46,21 +54,26 @@ const RoommateForm = () => {
   
     try {
       const dataToSend = {
-        gender: formData.sex,
-        yob: formData.dob,
+        // gender: formData.sex, api create roommates không cần truyền gender, cần truyền thêm token
         hometown: formData.hometown,
+        city: formData.city,
+        district: formData.district,
+        yob: formData.dob,
         job: formData.job,
         hobbies: formData.hobbies.join(', '),
+        rateImage: formData.rateImage,
         more: formData.more,
-        userId: formData.userId ? parseInt(formData.userId) : null,
- // đảm bảo là số
+        userId: formData.userId ? parseInt(formData.userId) : null, // lấy từ token truyền, bỏ trên UI // đảm bảo là số
       };
   
       console.log('Payload being sent:', dataToSend);
   
       const createResponse = await fetch('http://localhost:8080/api/roommates', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZ3V5ZW52YW5hQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ1MjUyMTMyLCJleHAiOjE3NDUzMzg1MzJ9.yr7huglm08DCBlrNJ3GgMhLkLfoVoxoEAzVShL5JHE8IJyS2KDcgFD_RerALGN8wRDCjWfBdJ1g5jo76g9hrNA`,
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify(dataToSend),
       });
   
@@ -75,7 +88,7 @@ const RoommateForm = () => {
       const exportResponse = await fetch('http://localhost:8080/api/roommates/export-to-file', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXMxMmF0dXNhZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDQ4MTkwNDYsImV4cCI6MTc0NDkwNTQ0Nn0.X5yuOuiTFyl0I5gebXSs7osNZxFR3fKUTfVr5xCLmx0_2-wbV1sMZPLRMl4mjQIgPHwqKs7_4ZxbeYmMLPBk6g`, // Thêm header Authorization với token
+          'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZ3V5ZW52YW5hQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ1MjUyMTMyLCJleHAiOjE3NDUzMzg1MzJ9.yr7huglm08DCBlrNJ3GgMhLkLfoVoxoEAzVShL5JHE8IJyS2KDcgFD_RerALGN8wRDCjWfBdJ1g5jo76g9hrNA`, // Thêm header Authorization với token
           'Content-Type': 'application/json', // Thêm Content-Type nếu cần thiết
         },
       });
@@ -89,11 +102,14 @@ const RoommateForm = () => {
   
       // Step 3: Call Submit search roommates API
       const formDataToSend = new FormData();
-      formDataToSend.append('gender', formData.sex);
-      formDataToSend.append('yob', formData.dob);
+      // formDataToSend.append('gender', formData.sex); không còn lọc ở python nữa vì đã filter ở api export to file của java
       formDataToSend.append('hometown', formData.hometown);
+      formDataToSend.append('yob', formData.dob);
+      formDataToSend.append('city', formData.city);
+      formDataToSend.append('district', formData.district);
       formDataToSend.append('job', formData.job);
       formData.hobbies.forEach(hobby => formDataToSend.append('hobbies', hobby));
+      formDataToSend.append('rateImage', formData.rateImage);
       formDataToSend.append('more', formData.more);
   
       const submitResponse = await fetch('http://127.0.0.1:8000/submit', {
@@ -125,20 +141,38 @@ const RoommateForm = () => {
           <option value="Nữ">Nữ</option>
         </select>
 
+        <label>Quê quán của bạn:</label>
+        <input
+          type="text"
+          name="hometown"
+          value={formData.hometown}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Nơi bạn muốn thuê (Thành Phố):</label>
+        <input
+          type="text"
+          name="city"
+          value={formData.city}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Nơi bạn muốn thuê (Quận):</label>
+        <input
+          type="text"
+          name="district"
+          value={formData.district}
+          onChange={handleChange}
+          required
+        />
+
         <label>Năm sinh:</label>
         <input
           type="number"
           name="dob"
           value={formData.dob}
-          onChange={handleChange}
-          required
-        />
-
-        <label>Quê quán:</label>
-        <input
-          type="text"
-          name="hometown"
-          value={formData.hometown}
           onChange={handleChange}
           required
         />
@@ -152,7 +186,7 @@ const RoommateForm = () => {
           required
         />
 
-        <label>Sở thích:</label>
+        <label>Thói quen sinh hoạt:</label>
         <div className="checkbox-group">
           <label>
             <input
@@ -173,6 +207,60 @@ const RoommateForm = () => {
               onChange={handleChange}
             />
             Hút thuốc
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="hobbies"
+              value="Ăn Chay"
+              checked={formData.hobbies.includes("Ăn Chay")}
+              onChange={handleChange}
+            />
+            Ăn Chay
+          </label>
+        </div>
+
+        <label>Hãy chọn căn phòng mà bạn mong muốn?</label>
+        <div className="radio-group">
+          <label>
+            <input
+              type="radio"
+              name="rateImage"
+              value="1"
+              checked={formData.rateImage === "1"}
+              onChange={handleChange}
+            />
+            1
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="rateImage"
+              value="2"
+              checked={formData.rateImage === "2"}
+              onChange={handleChange}
+            />
+            2
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="rateImage"
+              value="3"
+              checked={formData.rateImage === "3"}
+              onChange={handleChange}
+            />
+            3
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="rateImage"
+              value="4"
+              checked={formData.rateImage === "4"}
+              onChange={handleChange}
+            />
+            4
           </label>
         </div>
 
