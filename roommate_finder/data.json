@@ -1,83 +1,35 @@
 [
   {
-    "gender": "Nam",
-    "hometown": "Quảng Nam",
-    "city": "Hà Nội",
-    "district": "Hoàn Kiếm",
-    "rateImage": 1,
-    "yob": 2002,
-    "job": "văn phòng",
-    "hobbies": "Nuôi thú cưng, Ăn chay",
-    "more": "Ngăn nắp, sạch sẽ, gọn gàng",
-    "userId": 5
-  },
-  {
-    "gender": "Nam",
-    "hometown": "Quảng Ngãi",
-    "city": "Đà Nẵng",
-    "district": "Thanh Khê",
-    "rateImage": 2,
-    "yob": 2002,
-    "job": "công nhân",
-    "hobbies": "Hút thuốc",
-    "more": "biết nấu ăn",
-    "userId": 6
-  },
-  {
-    "gender": "Nam",
+    "gender": "Nữ",
     "hometown": "Bình Định",
-    "city": "Đà Nẵng",
-    "district": "Hải Châu",
-    "rateImage": 3,
-    "yob": 2005,
-    "job": "sinh viên",
-    "hobbies": "Nuôi thú cưng",
-    "more": "Ngăn nắp, sạch sẽ",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "hometown": "Bình Định",
-    "city": "Hà Nội",
-    "district": "Ba Đình",
-    "rateImage": 4,
-    "yob": 2005,
-    "job": "công nhân",
-    "hobbies": "Nuôi thú cưng",
-    "more": "Nấu ăn",
-    "userId": 8
-  },
-  {
-    "gender": "Nam",
-    "hometown": "Bình Định",
-    "city": "Hồ Chí Minh",
-    "district": "Tân Bình",
-    "rateImage": 1,
-    "yob": 2005,
-    "job": "sinh viên",
-    "hobbies": "Nuôi thú cưng, Ăn Chay",
-    "more": "Nấu ăn",
-    "userId": 9
-  },
-  {
-    "gender": "Nam",
-    "hometown": "Quảng Nam",
     "city": "Đà Nẵng",
     "district": "Sơn Trà",
-    "rateImage": 2,
-    "yob": 2003,
-    "job": "công nhân",
-    "hobbies": "Nuôi thú cưng, Hút thuốc",
-    "more": "sinh viên bách khoa",
-    "userId": 10
+    "rateImage": 1,
+    "yob": 2005,
+    "job": "Công nhân",
+    "hobbies": "Nuôi thú cưng",
+    "more": "Nấu ăn",
+    "userId": 13
   },
   {
-    "yob": 2002,
+    "gender": "Nữ",
+    "hometown": "Quảng Nam",
+    "city": "Đà Nẵng",
+    "district": "Cẩm Lệ",
+    "rateImage": 3,
+    "yob": 2000,
+    "job": "công nhân",
+    "hobbies": "Nuôi thú cưng, Ăn Chay",
+    "more": "",
+    "userId": 14
+  },
+  {
+    "yob": 2000,
     "hometown": "Quảng Nam",
     "job": "công nhân",
     "hobbies": [
       "Nuôi thú cưng",
-      "Hút thuốc"
+      "Ăn Chay"
     ],
     "more": ""
   }
