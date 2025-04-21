@@ -41,7 +41,7 @@ public class AuthenticationService {
             User ourUser = new User();
             ourUser.setEmail(registrationRequest.getEmail());
             ourUser.setRole(Role.valueOf(registrationRequest.getRole().toUpperCase()));
-            ourUser.setGender(Gender.valueOf(registrationRequest.getGender().toUpperCase()));
+            ourUser.setGender(Gender.valueOf(registrationRequest.getGender()));
             ourUser.setFullName(registrationRequest.getFullName());
             ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
             ourUser.setPhone(registrationRequest.getPhone());
