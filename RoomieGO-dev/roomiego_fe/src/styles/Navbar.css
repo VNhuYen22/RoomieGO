@@ -100,3 +100,21 @@
     background-color: #f9f9f9;
     color: #007bff;
   }
+  .username {
+    margin-right: 15px;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .logout-btn {
+    background: #ff6b6b;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .logout-btn:hover {
+    background: #e63946;
+  }

@@ -178,24 +178,14 @@
   .create-account button:hover {
     background: #ea580c;
   }
-  /* Tùy chỉnh màu sắc cho dropdown */
-  .form-group select {
-    background-color: #e0f7fa; /* Màu nền xanh nhạt */
-    color: #00796b; /* Màu chữ xanh đậm */
-    border: 1px solid #00796b; /* Viền xanh đậm */
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none;
-    transition: all 0.3s ease-in-out;
+  /* Tùy chỉnh màu sắc cho các tùy chọn */
+  .option-role{
+    background-color: #090909; /* Màu nền của các tùy chọn */
+    color: #007bff; /* Màu chữ */
+    padding: 5px; /* Khoảng cách bên trong */
+    font-size: 14px; 
   }
-  
-  .form-group select:focus {
-    border-color: #004d40; /* Viền xanh đậm hơn khi focus */
-    box-shadow: 0 0 5px rgba(0, 77, 64, 0.5); /* Hiệu ứng ánh sáng khi focus */
-  }
-  
-  .form-group select option {
-    background-color: #ffffff; /* Màu nền của các tùy chọn */
-    color: #00796b; /* Màu chữ của các tùy chọn */
+  .option-role:hover {
+    background-color: #007bff; /* Màu nền khi hover */
+    color: #fff; /* Màu chữ khi hover */
   }

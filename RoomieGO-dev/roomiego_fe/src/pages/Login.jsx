@@ -14,42 +14,57 @@ export default function Login() {
     e.preventDefault();
 
     // Kiểm tra dữ liệu đầu vào
-    if (username.trim() === "" || password.length < 6) {
+    if (email.trim() === "" || password.length < 6) {
       setError("Username không được để trống và mật khẩu phải có ít nhất 6 ký tự.");
       return;
     }
-
     try {
-      // Gửi yêu cầu POST đến API
-      const response = await axios.post("http://localhost:8080/auth/login", {
-        username,
-        password,
+      let data = {
+        email: email,
+        password: password,
+      };
+      console.log("Dữ liệu gửi đến API:", data);
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
+     // nho them token vao localStorage
+        // Kiểm tra nếu phản hồi không thành công
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Đăng nhập thất bại.");
+    }
+     // Xử lý phản hồi từ API
+     const responseData = await response.json();
+     
+     const { token } = responseData; // Lấy token và full_name từ phản hồi
+      // Lấy token từ phản hồi
+      console.log("Response data:", responseData);
+    if (token) {
+      setError("");
+      
+      alert("Đăng nhập thành công!");
+      console.log("Token:", token); 
+     // Lưu vào localStorage
+     localStorage.setItem("authToken", token);
+     localStorage.setItem("Email", email);
+    
 
-      // Xử lý phản hồi từ API
-      if (response.status === 200) {
-        const { token } = response.data;
-        setError("");
-        alert("Đăng nhập thành công!");
-        console.log("Token:", token);
-
-        // Lưu token vào localStorage (hoặc sessionStorage)
-        localStorage.setItem("authToken", token);
-
-        // Chuyển hướng người dùng đến trang chính
-        window.location.href = "/home";
-      }
-    } catch (err) {
-      // Xử lý lỗi
-      setError(err.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.");
+     // Điều hướng sang trang chính hoặc dashboard
+     window.location.href = "/room";
+     // Điều hướng sang trang chính hoặc dashboard
+    } else {
+      setError("Đăng nhập thất bại. Vui lòng thử lại.");
+    } 
+  }catch (err) {
+      console.error('Login failed:', err.response?.data || err.message);
+      setError('Sai tài khoản hoặc mật khẩu');
     }
   };
-  const handleForgotPassword = (e) => {
-    e.preventDefault();
-    console.log("Reset password for:", email);
-    alert("Một email đặt lại mật khẩu đã được gửi đến " + email);
-  };
-
+      
   return (
     <div className="login-wrapper">
       {/* Video nền động */}
@@ -77,7 +92,7 @@ export default function Login() {
             {forgotPassword ? (
               <>
                 <h2>Quên mật khẩu</h2>
-                <form onSubmit={handleForgotPassword}>
+                <form onSubmit={forgotPassword}>
                   <div className="form-group">
                     <label>Nhập email của bạn</label>
                     <input 
@@ -102,10 +117,10 @@ export default function Login() {
                   <div className="form-group">
                     <label>Tên đăng nhập</label>
                     <input 
-                      type="text" 
-                      placeholder="Username" 
-                      value={username} 
-                      onChange={(e) => setUsername(e.target.value)} 
+                      type="email" 
+                      placeholder="Email" 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)} 
                       required 
                     />
                   </div>

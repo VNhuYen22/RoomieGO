@@ -128,8 +128,8 @@ export default function Register() {
                   onChange={(e) => setRole(e.target.value)} 
                   required
                 >
-                  <option value="OWNER">OWNER</option>
-                  <option value="RENTER">RENTER</option>
+                  <option className="option-role" value="OWNER">OWNER</option>
+                  <option className="option-role" value="RENTER">RENTER</option>
                 </select>
               </div>
               <div className="form-group">
