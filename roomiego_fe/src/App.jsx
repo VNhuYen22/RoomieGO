@@ -21,6 +21,8 @@ import Storage from "./components/Invoices/Storage";
 import InvoiceForm from "./components/Invoices/InvoiceForm";
 import RoommateForm from "./components/RoommateForm/RoommateForm";
 import MatchDetails from "./components/RoommateForm/MatchDetails ";
+import Dashboard from "./pages/Dashboard";
+import Register from "./pages/Register";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -46,28 +48,32 @@ const App = () => {
   const showNavbarchatbox = ["/chatbox", "/settings"].includes(location.pathname);
 
   // Define routes where Footer should not be visible
-  const hideFooter = ["/maps","/test1"].includes(location.pathname);
+  const hideFooter = ["/maps","/test1","/dashboard"].includes(location.pathname);
 
   // Define routes where SearchBar should not be visible
-  const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match"].includes(location.pathname);
+  const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match","/dashboard"].includes(location.pathname);
+  const hideNavbarAndNavbarchatbox = location.pathname === "/dashboard";
 
   return (
     <div data-theme={theme}>
-      {showNavbarchatbox ? (
-        <Navbarchatbox />
-      ) : (
-        <>
-          <Navbar />
-          {!hideSearchBar && <SearchBar />} {/* Conditionally render SearchBar */}
-        </>
+      {/* Nếu không phải /q mới render Navbarchatbox hoặc Navbar + SearchBar */}
+      {!hideNavbarAndNavbarchatbox && (
+        showNavbarchatbox ? (
+          <Navbarchatbox />
+        ) : (
+          <>
+            <Navbar />
+            {!hideSearchBar && <SearchBar />}
+          </>
+        )
       )}
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/room" element={<Room />} />
         <Route path="/ResultRoom" element={<ResultRoom />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register/>}/>
         <Route path="/chatbox" element={<Chatbox />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/maps" element={<MapComponent />} />
@@ -75,6 +81,7 @@ const App = () => {
         <Route path="/test1" element={<InvoiceForm />} />
         <Route path="/roommates" element={<RoommateForm />} />
         <Route path="/match" element={<MatchDetails />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
 
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}

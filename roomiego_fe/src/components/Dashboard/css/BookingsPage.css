@@ -1,0 +1,33 @@
+.BookingsPage-content {
+    flex: 1;
+    padding: 10px;
+  }
+  .booking-actions {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+  }
+  .search-input {
+    flex: 1;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-right: 16px;
+  }
+  .action-btn {
+    background: #2574fb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .booking-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  
