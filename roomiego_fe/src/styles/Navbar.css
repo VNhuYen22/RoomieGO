@@ -1,90 +1,121 @@
+
+/* Navbar Container */
 .navbar {
     display: flex;
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: center; /* Logo nằm giữa, các link sát vào logo */
-    height: 10vh;
-    padding: 0 20px;
-    background:url('../assets/beach.jpg');
-    background-size: cover;
-    background-position: center; /* Căn giữa */
-    background-repeat: no-repeat;
-    /* position: sticky;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     top: 0;
-    /* width: 100%; */
-    /* z-index: 1000; */ 
-    /* border-bottom-right-radius:30px  ;
-    border-bottom-left-radius:30px  ; */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Left & Right Side sát vào Logo */
-.leftside, .rightside {
-    display: flex;
-    gap: 50px; /* Giảm khoảng cách giữa các link */
-}
-
-/* Logo ở giữa */
-.center {
-    display: flex;
-    justify-content: center;
-    margin: 0 15px; /* Tạo khoảng cách nhỏ giữa logo và các links */
-}
-
-.center img {
-    width: 50px; /* Điều chỉnh kích thước logo */
-    height: auto;
-}
-
-/* Style cho link */
-.rightside a, .leftside a {
-    color: white;
-    text-decoration: none;
-    font-size: 22px;
-    font-weight: 500;
-}
-
-.rightside a:hover, .leftside a:hover {
-    color: yellow;
-}
-
-/* 📌 RESPONSIVE CHO MÀN HÌNH NHỎ */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column; /* Chuyển thành dạng cột */
-        height: auto;
-        padding: 10px 0;
-    }
-
-    .leftside, .rightside {
-        flex-direction: column; /* Xếp link thành cột */
-        align-items: center;
-        gap: 50px;
-    }
-
-    .center {
-        margin: 10px 0;
-    }
-
-    .center img {
-        width: 40px; /* Giảm kích thước logo */
-    }
-}
-@media (min-width: 1920px) {
-    .navbar {
-      height: 50px; /* Increase height for larger screens */
-      padding: 20px 40px; /* Increase padding for larger screens */
-    }
-  
-    .leftside, .rightside {
-      gap: 100px; /* Increase gap between links for larger screens */
-    }
-  
-    .center img {
-      width: 80px; /* Increase logo size for larger screens */
-    }
-  
-    .rightside a, .leftside a {
-      font-size: 28px; /* Increase font size for larger screens */
-    }
+    z-index: 1000;
   }
-
+  .dropdown-toggle {
+      background: none;
+      border: 1px solid #ddd; /* Thêm border */
+      border-radius: 25px; /* Bo tròn góc */
+      padding: 0.5rem 1rem; /* Khoảng cách bên trong */
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .dropdown-toggle:hover {
+      border-color: #007bff; /* Đổi màu border khi hover */
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Thêm hiệu ứng shadow khi hover */
+    }
+    
+    .menu-icon {
+      margin-right: 0.5rem; /* Khoảng cách giữa menu icon và user icon */
+    }
+    
+    .rightSide img {
+      width: 30px; /* Đổi kích thước user icon */
+      height: 30px; /* Đổi kích thước user icon */
+      font-size: 1.5rem;
+    }
+  /* Left Side Links */
+  .leftside a {
+      
+    margin-right: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .leftside a:hover {
+    color: #007bff;
+  }
+  
+  /* Center Logo */
+  .center img {
+    height: 40px;
+  }
+  
+  /* Right Side Dropdown */
+  .rightSide {
+    position: relative;
+  }
+  
+  .dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+  }
+  
+  .menu-icon {
+    margin-right: 0.5rem;
+  }
+  
+  .user-icon {
+    font-size: 1.5rem;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    padding: 0.5rem 0;
+    z-index: 1000;
+  }
+  
+  .dropdown-menu a {
+    display: block;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #f9f9f9;
+    color: #007bff;
+  }
+  .username {
+    margin-right: 15px;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .logout-btn {
+    background: #ff6b6b;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .logout-btn:hover {
+    background: #e63946;
+  }

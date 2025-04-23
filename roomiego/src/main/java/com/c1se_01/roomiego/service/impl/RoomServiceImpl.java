@@ -29,38 +29,28 @@ public class RoomServiceImpl implements RoomService {
     private final UserRepository userRepository;
 
     private final RoomMapper roomMapper;
-
     @Override
-    public RoomDTO createRoom(RoomDTO roomDTO) {
-        // Kiểm tra và lấy thông tin người dùng
-        User user = userRepository.findById(roomDTO.getOwnerId())
-                .orElseThrow(() -> new NotFoundException("User không tồn tại")); // Lỗi 404
+    public RoomDTO createRoom(RoomDTO roomDTO, Long ownerId) {
+        User user = userRepository.findById(ownerId)
+                .orElseThrow(() -> new NotFoundException("User không tồn tại"));
 
-        // Kiểm tra quyền người dùng
         if (!StringUtils.pathEquals(Role.OWNER.name(), user.getRole().name())) {
-            throw new ForbiddenException("User không có quyền tạo phòng"); // Lỗi 403
+            throw new ForbiddenException("User không có quyền tạo phòng");
         }
 
-        // Chuyển đổi RoomDTO thành Room entity
-        Room room = roomMapper.toEntity(roomDTO);
+        roomDTO.setOwnerId(ownerId); // Gán ownerId chính xác
 
-        // Lưu phòng vào cơ sở dữ liệu (phải lưu trước khi tạo RoomImage)
+        Room room = roomMapper.toEntity(roomDTO);
         Room savedRoom = roomRepository.save(room);
 
-        // Xử lý hình ảnh (nếu có)
         if (roomDTO.getImageUrls() != null && !roomDTO.getImageUrls().isEmpty()) {
             List<RoomImage> roomImages = roomDTO.getImageUrls().stream()
-                    .map(imageUrl -> new RoomImage(null, savedRoom, imageUrl)) // Tạo RoomImage từ URL và liên kết với Room đã lưu
+                    .map(imageUrl -> new RoomImage(null, savedRoom, imageUrl))
                     .collect(Collectors.toList());
-
-            // Lưu các hình ảnh vào cơ sở dữ liệu
             roomImageRepository.saveAll(roomImages);
-
-            // Gán danh sách hình ảnh vào Room entity
             savedRoom.setRoomImages(roomImages);
         }
 
-        // Trả về RoomDTO đã được lưu
         return roomMapper.toDTO(savedRoom);
     }
 
@@ -81,15 +71,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomDTO updateRoom(Long id, RoomDTO roomDTO) {
+    public RoomDTO updateRoom(Long id, RoomDTO roomDTO, Long ownerId) {
         Room existingRoom = roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Phòng không tồn tại"));
 
-        // Kiểm tra quyền chỉnh sửa
-        User user = userRepository.findById(roomDTO.getOwnerId())
-                .orElseThrow(() -> new NotFoundException("User không tồn tại"));
-
-        if (!StringUtils.pathEquals(Role.OWNER.name(), user.getRole().name())) {
+        if (!existingRoom.getOwner().getId().equals(ownerId)) {
             throw new ForbiddenException("User không có quyền chỉnh sửa phòng này");
         }
 
@@ -105,5 +91,16 @@ public class RoomServiceImpl implements RoomService {
 
         roomRepository.delete(room);
     }
+    @Override
+    public List<RoomDTO> getRoomsByOwner(Long ownerId) {
+        List<Room> rooms = roomRepository.findByOwnerId(ownerId);
+        if (rooms.isEmpty()) {
+            throw new NotFoundException("Không có phòng nào được tìm thấy cho owner này");
+        }
+        return rooms.stream()
+                .map(roomMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
 
 }

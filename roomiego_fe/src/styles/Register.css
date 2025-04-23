@@ -1,0 +1,191 @@
+
+  
+ 
+  /* Video nền */
+  #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    
+  }
+  
+  /* Lớp overlay trên video */
+  .video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* điều chỉnh độ tối nền */
+    z-index: -2;
+  }
+ /* Container tổng cho Login */
+  .login-container {
+    margin: 0;
+    background: linear-gradient(135deg, rgba(72,70,255,0.8), rgba(255,159,28,0.8));
+    background-size: cover;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0; /* Khoảng cách để không che navbar/footer */
+  }
+  
+  /* Hộp login với Glassmorphism */
+
+  
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Phần form đăng nhập */
+  .login-form {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+  }
+  
+  .login-form h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  /* Style cho thông báo lỗi */
+  .error-message {
+    color: #ff6b6b;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Input fields */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #6095e6;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.2);
+    color: #86afe6;
+    border-radius: 5px;
+    transition: all 0.3s;
+  }
+  
+  .form-group input:focus {
+    border-color: #2f1acb;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Password toggle icon */
+  .password-wrapper {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* Link quên mật khẩu */
+  .forgot-password {
+    text-align: right;
+    margin-bottom: 15px;
+  }
+  
+  .forgot-password a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Nút đăng nhập */
+  .login-btn {
+    background: rgba(47, 26, 203, 0.9);
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .login-btn:hover {
+    background: #ea580c;
+  }
+  
+  /* Nút quay lại (cho phần quên mật khẩu) */
+  .back-btn {
+    margin-top: 10px;
+    background: #555;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border: none;
+    transition: background 0.3s;
+  }
+  
+  .back-btn:hover {
+    background: #333;
+  }
+  
+  /* Phần đăng ký tài khoản */
+  .create-account {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .create-account button {
+    background: rgba(47, 26, 203, 0.9);
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .create-account button:hover {
+    background: #ea580c;
+  }
+  /* Tùy chỉnh màu sắc cho các tùy chọn */
+  .option-role{
+    background-color: #090909; /* Màu nền của các tùy chọn */
+    color: #007bff; /* Màu chữ */
+    padding: 5px; /* Khoảng cách bên trong */
+    font-size: 14px; 
+  }
+  .option-role:hover {
+    background-color: #007bff; /* Màu nền khi hover */
+    color: #fff; /* Màu chữ khi hover */
+  }

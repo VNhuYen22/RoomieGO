@@ -1,0 +1,64 @@
+.booking-card {
+  width: 300px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-image {
+  width: 100%;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+
+.booking-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 🔥 quan trọng: để ảnh không bị méo */
+  display: block;
+}
+
+.price-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #3b82f6;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+  .booking-info {
+    padding: 20px;
+  }
+  .hotel-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  .hotel-location {
+    color: #888;
+    margin-bottom: 12px;
+  }
+  .card-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+  }
+  .edit-btn, .delete-btn {
+    border: none;
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .delete-btn {
+    color: #e74c3c;
+  }
+  
