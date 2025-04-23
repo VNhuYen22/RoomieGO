@@ -1,139 +1,189 @@
 .body {
   
-    display: flex;
-    flex-wrap: wrap;
-    min-height: calc(100vh - 100px); /* Ensure the body takes up at least the full height of the viewport minus the footer height */
-  }
-  /* FILTER-ROOM  */
-  .filter-section {
-    float: left;
-    width: 250px;
-    height: 350px; /* Chiều rộng cố định cho bộ lọc */
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-  }
-  
-  .filter-section h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #333;
-  }
-  
-  .filter-group {
-    margin-bottom: 1rem;
-  }
-  
-  .filter-group label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: #666;
-  }
-  
-  .filter-group input,
-  .filter-group select {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .filter-button {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .filter-button:hover {
-    background-color: #0056b3;
-  }
-  /* CARD-ROOM */
-  .card-link {
-    text-decoration: none; /* Remove underline from links */
-    color: inherit; /* Inherit text color */
-  }
-  .card:hover {
-    transform: translateY(-10px); /* Move the card up */
-    box-shadow: 0 8px 16px rgb(0 0 0 / 32%); /* Increase the shadow */
-  }
-  .card {
-    
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgb(0 0 0 / 32%);
-    width: 300px;
-    height: 400px; /* Set the height equal to the width to make it a square */
-    margin: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Ensure content is spaced evenly */
-  }
-  
-  .card-header {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-  }
-  
-  .card-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  .card-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .card-info h3 {
-    margin: 0;
-    font-size: 18px;
-  }
-  
-  .card-info span {
-    color: green;
-    font-size: 14px;
-  }
-  
-  .card-body {
-    
-    padding: 10px;
-    flex-grow: 1; /* Allow the body to grow and take up available space */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center the content vertically */
-    align-items: center; /* Center the content horizontally */
-    text-align: center; /* Center align text */
-  }
-  
-  .card-body h2 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .card-body p {
-    font-weight: bold;
-    margin: 5px 0;
-    color: #666;
-    font-size: 14px; /* Adjust font size to fit content */
-  }
-  
-  .card-image_body {
-    width: 100%;
-    height: auto;
-    max-height: 150px; /* Ensure the image fits within the card */
-    object-fit: cover; /* Ensure the image covers the area without stretching */
-    border-radius: 10px;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  min-height: calc(100vh - 100px); /* Ensure the body takes up at least the full height of the viewport minus the footer height */
+}
+/* FILTER-ROOM  */
+.filter-section {
+  float: left;
+  width: 250px;
+  height: 550px; /* Chiều rộng cố định cho bộ lọc */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.filter-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+
+.filter-group label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.filter-group input,
+.filter-group select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filter-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filter-button:hover {
+  background-color: #0056b3;
+}
+/* CARD-ROOM */
+.card-link {
+  text-decoration: none; /* Remove underline from links */
+  color: inherit; /* Inherit text color */
+}
+
+.card {
+  position: relative; /* Đặt vị trí tương đối để sử dụng ::before và ::after */
+  border: none; /* Loại bỏ viền mặc định */
+  border-radius: 15px; /* Tăng độ bo góc */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Tăng độ mờ của bóng */
+  width: 350px; /* Chiều rộng */
+  height: 450px; /* Chiều cao */
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background: #fff; /* Màu nền của thẻ */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  background: linear-gradient(to right, #2563EB, #06B6D4, #A5F3FC);/* Gradient màu xanh dương sang xanh lá */
+  transition: transform 0.6s ease;
+}
+
+.card::before {
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  transform: scaleY(0); /* Bắt đầu từ trạng thái ẩn */
+  transform-origin: bottom; /* Điểm bắt đầu từ dưới lên */
+}
+
+.card::after {
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 4px;
+  transform: scaleX(0); /* Bắt đầu từ trạng thái ẩn */
+  transform-origin: right; /* Điểm bắt đầu từ phải sang */
+}
+
+.card:hover::before {
+  transform: scaleY(1); /* Đường viền dọc chạy từ dưới lên */
+}
+
+.card:hover::after {
+  transform: scaleX(1); /* Đường viền ngang chạy từ phải sang */
+}
+
+.card:hover {
+  transform: translateY(-10px); /* Di chuyển thẻ lên trên khi hover */
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3); /* Tăng bóng khi hover */
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.card-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-info h3,
+.card-info span {
+  margin: 0;
+  font-size: 16px;
+  word-break: break-word;         /* Cho phép ngắt từ nếu quá dài */
+  overflow-wrap: break-word;      /* Ngắt dòng khi cần */
+  white-space: normal;            /* Cho phép xuống dòng */
+  text-align: left;
+}
+
+.card-info span {
+  color: green;
+  font-size: 14px;
+}
+
+.card-body {
+  padding: 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.card-body h2,
+.card-body p {
+  margin: 5px 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+}
+
+.card-body h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.card-body p {
+  font-weight: bold;
+  color: #666;
+  font-size: 14px;
+}
+
+.card-image_body {
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}

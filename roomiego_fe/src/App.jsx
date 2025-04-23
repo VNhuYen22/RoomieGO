@@ -21,7 +21,7 @@ import Storage from "./components/Invoices/Storage";
 import InvoiceForm from "./components/Invoices/InvoiceForm";
 import RoommateForm from "./components/RoommateForm/RoommateForm";
 import MatchDetails from "./components/RoommateForm/MatchDetails ";
-
+import Register from "./pages/Register";
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
@@ -75,6 +75,8 @@ const App = () => {
         <Route path="/test1" element={<InvoiceForm />} />
         <Route path="/roommates" element={<RoommateForm />} />
         <Route path="/match" element={<MatchDetails />} />
+        <Route path="/register" element={<Register />} />
+        {/* Add other routes here */}
       </Routes>
 
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
