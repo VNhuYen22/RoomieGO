@@ -1,10 +1,10 @@
 import React,{useEffect, useState} from "react";
 import Logo from "../assets/beach.jpg";
 import { Link } from "react-router-dom";
-import chatbox from "../assets/find.png"
+import chatbox from "../assets/chatbox.png"
 import "../styles/Navbar.css";
 import user from "../assets/user.png";
-import { FaComments } from "react-icons/fa";
+
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,15 +59,13 @@ function Navbar() {
         <img src={Logo} alt="Logo" />
       </div>
       <div className="leftside">
-        <Link to="/"> Home </Link>
-        <Link to="/roommates"> Roommates </Link>
-        <Link to="/dashboard"> Dashboard </Link>
-        <Link to="/about"> About </Link>
-        <Link to="/room"> Rooms </Link>
+        <Link to="/home">Home</Link>
+        <Link to="/about">About</Link>
+        <Link to="/room">Rooms</Link>
       </div>
       <div className="rightSide">
         <Link to="/chatbox">
-          <FaComments size={24} />
+          <img src={chatbox} alt="" className="user-icon" />
         </Link>
         {isLoggedIn ? (
           <div className="user-info">

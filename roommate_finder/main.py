@@ -47,7 +47,7 @@ async def show_form(request: Request):
 @app.post("/submit", response_class=JSONResponse)
 async def submit_form(
         request: Request,
-        gender: str = Form(...),
+        # gender: str = Form(...),
         yob: int = Form(...),
         hometown: str = Form(...),
         job: str = Form(...),
@@ -55,7 +55,7 @@ async def submit_form(
         more: str = Form("")
 ):
     user = {
-        "gender": gender,
+        # "gender": gender,
         "yob": yob,
         "hometown": hometown,
         "job": job,

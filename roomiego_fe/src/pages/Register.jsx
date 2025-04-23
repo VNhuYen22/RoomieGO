@@ -1,13 +1,13 @@
 import { useState } from "react";
-import '../styles/Register.css';
-//import vidBeach from "../assets/beach.mp4";
+import '../styles/Login.css';
+import vidBeach from "../assets/beach.mp4";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("FEMALE");
+  const [gender, setGender] = useState("Nữ");
   const [dob, setDob] = useState("");
   const [bio, setBio] = useState("");
   const [role, setRole] = useState("OWNER");
@@ -61,7 +61,7 @@ export default function Register() {
       setPassword("");
       setFullName("");
       setPhone("");
-      setGender("FEMALE");
+      setGender("Nữ");
       setDob("");
       setBio("");
       setRole("OWNER");
@@ -76,10 +76,10 @@ export default function Register() {
   return (
     <div className="login-wrapper">
       {/* Video nền động */}
-      {/* <video autoPlay muted loop id="bg-video">
+      <video autoPlay muted loop id="bg-video">
         <source src={vidBeach} type="video/mp4" />
         Trình duyệt của bạn không hỗ trợ video.
-      </video> */}
+      </video>
 
       {/* Overlay tối nhẹ trên video */}
       <div className="video-overlay"></div>
@@ -159,8 +159,8 @@ export default function Register() {
                   onChange={(e) => setGender(e.target.value)} 
                   required
                 >
-                  <option value="FEMALE">FEMALE</option>
-                  <option value="MALE">MALE</option>
+                  <option value="Nữ">Nữ</option>
+                  <option value="Nam">Nam</option>
                 </select>
               </div>
               <div className="form-group">

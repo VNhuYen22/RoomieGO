@@ -1,6 +1,6 @@
 import { useState } from "react";
 import '../styles/Login.css';
-//import vidBeach from "../assets/beach.mp4";
+import vidBeach from "../assets/beach.mp4";
 import axios from "axios";
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -68,10 +68,10 @@ export default function Login() {
   return (
     <div className="login-wrapper">
       {/* Video nền động */}
-      {/* <video autoPlay muted loop id="bg-video">
+      <video autoPlay muted loop id="bg-video">
         <source src={vidBeach} type="video/mp4" />
         Trình duyệt của bạn không hỗ trợ video.
-      </video> */}
+      </video>
 
       {/* Overlay tối nhẹ trên video */}
       <div className="video-overlay"></div>
