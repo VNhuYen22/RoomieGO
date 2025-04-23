@@ -7,7 +7,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("FEMALE");
+  const [gender, setGender] = useState("Nữ");
   const [dob, setDob] = useState("");
   const [bio, setBio] = useState("");
   const [role, setRole] = useState("OWNER");
@@ -61,7 +61,7 @@ export default function Register() {
       setPassword("");
       setFullName("");
       setPhone("");
-      setGender("FEMALE");
+      setGender("Nữ");
       setDob("");
       setBio("");
       setRole("OWNER");
@@ -159,8 +159,8 @@ export default function Register() {
                   onChange={(e) => setGender(e.target.value)} 
                   required
                 >
-                  <option value="FEMALE">FEMALE</option>
-                  <option value="MALE">MALE</option>
+                  <option value="Nữ">Nữ</option>
+                  <option value="Nam">Nam</option>
                 </select>
               </div>
               <div className="form-group">
