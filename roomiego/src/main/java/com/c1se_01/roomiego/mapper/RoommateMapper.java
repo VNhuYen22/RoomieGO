@@ -23,9 +23,12 @@ public interface RoommateMapper {
     @ObjectFactory
     default Roommate createRoommate(RoommateDTO dto, @Context User user) {
         Roommate roommate = new Roommate();
-        roommate.setGender(dto.getGender());
-        roommate.setYob(dto.getYob());
+        roommate.setGender(String.valueOf(user.getGender()));
         roommate.setHometown(dto.getHometown());
+        roommate.setCity(dto.getCity());
+        roommate.setDistrict(dto.getDistrict());
+        roommate.setRateImage(dto.getRateImage());
+        roommate.setYob(dto.getYob());
         roommate.setJob(dto.getJob());
         roommate.setHobbies(dto.getHobbies());
         roommate.setMore(dto.getMore());

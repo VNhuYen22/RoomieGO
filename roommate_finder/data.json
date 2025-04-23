@@ -1,132 +1,32 @@
 [
   {
-    "gender": "Nam",
-    "yob": 2005,
+    "gender": "Nữ",
     "hometown": "Bình Định",
-    "hobbies": "Nuôi thú cưng",
-    "more": "Ngăn nắp, sạch sẽ",
-    "userId": 5
-  },
-  {
-    "gender": "Nam",
+    "city": "Đà Nẵng",
+    "district": "Sơn Trà",
+    "rateImage": 1,
     "yob": 2005,
-    "hometown": "Bình Định",
+    "job": "Công nhân",
     "hobbies": "Nuôi thú cưng",
-    "more": "Ngăn nắp, sạch sẽ",
-    "userId": 3
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "aaa",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "aaa",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "aaa",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "aaa",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "aaa",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "aaa",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "ádasd",
-    "userId": 2
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "ádasd",
-    "userId": 2
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "smoke",
-    "more": "aaaaaa",
-    "userId": 5
-  },
-  {
-    "gender": "Nam",
-    "yob": 2003,
-    "hometown": "Huế",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "ádasdas",
-    "userId": 7
-  },
-  {
-    "gender": "Nam",
-    "yob": 1997,
-    "hometown": "Bình ĐỊnh",
-    "job": "Sinh Viên",
-    "hobbies": "pets",
-    "more": "ádasdasd",
-    "userId": 5
-  },
-  {
-    "gender": "Nam",
-    "yob": 2002,
-    "hometown": "Quảng Ngãi",
-    "job": "công nhân",
-    "hobbies": "pets",
-    "more": "ádasda",
-    "userId": 5
+    "more": "Nấu ăn",
+    "userId": 13
   },
   {
     "gender": "Nữ",
-    "yob": 2003,
     "hometown": "Quảng Nam",
+    "city": "Đà Nẵng",
+    "district": "Cẩm Lệ",
+    "rateImage": 3,
+    "yob": 2000,
+    "job": "công nhân",
+    "hobbies": "Nuôi thú cưng, Ăn Chay",
+    "more": "",
+    "userId": 14
+  },
+  {
+    "yob": 2000,
+    "hometown": "Quảng Nam",
+<<<<<<< HEAD
     "job": "văn phòng",
     "hobbies": "pets",
     "more": "ádasd",
@@ -344,9 +244,17 @@
     "yob": 2003,
     "hometown": "Quảng Nam",
     "job": "Sinh Viên",
+=======
+    "job": "công nhân",
+>>>>>>> 0a0800d2d836ec617c8a462c9030807e11b61241
     "hobbies": [
-      "Nuôi thú cưng"
+      "Nuôi thú cưng",
+      "Ăn Chay"
     ],
+<<<<<<< HEAD
     "more": "Ngủ sớm"
+=======
+    "more": ""
+>>>>>>> 0a0800d2d836ec617c8a462c9030807e11b61241
   }
 ]

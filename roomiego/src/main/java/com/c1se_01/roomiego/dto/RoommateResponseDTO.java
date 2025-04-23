@@ -9,8 +9,11 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoommateResponseDTO {
     private String gender;
-    private Integer yob;
     private String hometown;
+    private String city;
+    private String district;
+    private Integer rateImage;
+    private Integer yob;
     private String job;
     private String hobbies;
     private String more;
