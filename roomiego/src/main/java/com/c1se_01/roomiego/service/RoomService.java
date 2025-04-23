@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoomService {
-    RoomDTO createRoom(RoomDTO roomDTO);
+    RoomDTO createRoom(RoomDTO roomDTO, Long ownerId);
+    RoomDTO updateRoom(Long id, RoomDTO roomDTO, Long ownerId);
 
     List<RoomDTO> getAllRooms();
-
+    List<RoomDTO> getRoomsByOwner(Long ownerId);
     RoomDTO getRoomById(Long id);
-
-    RoomDTO updateRoom(Long id, RoomDTO roomDTO);
-
     void deleteRoom(Long id);
 }

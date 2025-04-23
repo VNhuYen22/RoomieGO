@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import chatbox from "../assets/chatbox.png"
 import "../styles/Navbar.css";
 import user from "../assets/user.png";
+
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
