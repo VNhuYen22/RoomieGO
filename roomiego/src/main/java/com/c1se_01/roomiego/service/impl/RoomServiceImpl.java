@@ -91,6 +91,16 @@ public class RoomServiceImpl implements RoomService {
 
         roomRepository.delete(room);
     }
+
+    @Override
+    public void hideRoom(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        room.setIsRoomAvailable(false);
+        roomRepository.save(room);
+    }
+
     @Override
     public List<RoomDTO> getRoomsByOwner(Long ownerId) {
         List<Room> rooms = roomRepository.findByOwnerId(ownerId);
