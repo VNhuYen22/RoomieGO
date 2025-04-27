@@ -1,5 +1,6 @@
 package com.c1se_01.roomiego.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,6 +66,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
+    @JsonBackReference
     private User owner;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
