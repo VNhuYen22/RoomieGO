@@ -3,6 +3,7 @@ package com.c1se_01.roomiego.model;
 import com.c1se_01.roomiego.enums.Gender;
 import com.c1se_01.roomiego.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -66,6 +67,7 @@ public class User implements UserDetails {
     private Date createdAt = new Date();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Room> rooms;
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL)

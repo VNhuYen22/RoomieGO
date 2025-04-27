@@ -13,4 +13,6 @@ public interface RoomService {
     List<RoomDTO> getRoomsByOwner(Long ownerId);
     RoomDTO getRoomById(Long id);
     void deleteRoom(Long id);
+
+    void hideRoom(Long roomId);
 }
