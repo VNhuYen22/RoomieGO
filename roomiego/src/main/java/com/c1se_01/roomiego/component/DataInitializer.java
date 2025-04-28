@@ -1,4 +1,4 @@
-package com.c1se_01.roomiego.Component;
+package com.c1se_01.roomiego.component;
 
 import com.c1se_01.roomiego.model.Marker;
 import com.c1se_01.roomiego.repository.MarkerRepository;
