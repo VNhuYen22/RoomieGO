@@ -42,7 +42,7 @@ public class RoomateController {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonContent = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(roommates);
 
-        String filePath = "E:/RoomieGO/roommate_finder/data.json";
+        String filePath = "D:/RoomieGO/roommate_finder/data.json";
         File file = new File(filePath);
         file.getParentFile().mkdirs();
         if (file.exists()) {

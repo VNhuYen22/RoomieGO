@@ -1,5 +1,7 @@
+/* Dashboard layout */
 .Dashboard-container {
-    display: flex;
-    height: 100vh;
-    background: #f7f9fa;
-  }
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: #f7f9fa;
+}

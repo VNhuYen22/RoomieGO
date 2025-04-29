@@ -37,6 +37,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/owner/**", "/api/rooms/**").hasAnyAuthority("OWNER")
                         .requestMatchers("/renter/**", "/api/roommates/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/renterowner/**").hasAnyAuthority("OWNER", "RENTER")
+                        .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

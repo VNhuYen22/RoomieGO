@@ -67,12 +67,12 @@ const RoommateForm = () => {
       };
   
       console.log('Payload being sent:', dataToSend);
-  
+      const token = localStorage.getItem("authToken");
       const createResponse = await fetch('http://localhost:8080/api/roommates', {
         method: 'POST',
         headers: { 
-          'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5ZW5xdWFvMjJAZ21haWwuY29tIiwiaWF0IjoxNzQ1MjU0MDA3LCJleHAiOjE3NDUzNDA0MDd9.MoZJDkEiHbqUooPmSbcZjsExptpZL0eQVIzcVMV0y86-aVs5VjTu3oK_H2wFStoZRSVNvnTUmcHGCVF3RAM-iw`,
-          'Content-Type': 'application/json' 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(dataToSend),
       });
@@ -88,8 +88,8 @@ const RoommateForm = () => {
       const exportResponse = await fetch('http://localhost:8080/api/roommates/export-to-file', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5ZW5xdWFvMjJAZ21haWwuY29tIiwiaWF0IjoxNzQ1MjU0MDA3LCJleHAiOjE3NDUzNDA0MDd9.MoZJDkEiHbqUooPmSbcZjsExptpZL0eQVIzcVMV0y86-aVs5VjTu3oK_H2wFStoZRSVNvnTUmcHGCVF3RAM-iw`, // Thêm header Authorization với token
-          'Content-Type': 'application/json', // Thêm Content-Type nếu cần thiết
+         "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
   
@@ -272,16 +272,6 @@ const RoommateForm = () => {
           value={formData.more}
           onChange={handleChange}
         />
-        <label>User ID:</label>
-        <input
-          type="number"
-          name="userId"
-          value={formData.userId}
-          onChange={handleChange}
-          required
-        />
-
-
         <button type="submit">Tìm người phù hợp</button>
       </form>
 
