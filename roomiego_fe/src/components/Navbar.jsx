@@ -60,6 +60,8 @@ function Navbar() {
       </div>
       <div className="leftside">
         <Link to="/home">Home</Link>
+        <Link to="/roommates">Roommates</Link>
+        <Link to="/dashboard">Dashboard</Link>
         <Link to="/about">About</Link>
         <Link to="/room">Rooms</Link>
       </div>

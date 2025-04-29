@@ -56,14 +56,19 @@ const EditForm = ({ hotel, onClose, onUpdate }) => {
         <h2>Edit Room Information</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-section">
-            {[{ label: "Title", name: "title" },
+            {[ 
+              { label: "Title", name: "title" },
               { label: "Location", name: "location" },
-              { label: "Address", name: "address" },
+              { label: "Address Details", name: "addressDetails" },
               { label: "Price", name: "price" },
               { label: "Room Size", name: "roomSize" },
               { label: "Number Of Bedrooms", name: "numBedrooms" },
               { label: "Number Of Bathrooms", name: "numBathrooms" },
-              { label: "Check-in Date", name: "checkInDate", type: "date" },
+              { label: "Available From", name: "availableFrom", type: "date" },
+              { label: "City", name: "city" },
+              { label: "District", name: "district" },
+              { label: "Ward", name: "ward" },
+              { label: "Street", name: "street" },
             ].map(({ label, name, type = "text" }) => (
               <div className="form-field" key={name}>
                 <label>{label}</label>
@@ -76,7 +81,7 @@ const EditForm = ({ hotel, onClose, onUpdate }) => {
                 />
               </div>
             ))}
-
+            
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
               <label>Description</label>
               <textarea
@@ -84,6 +89,21 @@ const EditForm = ({ hotel, onClose, onUpdate }) => {
                 placeholder="Description"
                 value={formData.description || ""}
                 onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-field" style={{ gridColumn: "1 / -1" }}>
+              <label>Room Availability</label>
+              <input
+                type="checkbox"
+                name="isRoomAvailable"
+                checked={formData.isRoomAvailable}
+                onChange={() =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    isRoomAvailable: !prev.isRoomAvailable,
+                  }))
+                }
               />
             </div>
           </div>

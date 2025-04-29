@@ -8881,6 +8881,7 @@ rollup@^4.20.0:
   version "0.1.0"
   resolved "file:"
   dependencies:
+    "@fortawesome/fontawesome-svg-core" "^6.7.2"
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
     "@fortawesome/react-fontawesome" "^0.2.2"
     "@react-google-maps/api" "^2.20.6"
