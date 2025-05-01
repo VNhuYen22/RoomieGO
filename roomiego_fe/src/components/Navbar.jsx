@@ -1,41 +1,37 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios"; // Import Axios
 import Logo from "../assets/beach.jpg";
 import { Link } from "react-router-dom";
-import chatbox from "../assets/chatbox.png"
+import chatbox from "../assets/chatbox.png";
 import "../styles/Navbar.css";
 import user from "../assets/user.png";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [fullName, setFullName] = useState(""); // State để lưu tên người dùng
+  const location = useLocation();
 
   // Hàm lấy thông tin người dùng
   const fetchUserProfile = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:8080/owner/get-all-users", {
-        method: "GET",
+      const response = await axios.get("http://localhost:8080/renterowner/get-profile", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch user profile");
-      }
-
-      const data = await response.json();
-      
-      const { fullName } = data; // Lấy fullName từ phản hồi
-      console.log("Full Name:", fullName); // In ra fullName để kiểm tra
       // Lấy fullName từ phản hồi và cập nhật state
+      const { user} = response.data;
+      const { fullName } = user;
+      console.log("Full Name:", fullName); // Kiểm tra fullName trong console
+      setFullName(fullName); // Cập nhật tên người dùng
       setIsLoggedIn(true);
-      
-      
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
@@ -43,15 +39,21 @@ function Navbar() {
 
   // Hàm xử lý đăng xuất
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setFullName("");
     window.location.reload(); // Reload trang để cập nhật giao diện
   };
 
+  // Gọi API lấy thông tin người dùng khi component được mount
   useEffect(() => {
-    fetchUserProfile(); // Gọi API khi component được mount
+    fetchUserProfile();
   }, []);
+
+  // Ẩn Navbar trên các trang Login và Register
+  if (location.pathname === "/Login" || location.pathname === "/Register") {
+    return null;
+  }
 
   return (
     <div className="navbar">
