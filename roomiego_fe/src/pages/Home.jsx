@@ -43,7 +43,7 @@ export default function App() {
           <span className="highlight">social</span>, in just a few taps!
         </h1>
         <p>Join Linkups to explore and hang out with travellers.</p>
-        <button className="home-arrow"><img src={Arrow} alt="" className="home-arrow_icon" />Find your room</button>
+        <button className="home-arrow">Find your room</button>
       </div>
     </div>
   );

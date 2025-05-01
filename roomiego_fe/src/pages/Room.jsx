@@ -112,7 +112,7 @@ function Room() {
       ) : (
         // Hiển thị danh sách các phòng
         rooms.map((room) => (
-          <Link to="/ResultRoom" className="card-link" key={room.id}>
+          <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
             <div className="card">
               <div className="card-header">
                 {/* Hiển thị ảnh đầu tiên trong mảng imageUrls */}
@@ -133,7 +133,7 @@ function Room() {
               </div>
 
               <div className="card-body">
-                <h2>${room.price} / mo</h2>
+                <h2>${room.price} / month</h2>
                 <p>{room.description}</p>
                 <p>{room.roomSize} m²</p>
                 <p>{room.location}</p>

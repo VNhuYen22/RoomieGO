@@ -7,21 +7,43 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("Nữ");
+  const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
   const [bio, setBio] = useState("");
-  const [role, setRole] = useState("OWNER");
+  const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định của form
-
+    const phoneRegex = /^[0-9]{10,}$/; // Số điện thoại phải có ít nhất 10 chữ số
+    if (!phoneRegex.test(phone)) {
+      setError("Số điện thoại không hợp lệ. Vui lòng nhập ít nhất 10 chữ số.");
+      return;
+    }
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex kiểm tra email
+    if (!emailRegex.test(email)) {
+      setError("Email không hợp lệ. Vui lòng nhập đúng định dạng.");
+      return;
+    }
     // Kiểm tra dữ liệu đầu vào
     if (password.length < 6 || email.trim() === "") {
       setError("Vui lòng nhập đầy đủ thông tin và mật khẩu phải có ít nhất 6 ký tự.");
       return;
     }
+      // Kiểm tra ngày sinh (đủ 18 tuổi)
+  const today = new Date();
+  const birthDate = new Date(dob);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  if (age < 18) {
+    setError("Bạn phải đủ 18 tuổi để đăng ký.");
+    return;
+  }
 
     try {
       // Tạo payload dữ liệu
@@ -61,10 +83,10 @@ export default function Register() {
       setPassword("");
       setFullName("");
       setPhone("");
-      setGender("Nữ");
+      setGender("");
       setDob("");
       setBio("");
-      setRole("OWNER");
+      setRole("");
     } catch (err) {
       // Xử lý lỗi
       console.error("Lỗi khi đăng ký:", err);
@@ -127,6 +149,14 @@ export default function Register() {
                   value={role} 
                   onChange={(e) => setRole(e.target.value)} 
                   required
+                  style={{
+                    color: "#000",
+                    backgroundColor: "#fff",
+                    border: "1px solid #ccc",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    fontSize: "14px",
+                  }}
                 >
                   <option className="option-role" value="OWNER">OWNER</option>
                   <option className="option-role" value="RENTER">RENTER</option>
@@ -145,10 +175,13 @@ export default function Register() {
               <div className="form-group">
                 <label>Số điện thoại</label>
                 <input 
-                  type="text" 
+                  type="text"
+                  maxLength="10" // Giới hạn độ dài tối đa là 10 ký tự 
                   placeholder="Phone Number" 
                   value={phone} 
                   onChange={(e) => setPhone(e.target.value)} 
+                  pattern="[0-9]*" // Chỉ cho phép nhập số
+                  title="Số điện thoại chỉ được chứa các chữ số."
                   required 
                 />
               </div>
@@ -158,6 +191,14 @@ export default function Register() {
                   value={gender} 
                   onChange={(e) => setGender(e.target.value)} 
                   required
+                  style={{
+                    color: "#000",
+                    backgroundColor: "#fff",
+                    border: "1px solid #ccc",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    fontSize: "14px",
+                  }}
                 >
                   <option value="Nữ">Nữ</option>
                   <option value="Nam">Nam</option>
@@ -179,6 +220,14 @@ export default function Register() {
                   value={bio} 
                   onChange={(e) => setBio(e.target.value)} 
                   required 
+                  style={{
+                    color: "#000",
+                    backgroundColor: "#fff",
+                    border: "1px solid #ccc",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    fontSize: "14px",
+                  }}
                 />
               </div>
               <button type="submit" className="login-btn">Đăng ký</button>

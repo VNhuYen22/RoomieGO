@@ -22,7 +22,8 @@ import InvoiceForm from "./components/Invoices/InvoiceForm";
 import RoommateForm from "./components/RoommateForm/RoommateForm";
 import MatchDetails from "./components/RoommateForm/MatchDetails ";
 import Register from "./pages/Register";
-
+import Request from "./components/Dashboard/Request";
+import DashBoard from "./pages/DashBoard";
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
@@ -70,7 +71,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/room" element={<Room />} />
-        <Route path="/ResultRoom" element={<ResultRoom />} />
+        <Route path="/ResultRoom/:id" element={<ResultRoom />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>}/>
         <Route path="/chatbox" element={<Chatbox />} />
@@ -81,8 +82,11 @@ const App = () => {
         <Route path="/roommates" element={<RoommateForm />} />
         <Route path="/match" element={<MatchDetails />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard/*" element={<DashBoard />} />
+       
         {/* Add other routes here */}
       </Routes>
+       
 
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
       <Toaster />
