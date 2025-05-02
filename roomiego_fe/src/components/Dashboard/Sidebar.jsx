@@ -1,15 +1,27 @@
 import React from "react";
 import "./css/Sidebar.css";
 
-const Sidebar = () => (
+const menuItems = [
+  { label: "Bookings", key: "bookings" },
+  { label: "Requests", key: "requests" },
+  { label: "Report", key: "report" },
+  { label: "Invoices", key: "invoices" },
+  { label: "Setting", key: "setting" },
+];
+
+const Sidebar = ({ active, onChange }) => (
   <div className="sidebar1">
     <div className="logo"><br />Logo</div>
     <ul>
-      <li className="active">Bookings</li>
-      <li>Requests</li>
-      <li>Message</li>
-      <li>Help</li>
-      <li>Setting</li>
+      {menuItems.map(item => (
+        <li
+          key={item.key}
+          className={active === item.key ? "active" : ""}
+          onClick={() => onChange(item.key)}
+        >
+          {item.label}
+        </li>
+      ))}
     </ul>
   </div>
 );

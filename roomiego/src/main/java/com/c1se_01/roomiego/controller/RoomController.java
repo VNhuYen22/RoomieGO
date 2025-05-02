@@ -136,4 +136,15 @@ public class RoomController {
 
         return ResponseEntity.ok(new ApiResponse<>(200, "Danh sách phòng của owner", rooms));
     }
+<<<<<<< HEAD
 }
+=======
+
+    @PostMapping("/{roomId}/hide")
+    public String hideRoom(@PathVariable Long roomId) {
+        roomService.hideRoom(roomId);
+        return "Room hidden successfully";
+    }
+
+}
+>>>>>>> c2adabf4fd881f9843c10124b31301f05f841486

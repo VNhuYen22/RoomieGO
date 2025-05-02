@@ -1,0 +1,42 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .modal2 {
+    background: #fff;
+    padding: 32px;
+    border-radius: 8px;
+    min-width: 360px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ddd;
+    z-index: 10000; /* Thêm z-index nếu cần */
+    color: black;
+  }
+  
+  .danger {
+    background: #e53935;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #1976d2;
+    color: #fff;
+  }
+  button:hover {
+    opacity: 0.9;
+  }
+  

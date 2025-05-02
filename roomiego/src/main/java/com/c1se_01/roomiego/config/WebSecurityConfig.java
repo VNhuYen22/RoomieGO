@@ -33,11 +33,18 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
+<<<<<<< HEAD
                         .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file").permitAll() // ✅ Cho phép API này truy cập công khai
                         .requestMatchers("/owner/**", "/api/rooms/**").hasAnyAuthority("OWNER")
                         .requestMatchers("/renter/**", "/api/roommates/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/renterowner/**").hasAnyAuthority("OWNER", "RENTER")
                         .requestMatchers("/images/**").permitAll()
+=======
+                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file", "/ws/**").permitAll() // ✅ Cho phép API này truy cập công khai
+                        .requestMatchers("/owner/**", "/api/rooms/**", "/api/contracts").hasAnyAuthority("OWNER")
+                        .requestMatchers("/renter/**", "/api/roommates/**", "/api/rent-requests/**", "/api/contracts/**").hasAnyAuthority("RENTER")
+                        .requestMatchers("/renterowner/**", "/api/reports/**").hasAnyAuthority("OWNER", "RENTER", "ADMIN")
+>>>>>>> c2adabf4fd881f9843c10124b31301f05f841486
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

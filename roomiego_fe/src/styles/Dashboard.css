@@ -1,7 +1,9 @@
-/* Dashboard layout */
 .Dashboard-container {
   display: flex;
-  min-height: 100vh;
-  width: 100%;
-  background: #f7f9fa;
+  height: 100vh;
+  background: #f7f7f7;
+}
+.main-content {
+  flex: 1;
+  padding: 32px;
 }
