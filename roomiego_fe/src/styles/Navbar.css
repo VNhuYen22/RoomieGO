@@ -8,6 +8,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     top: 0;
     z-index: 1000;
+    margin-bottom: 4vh;
   }
   .dropdown-toggle {
       background: none;
@@ -100,21 +101,26 @@
     background-color: #f9f9f9;
     color: #007bff;
   }
-  .username {
-    margin-right: 15px;
-    font-weight: bold;
-    color: #007bff;
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
   
-  .logout-btn {
-    background: #ff6b6b;
+  .username {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .logout-button {
+    background-color: #007bff;
     color: #fff;
     border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 0.4rem;
+    padding: 0.5rem 1rem;
     cursor: pointer;
   }
   
-  .logout-btn:hover {
-    background: #e63946;
+  .logout-button:hover {
+    background-color: #0056b3;
   }

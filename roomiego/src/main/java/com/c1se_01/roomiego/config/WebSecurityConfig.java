@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +39,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/owner/**", "/api/rooms/**", "/api/contracts").hasAnyAuthority("OWNER")
                         .requestMatchers("/renter/**", "/api/roommates/**", "/api/rent-requests/**", "/api/contracts/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/renterowner/**", "/api/reports/**").hasAnyAuthority("OWNER", "RENTER", "ADMIN")
+                        .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -62,6 +65,11 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
-
+    @Bean
+    public HttpFirewall allowUrlDoubleSlashFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedDoubleSlash(true); // Allow double slashes
+        return firewall;
+    }
 
 }

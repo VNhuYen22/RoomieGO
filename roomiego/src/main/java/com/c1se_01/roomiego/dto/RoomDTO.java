@@ -32,4 +32,5 @@ public class RoomDTO {
     private String addressDetails;
     private List<String> imageUrls;
 
+
 }
