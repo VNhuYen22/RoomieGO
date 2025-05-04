@@ -1,34 +1,28 @@
-import React, { useState } from "react";
+// Dashboard.jsx
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "../components/Dashboard/Sidebar";
 import BookingsPage from "../components/Dashboard/BookingsPage";
-import "../styles/Dashboard.css";
+import Request from "../components/Dashboard/Request";
 import ReportPage from "../components/Dashboard/ReportPage";
 import Storage from "../components/Invoices/Storage";
+// import SettingPage from "../components/Dashboard/Setting"; // nếu có
+import "../styles/Dashboard.css";
 
 function Dashboard() {
-  const [activePage, setActivePage] = useState("bookings");
-
-  const renderPage = () => {
-    switch (activePage) {
-      case "bookings":
-        return <BookingsPage />;
-      // case "requests":
-      //   return <RequestsPage />;
-      case "report":
-        return <ReportPage />;
-       case "invoices":
-         return <Storage />;
-      // case "setting":
-      //   return <SettingPage />;
-      default:
-        return <BookingsPage />;
-    }
-  };
-
   return (
     <div className="Dashboard-container">
-      <Sidebar active={activePage} onChange={setActivePage} />
-      {renderPage()}
+      <Sidebar />
+      <div style={{ flex: 1 }}>
+        <Routes>
+          <Route path="bookings" element={<BookingsPage />} />
+          <Route path="requests" element={<Request />} />
+          <Route path="report" element={<ReportPage />} />
+          <Route path="invoices" element={<Storage />} />
+          {/* <Route path="setting" element={<SettingPage />} /> */}
+          <Route path="*" element={<Navigate to="bookings" replace />} />
+        </Routes>
+      </div>
     </div>
   );
 }
