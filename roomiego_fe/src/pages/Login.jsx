@@ -2,6 +2,7 @@ import { useState } from "react";
 import '../styles/Login.css';
 import vidBeach from "../assets/beach.mp4";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -9,7 +10,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
-
+  const navigate = useNavigate(); 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,7 +32,7 @@ export default function Login() {
         },
         body: JSON.stringify(data),
       });
-     // nho them token vao localStorage
+     
         // Kiểm tra nếu phản hồi không thành công
     if (!response.ok) {
       const errorData = await response.json();
@@ -147,9 +148,9 @@ export default function Login() {
                   <button type="submit" className="login-btn">Đăng nhập</button>
                 </form>
                 <div className="create-account">
-                  <button onClick={() => alert("Redirect to signup page")}>
-                    Đăng ký tài khoản
-                  </button>
+                <button onClick={() => navigate("/Register")}> {/* Chuyển hướng đến /Register */}
+                  Đăng ký tài khoản
+                </button>
                 </div>
               </>
             )}

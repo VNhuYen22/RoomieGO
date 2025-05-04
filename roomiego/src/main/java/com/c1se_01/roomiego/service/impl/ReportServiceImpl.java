@@ -56,12 +56,20 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ResponseData getReports(Boolean isHandled, Pageable pageable) {
-        Page<Report> entities = reportRepository.findAllByIsHandled(isHandled, pageable)
-                .orElseThrow(() -> new RuntimeException("Report not found"));
+        Page<Report> entities;
+
+        if (isHandled == null) {
+            entities = reportRepository.findAll(pageable); // không lọc gì
+        } else {
+            entities = reportRepository.findAllByIsHandled(isHandled, pageable)
+                    .orElseThrow(() -> new RuntimeException("Report not found"));
+        }
+
         List<Report> reports = entities.getContent();
         List<ReportResponse> reportResponses = reportMapper.toDto(reports);
         Page<ReportResponse> page = new PageImpl<>(reportResponses, pageable, entities.getTotalElements());
         PageCustom<ReportResponse> pageCustom = this.convertToCustom(page);
+
         return new ResponseData(
                 Boolean.TRUE,
                 "Success",

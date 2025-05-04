@@ -7,7 +7,14 @@ const BookingCard = ({ initialHotel, onEditClick, onDeleteClick }) => {
   return (
     <div className="booking-card">
       <div className="booking-image">
-        <img src={hotelInfo.imageUrls[0]} alt={hotelInfo.title} />
+        <img
+            src={
+              hotelInfo.imageUrls?.length
+                ? `http://localhost:8080/images/${hotelInfo.imageUrls[0]}`
+                : "/default-room.jpg"
+            }
+            alt={hotelInfo.title}
+          />
         <div className="price-tag">${hotelInfo.price} per month</div>
       </div>
       <div className="booking-info">
