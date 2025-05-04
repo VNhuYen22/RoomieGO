@@ -49,11 +49,11 @@ const App = () => {
   const showNavbarchatbox = ["/chatbox", "/settings"].includes(location.pathname);
 
   // Define routes where Footer should not be visible
-  const hideFooter = ["/maps","/test1","/dashboard"].includes(location.pathname);
+  const hideFooter = ["/maps","/test1","/dashboard","/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests"].includes(location.pathname);
 
   // Define routes where SearchBar should not be visible
-  const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match","/dashboard"].includes(location.pathname);
-  const hideNavbarAndNavbarchatbox = location.pathname === "/dashboard";
+  const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match","/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests" ].includes(location.pathname);
+  const hideNavbarAndNavbarchatbox =["/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests"].includes(location.pathname);
 
   return (
     <div data-theme={theme}>
@@ -72,7 +72,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/room" element={<Room />} />
-        <Route path="/ResultRoom" element={<ResultRoom />} />
+        <Route path="/ResultRoom/:id" element={<ResultRoom />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>}/>
         <Route path="/chatbox" element={<Chatbox />} />
@@ -84,8 +84,11 @@ const App = () => {
         <Route path="/match" element={<MatchDetails />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/q" element={<ReportPage />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+
         {/* Add other routes here */}
       </Routes>
+       
 
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
       <Toaster />

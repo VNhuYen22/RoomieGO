@@ -1,4 +1,6 @@
+// Sidebar.jsx
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./css/Sidebar.css";
 
 const menuItems = [
@@ -9,21 +11,27 @@ const menuItems = [
   { label: "Setting", key: "setting" },
 ];
 
-const Sidebar = ({ active, onChange }) => (
-  <div className="sidebar1">
-    <div className="logo"><br />Logo</div>
-    <ul>
-      {menuItems.map(item => (
-        <li
-          key={item.key}
-          className={active === item.key ? "active" : ""}
-          onClick={() => onChange(item.key)}
-        >
-          {item.label}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const current = location.pathname.split("/").pop(); // Lấy phần sau cùng của path
+
+  return (
+    <div className="sidebar1">
+      <div className="logo"><br />Logo</div>
+      <ul>
+        {menuItems.map(item => (
+          <li
+            key={item.key}
+            className={current === item.key ? "active" : ""}
+            onClick={() => navigate(`/dashboard/${item.key}`)}
+          >
+            {item.label}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 export default Sidebar;

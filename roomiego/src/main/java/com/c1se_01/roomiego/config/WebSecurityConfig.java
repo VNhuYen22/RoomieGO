@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
@@ -33,18 +35,11 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-<<<<<<< HEAD
-                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file").permitAll() // ✅ Cho phép API này truy cập công khai
-                        .requestMatchers("/owner/**", "/api/rooms/**").hasAnyAuthority("OWNER")
-                        .requestMatchers("/renter/**", "/api/roommates/**").hasAnyAuthority("RENTER")
-                        .requestMatchers("/renterowner/**").hasAnyAuthority("OWNER", "RENTER")
-                        .requestMatchers("/images/**").permitAll()
-=======
                         .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file", "/ws/**").permitAll() // ✅ Cho phép API này truy cập công khai
                         .requestMatchers("/owner/**", "/api/rooms/**", "/api/contracts").hasAnyAuthority("OWNER")
                         .requestMatchers("/renter/**", "/api/roommates/**", "/api/rent-requests/**", "/api/contracts/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/renterowner/**", "/api/reports/**").hasAnyAuthority("OWNER", "RENTER", "ADMIN")
->>>>>>> c2adabf4fd881f9843c10124b31301f05f841486
+                        .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -70,6 +65,11 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
-
+    @Bean
+    public HttpFirewall allowUrlDoubleSlashFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedDoubleSlash(true); // Allow double slashes
+        return firewall;
+    }
 
 }

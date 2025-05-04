@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import "../styles/SearchBar.css";
 import User from "../assets/user.png";
 import Find from "../assets/find.png";
+import { useLocation } from "react-router-dom";
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const location = useLocation();
   const handleSearch = () => {
     alert(`Tìm kiếm: ${searchQuery}`);
   };
-
+  if (location.pathname === "/Login" || location.pathname === "/Register" || location.pathname === "/dashboard/*") {
+    return null;
+  }
   return (
     <div className="search-bar">
         <img src={Find} alt="Find Icon" className="find-icon" />

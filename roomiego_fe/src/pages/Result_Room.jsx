@@ -1,121 +1,146 @@
-import React from 'react'
-import '../styles/Result_Room.css'
-import { Link } from "react-router-dom";
-import room1 from "../assets/room1.jpeg";
-import room2 from "../assets/room2.jpeg";
-import room3 from "../assets/room3.jpeg";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import "../styles/Result_Room.css";
+import { axiosInstance } from "../lib/axios";
 
-function Result_Room  () {
+function Result_Room() {
+  const { id } = useParams(); // Lấy id từ URL
+
+  // ✅ Tất cả useState đặt ngay đầu function
+  const [room, setRoom] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+
+  useEffect(() => {
+    const fetchRoomDetails = async () => {
+      try {
+        const response = await axiosInstance.get(`http://localhost:8080/api/rooms/${id}`);
+        const roomData = response.data.data;
+        if (roomData && roomData.price != null) {
+          setRoom(roomData);
+        } else {
+          setError("Dữ liệu phòng không hợp lệ.");
+        }
+      } catch (err) {
+        console.error("Error fetching room details:", err.message);
+        setError("Failed to fetch room details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchRoomDetails();
+  }, [id]);
+
+  const handleReportSubmit = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      alert("Bạn cần đăng nhập để gửi báo cáo.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://localhost:8080/api/reports", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          roomId: room.id,
+          reason: reportReason,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      alert("Đã gửi báo cáo thành công.");
+      setShowReportForm(false);
+      setReportReason("");
+    } catch (error) {
+      alert("Gửi báo cáo thất bại.");
+      console.error("Error submitting report:", error);
+    }
+  };  
+
+  // ✅ Kiểm tra dữ liệu để tránh lỗi null
+  if (loading) return <p>Loading room details...</p>;
+  if (error) return <p>{error}</p>;
+  if (!room) return <p>Không tìm thấy phòng.</p>;
+
+  // Xử lý URL ảnh
+  const baseURL = "http://localhost:8080/images/";
+  const mainImageUrl =
+    room.imageUrls?.length > 0
+      ? baseURL + room.imageUrls[0]
+      : "/default-room.jpg"; // Sử dụng ảnh mặc định nếu không có ảnh
+
+  const sideImageUrls = room.imageUrls?.slice(1).map((url) => baseURL + url);
+
   return (
-    <div className='result-room'>
-      
-       <div className="breadcrumb">
-       <Link to="/Room">Room</Link> / <span>Room Details</span>
-        <img src="" alt="" className='logo' />
+    <div className="result-room">
+      <div className="breadcrumb">
+        <Link to="/Room">Room</Link> / <span>Room Details</span>
       </div>
 
-      {/* Title */}
-      <h1 className="hotel-title">Blue Origin Fams</h1>
-      <p className="hotel-location">Galle, Sri Lanka</p>
+      <h1 className="hotel-title">{room.title}</h1>
+      <p className="hotel-location">{room.addressDetails}</p>
 
-      {/* Image Gallery */}
       <div className="image-gallery">
         <div className="main-image">
-          <img src={room3} alt="Main Room" />
+          <img src={mainImageUrl} alt="Main Room" />
         </div>
         <div className="side-images">
-          <img src={room1} alt="Room 1" />
-          <img src={room2} alt="Room 2" />
+          {sideImageUrls?.map((url, index) => (
+            <img key={index} src={url} alt={`Room ${index + 1}`} />
+          ))}
         </div>
       </div>
+
       <div className="detail-room">
-        <div className='detail_about-place'>
-            <h2>About this place</h2>
-            <p>
-                Blue Origin Fams is a beautiful hotel located in the heart of Galle.
-                The hotel offers a variety of rooms and suites to suit your needs.
-                The hotel is located close to the beach and offers stunning views of the ocean.
-                The hotel also has a restaurant and bar where you can enjoy delicious meals and drinks.
-            </p>
-        </div>
-        <div className="detail_price-booking">
-            <h4>Start Booking</h4>
-            <span>$200 per Day</span>
-                <button>Book Now!</button>
-        </div>
-      </div>
-        {/* Contact Information */}
-      <div className="contact-information">
-        <div className="contact-avatar">
-            <h3>Contact Information</h3>
-          <img src={room1} alt="Landlord" />
-          <span>Landlord's name</span>
-        </div>
-        <div className="contact-details">
-          <div className="contact-buttons">
-            <button className='contact-info_phone'>Phone Number</button>
-            <button className='contact-info_phone'>Facebook</button>
+        <div className="detail_about-place">
+          <h2>About this place</h2>
+          <p>{room.description}</p>
+          <div className="room-details">
+            <span><strong>Room Size:</strong> {room.roomSize} m²</span>
+            <span><strong>Bedrooms:</strong> {room.numBedrooms}</span>
+            <span><strong>Bathrooms:</strong> {room.numBathrooms}</span>
           </div>
-          <span className="posting-date">Date of posting:</span>
-        </div>
-      </div>
-    {/* review section  */}
-      <div className="reviews-section">
-        <h2>Treasure to Choose</h2>
-        <div className="rating-summary">
-          <div className="rating-overview">
-            <h3>4 out of 5</h3>
-            <div className="stars">
-              ★★★★☆
-            </div>
-            <p>Top Rating</p>
-          </div>
-          <div className="rating-breakdown">
-            <div className="rating-bar">
-              <span>5 Stars</span>
-              <div className="bar"><div className="fill" style={{ width: "80%" }}></div></div>
-            </div>
-            <div className="rating-bar">
-              <span>4 Stars</span>
-              <div className="bar"><div className="fill" style={{ width: "60%" }}></div></div>
-            </div>
-            <div className="rating-bar">
-              <span>3 Stars</span>
-              <div className="bar"><div className="fill" style={{ width: "40%" }}></div></div>
-            </div>
-            <div className="rating-bar">
-              <span>2 Stars</span>
-              <div className="bar"><div className="fill" style={{ width: "20%" }}></div></div>
-            </div>
-            <div className="rating-bar">
-              <span>1 Star</span>
-              <div className="bar"><div className="fill" style={{ width: "10%" }}></div></div>
-            </div>
-          </div>
+          <p><strong>Available From:</strong> {new Date(room.availableFrom).toLocaleDateString()}</p>
+          <p><strong>Is Available:</strong> {room.isRoomAvailable ? "Yes" : "No"}</p>
         </div>
 
-        {/* Individual Reviews */}
-        <div className="review">
-          <img src={room1} alt="Reviewer" />
-          <div className="review-content">
-            <h4>Lina</h4>
-            <div className="stars">★★★★★</div>
-            <p>Class, launched less than a year ago by Blackboard co-founder Michael Chasen, integrates exclusively...</p>
-          </div>
-          <span className="review-time">3 months</span>
+        <div className="detail_price-booking">
+          <h4>Start Booking</h4>
+          <span>${room.price.toLocaleString()} per Month</span>
+          <button>Book Now!</button>
         </div>
-        <div className="review">
-          <img src={room2} alt="Reviewer" />
-          <div className="review-content">
-            <h4>Lina</h4>
-            <div className="stars">★★★★★</div>
-            <p>Class, launched less than a year ago by Blackboard co-founder Michael Chasen, integrates exclusively...</p>
+
+        <button onClick={() => setShowReportForm(true)}>Báo cáo bài viết</button>
+
+        {showReportForm && (
+          <div className="report-overlay">
+            <div className="report-form">
+              <h3>Báo cáo bài viết</h3>
+              <textarea
+                value={reportReason}
+                onChange={(e) => setReportReason(e.target.value)}
+                placeholder="Nhập lý do báo cáo..."
+              />
+              <div className="report-buttons">
+                <button onClick={handleReportSubmit}>Gửi báo cáo</button>
+                <button onClick={() => setShowReportForm(false)}>Hủy</button>
+              </div>
+            </div>
           </div>
-          <span className="review-time">3 months</span>
-        </div>
+        )}
       </div>
     </div>
-  )
+  );
 }
 
-export default Result_Room
+export default Result_Room;

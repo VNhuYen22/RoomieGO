@@ -1,0 +1,202 @@
+/* Container chính */
+.request-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  color: #333;
+  border-radius: 0.8rem;
+  max-width: 70vw;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Tiêu đề */
+.request-title {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #0056b3;
+  text-align: center;
+}
+
+/* Bảng */
+.request-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+  overflow: hidden;
+}
+
+.request-table th,
+.request-table td {
+  padding: 1rem; /* Giảm padding để bảng gọn hơn */
+  text-align: center; /* Căn giữa nội dung trong ô */
+  vertical-align: middle; /* Căn giữa theo chiều dọc */
+  border-bottom: 1px solid #e0e0e0; /* Đường viền dưới */
+}
+
+.request-table th {
+  background-color: #e6f7ff; /* Màu nền tiêu đề */
+  font-weight: bold;
+  color: #0056b3;
+}
+
+.request-table tr:hover {
+  background-color: #f0f8ff; /* Màu nền khi hover */
+}
+
+/* Căn chỉnh cột Action */
+.request-table td:last-child {
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  gap: 0.5rem; /* Khoảng cách giữa các nút */
+}
+
+/* Hình ảnh trong bảng */
+.request-image {
+  width: 40px; /* Kích thước hình ảnh */
+  height: 40px; /* Kích thước hình ảnh */
+  border-radius: 50%; /* Bo tròn hình ảnh */
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+  display: block; /* Đảm bảo hình ảnh không bị lỗi căn chỉnh */
+  margin: 0 auto; /* Căn giữa hình ảnh trong ô */
+}
+
+.request-info {
+  display: flex;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  gap: 0.5rem; /* Khoảng cách giữa hình ảnh và tên */
+  text-align: center; /* Căn giữa nội dung */
+}
+
+.request-image:hover {
+  transform: scale(1.2); /* Phóng to hình ảnh 1.2 lần khi hover */
+}
+
+/* Nút Accept */
+.accept-btn {
+  background-color: #ffffff;
+  color: #007bff; /* Màu xanh dương */
+  border: 2px solid #007bff; /* Viền xanh dương */
+  border-radius: 22.4rem; /* Bo tròn nút */
+  padding: 0.5rem 1rem; /* Kích thước nút */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.accept-btn:hover {
+  background-color: #007bff; /* Nền xanh dương khi hover */
+  color: #ffffff; /* Chữ trắng khi hover */
+}
+
+/* Nút Reject */
+.reject-btn {
+  background-color: #ffffff;
+  color: #b30000; /* Màu đỏ */
+  border: 2px solid #b30000; /* Viền đỏ */
+  border-radius: 22.4rem; /* Bo tròn nút */
+  padding: 0.5rem 1rem; /* Kích thước nút */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reject-btn:hover {
+  background-color: #b30000; /* Nền đỏ khi hover */
+  color: #ffffff; /* Chữ trắng khi hover */
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Chiều rộng toàn màn hình */
+  height: 100vh; /* Chiều cao toàn màn hình */
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Hiển thị trên cùng */
+}
+
+/* Nội dung modal */
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.2);
+  width: 30vw; /* Chiều rộng modal là 30% viewport */
+  max-width: 90%; /* Đảm bảo không vượt quá 90% chiều rộng */
+  text-align: center;
+  animation: fadeIn 0.3s ease; /* Hiệu ứng xuất hiện */
+}
+
+/* Nút đóng modal */
+.close-modal-btn {
+  position: absolute; /* Định vị nút "Close" */
+  top: 1rem; /* Cách mép trên 1rem */
+  right: 1rem; /* Cách mép phải 1rem */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 50%; /* Bo tròn nút */
+  width: 2.5rem; /* Chiều rộng nút */
+  height: 2.5rem; /* Chiều cao nút */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.2rem; /* Kích thước biểu tượng hoặc chữ */
+  transition: background-color 0.3s ease;
+}
+
+.close-modal-btn:hover {
+  background-color: #0056b3; /* Màu nền khi hover */
+}
+/* Nút View Details */
+
+
+
+/* Container cho hình ảnh trong modal */
+.modal-image-container {
+  position: relative;
+  width: 10vw; /* Sử dụng 10% chiều rộng viewport */
+  height: 10vw; /* Sử dụng 10% chiều rộng viewport để giữ hình vuông */
+  margin: 0 auto;
+  margin-top: -10vh; /* Đẩy hình ảnh lên trên modal */
+  border-radius: 50%; /* Bo tròn container */
+  overflow: hidden; /* Ẩn phần hình ảnh vượt ra ngoài container */
+  border: 0.2rem solid #007bff; /* Viền xanh dương */
+  box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.5); /* Hiệu ứng đổ bóng */
+}
+
+/* Hình ảnh bên trong modal */
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+}
+
+/* Container cho thông tin chi tiết trong modal */
+.modal-details {
+  text-align: left; /* Căn trái nội dung */
+  margin-top: 1rem; /* Khoảng cách giữa hình ảnh và thông tin */
+  padding: 0 1rem; /* Thêm khoảng cách hai bên */
+  font-size: 1rem; /* Kích thước chữ */
+  line-height: 1.5; /* Khoảng cách giữa các dòng */
+}
+
+/* Hiệu ứng xuất hiện của modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
