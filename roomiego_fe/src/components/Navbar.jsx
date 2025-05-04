@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"; // Import Axios
-import Logo from "../assets/beach.jpg";
 import { Link } from "react-router-dom";
-import chatbox from "../assets/chatbox.png";
 import "../styles/Navbar.css";
+import chatbox from "../assets/chatbox.png";
 import user from "../assets/user.png";
 import { useLocation } from "react-router-dom";
-
+import logout from "../assets/logout.png";
+import dashboard from "../assets/dashboard.png";
+import user2 from "../assets/user2.png";
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,9 +28,8 @@ function Navbar() {
       });
 
       // Lấy fullName từ phản hồi và cập nhật state
-      const { user} = response.data;
+      const { user } = response.data;
       const { fullName } = user;
-      console.log("Full Name:", fullName); // Kiểm tra fullName trong console
       setFullName(fullName); // Cập nhật tên người dùng
       setIsLoggedIn(true);
     } catch (error) {
@@ -57,37 +57,41 @@ function Navbar() {
 
   return (
     <div className="navbar">
-      <div className="center">
-        <img src={Logo} alt="Logo" />
-      </div>
       <div className="leftside">
-        <Link to="/home">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/room">Rooms</Link>
+        <h1 className="logo-text">ROOMIEGO</h1>
       </div>
-      <div className="rightSide">
-        <Link to="/chatbox">
-          <img src={chatbox} alt="" className="user-icon" />
-        </Link>
+      <div className="rightside">
+        <Link to="/home">Our Story</Link>
+        <Link to="/membership">Membership</Link>
+        <Link to="/write">Write</Link>
         {isLoggedIn ? (
-          <div className="user-info">
-            <span className="username">Welcome, {fullName}!</span> {/* Hiển thị tên người dùng */}
-            <button className="logout-button" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
+             <div className="user-menu">
+             <div
+               className="user-avatar"
+               onClick={() => setDropdownOpen(!dropdownOpen)}
+             >
+               <img src={user} alt="User Avatar" />
+               
+             </div>
+             {dropdownOpen && (
+               <div className="dropdown-menu">
+                
+                <span>Welcome! {fullName}</span>
+                 <button onClick={() => window.location.href = "/profile"}>
+                 <img src={user2} alt="" /> Profile
+                 </button>
+                  <button onClick={() => window.location.href = "/dashboard"}>
+                   <img src={dashboard} alt="" className="dashboard-user"/> Dashboard
+                  </button>
+                 <button onClick={handleLogout}>
+                  <img src={logout} alt="" />Logout</button>
+               </div>
+             )}
+           </div>
         ) : (
           <>
-            <button className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
-              <span className="menu-icon">☰</span>
-              <img src={user} alt="" className="user-icon" />
-            </button>
-            {dropdownOpen && (
-              <div className="dropdown-menu">
-                <Link to="/Login">Login</Link>
-                <Link to="/Register">Signup</Link>
-              </div>
-            )}
+            <Link to="/Register">Sign In</Link>
+           <Link to="Login"><button className="get-started-btn">Login</button></Link> 
           </>
         )}
       </div>

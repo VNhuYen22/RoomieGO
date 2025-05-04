@@ -98,3 +98,30 @@
     font-size: 1rem;
   }
 }
+/* Responsive design for large screens (50 inch) */
+@media (min-width: 1920px) {
+  .search-bar {
+    width: 50vw; /* Tăng chiều rộng để phù hợp với màn hình lớn */
+    height: 8vh; /* Tăng chiều cao để cân đối */
+    padding: 1rem 4rem; /* Tăng khoảng cách padding */
+    font-size: 1.2rem; /* Tăng kích thước chữ */
+  }
+
+  .search-bar input {
+    font-size: 1.2rem; /* Tăng kích thước chữ trong ô input */
+  }
+
+  .search-bar .search-top ul li {
+    margin-right: 3rem; /* Tăng khoảng cách giữa các mục */
+  }
+
+  .search-bar .search-top button {
+    padding: 1rem 1.5rem; /* Tăng kích thước nút */
+    font-size: 1.2rem; /* Tăng kích thước chữ trong nút */
+  }
+
+  .search-bar .search-top ul li img {
+    width: 30px; /* Tăng kích thước hình ảnh */
+    height: 30px;
+  }
+}
