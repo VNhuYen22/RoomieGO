@@ -3,6 +3,7 @@ import '../styles/Login.css';
 import vidBeach from "../assets/beach.mp4";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
+import logo from "../assets/logo.png"; // Import logo nếu cần
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -82,7 +83,8 @@ export default function Login() {
         <div className="login-box">
           <div className="login-image">
             <img 
-              src="https://storage.googleapis.com/a1aa/image/pIX598hLKNAAlo-PMfaRY2XfJQXo-I6fQbAqm6H-2T4.jpg" 
+              src={logo}
+              className="logo" 
               alt="Modern Apartment" 
             />
             <div className="overlay">
