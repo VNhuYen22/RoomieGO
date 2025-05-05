@@ -86,6 +86,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
     private List<Conversation> conversationsAsUser2 = new ArrayList<>();
 
+    @OneToMany(mappedBy = "renter", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ViewRequest> viewRequests;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
