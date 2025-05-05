@@ -122,21 +122,25 @@ function Room() {
                   className="card-image"
                   onError={(e) => {
                     // Nếu ảnh lỗi thì fallback về ảnh mặc định
-                    e.target.src = getValidImageUrl("");
+                    e.target.src = getValidImageUrl("Anh");
                   }}
                 />
+                
                 <div className="card-info">
+                
                   <h3>{room.title}</h3>
                   {/* Định dạng ngày từ trường availableFrom */}
                   <span>{new Date(room.availableFrom).toLocaleDateString()}</span>
                 </div>
               </div>
+              <img className="card-image_big" src={getValidImageUrl(room.imageUrls[0]) } />
 
               <div className="card-body">
-                <h2>${room.price} / month</h2>
+                
                 <p>{room.description}</p>
+                <h2>${room.price} / month</h2>
                 <p>{room.roomSize} m²</p>
-                <p>{room.location}</p>
+                
 
                 {/* Hiển thị tất cả ảnh trong imageUrls nếu có – loại trùng lặp bằng Set */}
                 <div className="additional-images">
