@@ -1,24 +1,10 @@
 .Dashboard-container {
   display: flex;
   height: 100vh;
-  background-color: #f9f9f9;
-}
 
-.sidebar1 {
-  width: 220px;
-  background: #fff;
-  padding: 24px 0;
-  border-right: 1px solid #eee;
-  position: fixed; /* Cố định Sidebar */
-  top: 0;
-  left: 0;
-  height: 100%; /* Chiều cao toàn màn hình */
-  overflow-y: auto; /* Cuộn nếu nội dung quá dài */
+  background: #f7f7f7;
 }
-
-.Dashboard-content {
-  margin-left: 220px; /* Đẩy nội dung sang phải để không bị đè bởi Sidebar */
-  padding: 20px;
+.main-content {
   flex: 1;
-  overflow-y: auto;
+  padding: 32px;
 }

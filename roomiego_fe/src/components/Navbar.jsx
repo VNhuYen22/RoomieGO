@@ -58,7 +58,9 @@ function Navbar() {
   return (
     <div className="navbar">
       <div className="leftside">
+
        <Link to="/Room"><h1 className="logo-text">ROOMIEGO</h1></Link>
+
       </div>
       <div className="rightside">
         <Link to="/home">Our Story</Link>

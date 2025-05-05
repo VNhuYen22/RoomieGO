@@ -3,11 +3,16 @@ import '../styles/Login.css';
 import vidBeach from "../assets/beach.mp4";
 
 export default function Register() {
+  const genderOptions = [
+    { value: "MALE", label: "Nam" },
+    { value: "FEMALE", label: "Nữ" }
+  ];
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("FEMALE"); // default là Nữ
   const [dob, setDob] = useState("");
   const [bio, setBio] = useState("");
   const [role, setRole] = useState("");
@@ -158,8 +163,8 @@ export default function Register() {
                     fontSize: "14px",
                   }}
                 >
-                  <option className="option-role" value="OWNER">OWNER</option>
-                  <option className="option-role" value="RENTER">RENTER</option>
+                  <option className="option-role" value="OWNER">Người Cho Thuê</option>
+                  <option className="option-role" value="RENTER">Người Thuê</option>
                 </select>
               </div>
               <div className="form-group">
@@ -187,9 +192,9 @@ export default function Register() {
               </div>
               <div className="form-group">
                 <label>Giới tính</label>
-                <select 
-                  value={gender} 
-                  onChange={(e) => setGender(e.target.value)} 
+                <select
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
                   required
                   style={{
                     color: "#000",
@@ -200,10 +205,14 @@ export default function Register() {
                     fontSize: "14px",
                   }}
                 >
-                  <option value="Nữ">Nữ</option>
-                  <option value="Nam">Nam</option>
+                  {genderOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
+
               <div className="form-group">
                 <label>Ngày sinh</label>
                 <input 

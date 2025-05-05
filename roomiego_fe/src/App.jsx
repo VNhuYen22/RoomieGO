@@ -22,8 +22,9 @@ import InvoiceForm from "./components/Invoices/InvoiceForm";
 import RoommateForm from "./components/RoommateForm/RoommateForm";
 import MatchDetails from "./components/RoommateForm/MatchDetails ";
 import Register from "./pages/Register";
-import Request from "./components/Dashboard/Request";
-import DashBoard from "./pages/DashBoard";
+import Dashboard from "./pages/Dashboard";
+import ReportPage from "./components/Dashboard/ReportPage";
+
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
@@ -48,11 +49,11 @@ const App = () => {
   const showNavbarchatbox = ["/chatbox", "/settings"].includes(location.pathname);
 
   // Define routes where Footer should not be visible
-  const hideFooter = ["/maps","/test1","/dashboard"].includes(location.pathname);
+  const hideFooter = ["/maps","/test1","/dashboard","/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests"].includes(location.pathname);
 
   // Define routes where SearchBar should not be visible
-  const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match","/dashboard"].includes(location.pathname);
-  const hideNavbarAndNavbarchatbox = location.pathname === "/dashboard";
+  const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match","/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests" ].includes(location.pathname);
+  const hideNavbarAndNavbarchatbox =["/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests"].includes(location.pathname);
 
   return (
     <div data-theme={theme}>
@@ -81,9 +82,10 @@ const App = () => {
         <Route path="/test1" element={<InvoiceForm />} />
         <Route path="/roommates" element={<RoommateForm />} />
         <Route path="/match" element={<MatchDetails />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard/*" element={<DashBoard />} />
-       
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/q" element={<ReportPage />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+
         {/* Add other routes here */}
       </Routes>
        
