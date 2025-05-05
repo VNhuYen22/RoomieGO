@@ -37,7 +37,16 @@ def recommend_roommates(name, top_n=5):
 
     # Nếu có nhiều người cùng giới tính -> tiếp tục lọc theo quê quán
     filtered = same_gender.copy()
-    filtered['same_hometown'] = (filtered['hometown'] == user['hometown']).astype(int)
+    filtered['priority_score'] = 0
+
+    # Ưu tiên người cùng quê quán
+    filtered.loc[filtered['hometown'] == user['hometown'], 'priority_score'] += 3
+
+    # Ưu tiên người cùng thành phố
+    filtered.loc[filtered['city'] == user['city'], 'priority_score'] += 2
+
+    # Ưu tiên người cùng quận
+    filtered.loc[filtered['district'] == user['district'], 'priority_score'] += 1
 
     # Tính điểm tương đồng cosine
     similarity_scores = list(enumerate(cosine_sim[idx]))
@@ -46,10 +55,10 @@ def recommend_roommates(name, top_n=5):
     filtered_indices = filtered.index.tolist()
     filtered_scores = [s for s in similarity_scores if s[0] in filtered_indices and s[0] != idx]
 
-    # Ưu tiên người cùng quê quán bằng cách cộng thêm điểm
+    # Cộng điểm ưu tiên vào điểm tương đồng
     scored = []
     for i, score in filtered_scores:
-        extra = 0.1 if roommates.iloc[i]['hometown'] == user['hometown'] else 0
+        extra = filtered.loc[i, 'priority_score']
         scored.append((i, score + extra))
 
     # Sắp xếp theo điểm tổng
@@ -57,7 +66,7 @@ def recommend_roommates(name, top_n=5):
 
     # Trả về top N gợi ý
     top_matches = [i[0] for i in scored[:top_n]]
-    return roommates[['name', 'gender', 'hometown']].iloc[top_matches]
+    return roommates[['name', 'gender', 'hometown', 'city', 'district', 'yob', 'hobbies', 'job', 'more', 'rate_image']].iloc[top_matches]
 
 # Ví dụ sử dụng
 print("Gợi ý bạn cùng phòng cho Alice:")
