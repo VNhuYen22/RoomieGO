@@ -1,7 +1,9 @@
 // Sidebar.jsx
+import back from "../../assets/back.png";
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./css/Sidebar.css";
+import { Link } from "react-router-dom";
 
 const menuItems = [
   { label: "Bookings", key: "bookings" },
@@ -18,7 +20,8 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar1">
-      <div className="logo"><br />Logo</div>
+      <div className="back-sidebar"><a href="http://localhost:5173/room"><img className="back-sidebar" src={back} alt="" /></a></div>
+      <div className="logo-sideBar"><br /><h1 className="logo-text1">ROOMIEGO</h1></div>
       <ul>
         {menuItems.map(item => (
           <li

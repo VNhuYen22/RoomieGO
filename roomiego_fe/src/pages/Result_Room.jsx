@@ -6,7 +6,7 @@ import { axiosInstance } from "../lib/axios";
 function Result_Room() {
   const { id } = useParams(); // Lấy id từ URL
 
-  // ✅ Tất cả useState đặt ngay đầu function
+  // Tất cả useState đặt ngay đầu function
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -117,7 +117,10 @@ function Result_Room() {
         <div className="detail_price-booking">
           <h4>Start Booking</h4>
           <span>${room.price.toLocaleString()} per Month</span>
+          <div className="contact-button">
+          <button>Chat Now!</button>
           <button>Book Now!</button>
+          </div>
         </div>
 
         <button onClick={() => setShowReportForm(true)}>Báo cáo bài viết</button>

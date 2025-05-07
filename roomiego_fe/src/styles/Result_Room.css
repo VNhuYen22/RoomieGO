@@ -77,8 +77,27 @@
 .room-details strong {
   margin-right: 0.5rem;
 }
+.contact-button button {
+  animation: bounce 1.5s infinite;
+  margin: 0 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+}
 
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
 .detail_price-booking {
+  margin-left: 3rem;
   flex: 1;
   padding: 0.625rem;
   text-align: center;

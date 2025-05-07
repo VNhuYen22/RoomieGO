@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import { Link } from "react-router-dom";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -43,7 +43,7 @@ export default function App() {
           <span className="highlight">social</span>, in just a few taps!
         </h1>
         <p>Join Linkups to explore and hang out with travellers.</p>
-        <button className="home-arrow">Find your room</button>
+       <Link to="/Room"><button className="home-arrow">Find your room</button></Link> 
       </div>
     </div>
   );

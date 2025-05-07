@@ -59,7 +59,7 @@ export default function Login() {
      window.location.href = "/room";
      // Điều hướng sang trang chính hoặc dashboard
     } else {
-      setError("Đăng nhập thất bại. Vui lòng thử lại.");
+      setError("Sai tài khoản hoặc mật khẩu.");
     } 
   }catch (err) {
       console.error('Login failed:', err.response?.data || err.message);
@@ -88,7 +88,7 @@ export default function Login() {
               alt="Modern Apartment" 
             />
             <div className="overlay">
-              <h1>RoomieGoo</h1>
+              <h1>RoomieGo</h1>
             </div>
           </div>
           <div className="login-form">

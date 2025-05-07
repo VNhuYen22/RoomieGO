@@ -1,0 +1,114 @@
+/* Background setup */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #e2e8f0;
+  }
+  
+  .presentation-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+  }
+  
+  /* Card Styling */
+  .presentation-card {
+    position: relative;
+    width: 700px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(25px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Gradient circle background */
+  .circle-bg {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle at center, rgba(59,130,246,0.6), transparent);
+    top: -100px;
+    left: -100px;
+    border-radius: 50%;
+    z-index: 0;
+  }
+  
+  /* Text inside the card */
+  .content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+  }
+  
+  .year {
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0.7;
+    margin: 0;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    margin: 5px 0;
+  }
+  
+  .title {
+    font-size: 32px;
+    font-weight: 900;
+    margin: 10px 0;
+  }
+  
+  .desc {
+    font-size: 16px;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+  }
+  
+  .btn {
+    background: #10b981;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(16,185,129,0.4);
+  }
+  
+  /* Logo at top-right */
+  .logo {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: rgba(255,255,255,0.2);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 2;
+  }
+  
+  /* Floating icon */
+  .icon-doc {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+    font-size: 50px;
+    color: #ffffffcc;
+    transform: rotate(15deg);
+    z-index: 1;
+  }
+  

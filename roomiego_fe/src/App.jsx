@@ -64,7 +64,7 @@ const App = () => {
         ) : (
           <>
             <Navbar />
-            {!hideSearchBar && <SearchBar />}
+            {/* {!hideSearchBar && <SearchBar />} */}
           </>
         )
       )}

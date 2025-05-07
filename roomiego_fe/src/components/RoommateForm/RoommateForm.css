@@ -6,6 +6,7 @@
     border: 1px solid #ccc; /* Thêm viền */
     border-radius: 5px; /* Bo tròn góc */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ */
+    background: linear-gradient(to bottom, #007bff, #00d4ff);
 }
 
 .roommate-form h2 {
@@ -53,7 +54,7 @@
 }
 
 .roommate-form button {
-    background-color: #5cb85c; /* Màu xanh lá cây */
+    background-color: #3f62e2; /* Màu xanh lá cây */
     color: white;
     padding: 12px 20px;
     border: none;

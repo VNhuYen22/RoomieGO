@@ -1,127 +1,205 @@
-.search-bar {
+/* SearchBar.css */
+.search-widget {
+  margin: 0 auto; /* Center horizontally just in case */
+}
+.search-container_total {
   display: flex;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 2.5rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 3rem;
-  width: 48vw;
-  height: 8vh;
-  position: sticky;
+  justify-content: center; /* Center the search container */
+  align-items: center; /* Center vertically */
+  width: 100%;
+  height: 60vh; /* Example height, adjust as needed */
+  overflow: hidden;              /* hoặc unset */
+  z-index: 0;
+}
+.search-container-background {
+  width: 70%;
+  position: relative; /* Important for positioning the search widget on top */
+  height: 80vh;  /* Example height, adjust as needed */
+  display: flex;
+  flex-direction: column; /* Stack text overlay and search widget */
+  align-items: center; /* Center children horizontally */
+  justify-content: center; /* Center children vertically */
+  /* padding: 20px; */
+  box-sizing: border-box;
+  text-align: left; /* For the "Enjoy your dream vacation" text */
+  z-index: 1;
+}
+
+.background-image-full {
+  
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  opacity: 1;
+  position: absolute;
   top: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  object-fit: cover; /* Cover the entire container */
+  z-index: -1; /* Place it behind other content */
+  filter: brightness(0.7); /* Optional: darken the image a bit so text is more readable */
+}
+
+.search-content-overlay {
+  margin-bottom: 30px; /* Space between text and search widget */
+  text-align: left;
+  width: 100%;
+  max-width: 900px; /* Match the search widget width or adjust */
+  padding: 0 20px; /* Some padding */
+  box-sizing: border-box;
+  z-index: 1; /* Ensure this is above the image */
+}
+
+.search-content-overlay h1 {
+  font-size: 2.8em; /* Adjust as needed */
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+.search-content-overlay p {
+  font-size: 1.1em;
+}
+
+.search-widget {
+  border-radius: 10px;
+  padding: 20px 25px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  position: relative;
   z-index: 2;
-  margin: 0 auto;
-  margin-top: 10px;
-}
-.find-icon{
-  width: 20px;
-  height: 20px;
-}
-.search-bar input {
- border: none;
-  outline: none;
-  font-size: 1rem;
+
+  background: rgba(255, 255, 255, 0.2); /* Màu nền có độ trong suốt */
+  backdrop-filter: blur(15px); /* Làm mờ nền phía sau */
+  -webkit-backdrop-filter: blur(15px); /* Hỗ trợ Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Viền nhẹ cho hiệu ứng kính */
 }
 
-.search-bar .search-top {
+.search-options {
   display: flex;
-  align-items: center;
+  flex-grow: 1;
+  flex-wrap: wrap; /* Cho phép các options xếp chồng lên nhau nếu không đủ chỗ */
+  gap: 20px; /* Khoảng cách giữa các option */
+}
+
+.search-option {
+  padding-right: 20px; /* Khoảng cách giữa các option */
+  margin-right: 15px; /* Khoảng cách thêm giữa các option */
+  border-right: 1px solid #eee; /* Đường viền phải giữa các option */
   flex: 1;
+  min-width: 150px; /* Đảm bảo mỗi option có một chiều rộng tối thiểu */
 }
 
-.search-bar .search-top ul {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.search-option:last-child {
+  border-right: none; /* Không cần đường viền phải cho option cuối */
+  margin-right: 0;
+  padding-right: 0;
 }
 
-.search-bar .search-top ul li {
-  display: flex;
-  align-items: center;
-  margin-right: 2rem;
+.search-option label {
+  display: block;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 5px;
 }
 
-.search-bar .search-top ul li img {
-  margin-right: 0.5rem;
+.search-option input[type="text"] {
+  border: 1px solid #ccc; /* Viền nhẹ xung quanh input */
+  padding: 8px 10px;
+  font-size: 1em;
+  color: #555;
+  width: 100%; /* Chiếm hết không gian của search-option */
+  border-radius: 5px; /* Bo góc cho input */
 }
 
-.search-bar .search-top button {
-  background-color: #007bff;
+.search-option input[type="text"]::placeholder {
+  color: #aaa;
+}
+
+.search-button-main {
+  background-color: #007bff; /* A blue color, change as needed */
   color: white;
   border: none;
-  border-radius: 1.25rem;
-  padding: 0.8rem 1rem;
-  cursor: pointer;
- box-shadow: 0 0.5rem 1rem rgba(194, 116, 116, 0.1);
-}
-.search-bar .search-top button:hover {
-  background-color: #0056b3;
-}
-
-.search-bar .search-top ul li {
+  border-radius: 50%; /* Make it circular */
+  width: 50px; /* Adjust size */
+  height: 50px; /* Adjust size */
   display: flex;
   align-items: center;
-  margin-right: 2rem;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 20px; /* Space from the last input field */
 }
 
-.search-bar .search-top ul li img {
-  margin-right: 0.5rem;
+.search-button-main:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
-.search-bar .search-top ul li span {
-  margin-left: 0.5rem;
+.search-button-main svg {
+  /* Style for the SVG icon if you use one */
 }
 
-/* Responsive design */
+/* Your existing sort button styles - you might want to adjust them */
+.sort-controls {
+  margin-top: 20px; /* Space above sort buttons */
+  display: flex;
+  gap: 10px; /* Space between sort buttons */
+}
+
+.sort-button {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  padding: 8px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 20px;
+  font-size: 0.9em;
+ /* Optional: add a blur effect */
+}
+
+.sort-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Responsive adjustments (example) */
 @media (max-width: 768px) {
-  .search-bar {
+  .search-widget {
     flex-direction: column;
-    padding: 1rem;
-    width: 90vw;
-    height: 40vh;
+    align-items: stretch; /* Make options take full width */
   }
 
-  .search-bar .search-top ul {
+  .search-options {
     flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .search-bar .search-top ul li {
-    margin-right: 0;
-    margin-bottom: 1rem;
-  }
-
-  .search-bar .search-top button {
     width: 100%;
-    padding: 1rem;
-    font-size: 1rem;
-  }
-}
-/* Responsive design for large screens (50 inch) */
-@media (min-width: 1920px) {
-  .search-bar {
-    width: 50vw; /* Tăng chiều rộng để phù hợp với màn hình lớn */
-    height: 8vh; /* Tăng chiều cao để cân đối */
-    padding: 1rem 4rem; /* Tăng khoảng cách padding */
-    font-size: 1.2rem; /* Tăng kích thước chữ */
   }
 
-  .search-bar input {
-    font-size: 1.2rem; /* Tăng kích thước chữ trong ô input */
+  .search-option {
+    margin-right: 0;
+    margin-bottom: 15px; /* Space between options when stacked */
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid #eee; /* Horizontal line when stacked */
+  }
+  .search-option:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
   }
 
-  .search-bar .search-top ul li {
-    margin-right: 3rem; /* Tăng khoảng cách giữa các mục */
+  .search-button-main {
+    margin-top: 15px;
+    margin-left: 0;
+    width: 100%; /* Full width button on smaller screens */
+    border-radius: 5px; /* Less circular on smaller screens */
   }
 
-  .search-bar .search-top button {
-    padding: 1rem 1.5rem; /* Tăng kích thước nút */
-    font-size: 1.2rem; /* Tăng kích thước chữ trong nút */
+  .search-content-overlay h1 {
+    font-size: 2em;
   }
-
-  .search-bar .search-top ul li img {
-    width: 30px; /* Tăng kích thước hình ảnh */
-    height: 30px;
+  .search-content-overlay p {
+    font-size: 1em;
   }
 }

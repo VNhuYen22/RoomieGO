@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import axios from "axios"; // Import Axios
 import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
@@ -13,6 +13,8 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [fullName, setFullName] = useState(""); // State để lưu tên người dùng
   const location = useLocation();
+  const dropdownRef = useRef(null);
+  const [role, setRole] = useState(""); // Thêm state role
 
   // Hàm lấy thông tin người dùng
   const fetchUserProfile = async () => {
@@ -29,9 +31,12 @@ function Navbar() {
 
       // Lấy fullName từ phản hồi và cập nhật state
       const { user } = response.data;
-      const { fullName } = user;
+      const { fullName,role } = user;
       setFullName(fullName); // Cập nhật tên người dùng
+      setRole(role); // Cập nhật role người dùng
       setIsLoggedIn(true);
+      console.log("User role:", role);
+
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
@@ -42,12 +47,26 @@ function Navbar() {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setFullName("");
-    window.location.reload(); // Reload trang để cập nhật giao diện
+    window.location.href("http://localhost:5173/"); // Reload trang để cập nhật giao diện
   };
 
   // Gọi API lấy thông tin người dùng khi component được mount
   useEffect(() => {
+    
     fetchUserProfile();
+     // Hàm đóng dropdown nếu click bên ngoài
+     const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup listener khi component bị unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   // Ẩn Navbar trên các trang Login và Register
@@ -59,34 +78,41 @@ function Navbar() {
     <div className="navbar">
       <div className="leftside">
 
-       <Link to="/Room"><h1 className="logo-text">ROOMIEGO</h1></Link>
+       <Link to="http://localhost:5173/"><h1 className="logo-text">ROOMIEGO</h1></Link>
 
       </div>
       <div className="rightside">
-        <Link to="/home">Our Story</Link>
-        <Link to="/membership">Membership</Link>
-        <Link to="/write">Write</Link>
+        <Link to="/Room"><a href="">Room</a></Link>
+        <Link to="/Roommates"><a href="">Roomates</a></Link>
+        {/* <Link to="/write">Write</Link> */}
         {isLoggedIn ? (
              <div className="user-menu">
              <div
                className="user-avatar"
                onClick={() => setDropdownOpen(!dropdownOpen)}
              >
-               <img src={user} alt="User Avatar" />
+               <img src={user2} alt="User Avatar" />
                
              </div>
              {dropdownOpen && (
-               <div className="dropdown-menu">
+               <div className="dropdown-menu" ref={dropdownRef}>
                 
-                <span>Welcome! {fullName}</span>
+                <a href="">{fullName}</a>
                  <button onClick={() => window.location.href = "/profile"}>
                  <img src={user2} alt="" /> Profile
                  </button>
-                  <button onClick={() => window.location.href = "/dashboard"}>
+                  {/* <button onClick={() => window.location.href = "/dashboard"}>
                    <img src={dashboard} alt="" className="dashboard-user"/> Dashboard
+                  </button> */}
+                  {role === "OWNER" && ( //Thêm điều kiện tại đây
+                  <button onClick={() => window.location.href = "/dashboard"}>
+                  <img src={dashboard} alt="" className="dashboard-user" /> Dashboard
                   </button>
+                  )}
                  <button onClick={handleLogout}>
-                  <img src={logout} alt="" />Logout</button>
+                  <img src={logout} alt="" />Logout
+                  </button>
+                 
                </div>
              )}
            </div>

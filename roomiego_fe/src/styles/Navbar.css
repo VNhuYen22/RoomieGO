@@ -7,13 +7,17 @@
 }
 
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #fdfcf7; /* Màu nền nhạt */
-  border-bottom: 1px solid #e6e6e6; /* Đường viền dưới */
-  font-family: 'Arial', sans-serif;
+    overflow: visible;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(255, 255, 255, 0.2); /* Màu trắng với độ trong suốt */
+    backdrop-filter: blur(10px); /* Làm mờ nền phía sau */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Đường viền nhẹ */
+    font-family: 'Arial', sans-serif;
+  
+  
 }
 
 /* Logo */
@@ -89,6 +93,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  z-index: 100;
 }
 
 .user-avatar {
@@ -96,6 +101,8 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  border: 2px solid #310ced; /* Đường viền xung quanh avatar */
+  border-radius: 50%; /* Bo tròn avatar */
 }
 
 .user-avatar img {
@@ -105,6 +112,7 @@
   object-fit: cover;
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
   top: 50px;
@@ -113,8 +121,17 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 26px;
-  z-index: 10;
+  padding: 10px;
+  z-index: 9999; 
+  width: 200px; /* Giới hạn chiều rộng menu nếu cần */
+  text-align: left; /* Căn chỉnh văn bản trong menu sang trái */
+}
+.rightside a{
+  margin-right: 1.5rem;
+  text-decoration: none;
+  color: #1a1a1a; /* Màu chữ đậm */
+  font-size: 1rem;
+  font-weight: bold;
 }
 /* Định dạng chung cho các nút trong dropdown menu */
 .dropdown-menu button {
@@ -125,16 +142,25 @@
   padding: 10px;
   background: none;
   border: none;
-  text-align: left;
+  text-align: left; /* Căn chỉnh chữ bên trái */
   cursor: pointer;
-  font-size: 14px;
   color: #333; /* Màu chữ */
   transition: background-color 0.3s ease, color 0.3s ease; /* Thêm hiệu ứng chuyển đổi màu */
   border-radius: 4px; /* Bo góc nhẹ cho nút */
 }
 
+/* Định dạng cho phần tử <a> */
+.dropdown-menu a {
+  font-weight: bold;
+  display: block;
+  padding: 10px;
+  color: #333;
+  text-align: left; /* Căn chỉnh chữ bên trái */
+  cursor: pointer;
+}
+
+/* Hiệu ứng hover cho các nút */
 .dropdown-menu button:hover {
-  /* Màu nền khi hover */
   color: #007bff; /* Màu chữ khi hover */
 }
 

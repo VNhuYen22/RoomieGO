@@ -56,7 +56,7 @@
   .login-image img {
     width: 100%;
     height: 100%;
-    object-fit: full;
+    object-fit: cover;
   }
   
   .overlay {
@@ -69,7 +69,7 @@
   }
   
   .login-image .overlay h1 {
-    font-size: 2.5rem; /* Kích thước chữ lớn hơn */
+    font-size: 3rem; /* Kích thước chữ lớn hơn */
     font-weight: normal; /* Đậm chữ */
     font-family: 'Kirucoupage', sans-serif; /* Font chữ tùy chỉnh */
     text-transform: uppercase; /* Viết hoa toàn bộ chữ */
@@ -79,7 +79,7 @@
     text-align: center; /* Căn giữa chữ */
     margin: 0; /* Loại bỏ khoảng cách mặc định */
     letter-spacing: 0.2rem; /* Khoảng cách giữa các chữ */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Hiệu ứng đổ bóng nhẹ */
+    text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5); /* Hiệu ứng đổ bóng nhẹ */
   }
   /* Phần form đăng nhập */
   .login-form {
