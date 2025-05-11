@@ -1,126 +1,209 @@
 /* Navbar Container */
+@font-face {
+  font-family: 'Kirucoupage';
+  src: url('./Kirucoupage.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    top: 0;
-    z-index: 1000;
-    /* margin-bottom: 4vh; */
-  }
-  .dropdown-toggle {
-      background: none;
-      border: 1px solid #ddd; /* Thêm border */
-      border-radius: 25px; /* Bo tròn góc */
-      padding: 0.5rem 1rem; /* Khoảng cách bên trong */
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      font-size: 1rem;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .dropdown-toggle:hover {
-      border-color: #007bff; /* Đổi màu border khi hover */
-      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Thêm hiệu ứng shadow khi hover */
-    }
-    
-    .menu-icon {
-      margin-right: 0.5rem; /* Khoảng cách giữa menu icon và user icon */
-    }
-    
-    .rightSide img {
-      width: 30px; /* Đổi kích thước user icon */
-      height: 30px; /* Đổi kích thước user icon */
-      font-size: 1.5rem;
-    }
-  /* Left Side Links */
-  .leftside a {
-      
-    margin-right: 1.5rem;
-    text-decoration: none;
-    color: #333;
-    font-size: 1rem;
-  }
-  
-  .leftside a:hover {
-    color: #007bff;
-  }
-  
-  /* Center Logo */
-  .center img {
-    height: 40px;
-  }
-  
-  /* Right Side Dropdown */
-  .rightSide {
-    position: relative;
-  }
-  
-  .dropdown-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-  }
-  
-  .menu-icon {
-    margin-right: 0.5rem;
-  }
-  
-  .user-icon {
-    font-size: 1.5rem;
-  }
-  
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 200px;
-    padding: 0.5rem 0;
-    z-index: 1000;
-  }
-  
-  .dropdown-menu a {
-    display: block;
-    padding: 0.75rem 1rem;
-    text-decoration: none;
-    color: #333;
-    font-size: 1rem;
-  }
-  
-  .dropdown-menu a:hover {
-    background-color: #f9f9f9;
-    color: #007bff;
-  }
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .username {
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  .logout-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 0.4rem;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-  }
-  
-  .logout-button:hover {
-    background-color: #0056b3;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fdfcf7; /* Màu nền nhạt */
+  border-bottom: 1px solid #e6e6e6; /* Đường viền dưới */
+  font-family: 'Arial', sans-serif;
+}
+
+/* Logo */
+.logo-text {
+  font-size: 2.5rem; /* Kích thước chữ lớn hơn */
+  font-weight: bold; /* Đậm chữ */
+  font-family: 'Kirucoupage', sans-serif; /* Font chữ tùy chỉnh */
+  text-transform: uppercase; /* Viết hoa toàn bộ chữ */
+  background: linear-gradient(to right, #007bff, #00d4ff); /* Hiệu ứng gradient từ xanh đậm sang xanh nhạt */
+  -webkit-background-clip: text; /* Cắt gradient theo chữ */
+  -webkit-text-fill-color: transparent; /* Làm chữ trong suốt để hiển thị gradient */
+  text-align: center; /* Căn giữa chữ */
+  letter-spacing: 0.2rem; /* Khoảng cách giữa các chữ */
+  margin: 0 50px;
+}
+
+/* Right Side Links */
+.rightside a {
+  margin-right: 1.5rem;
+  text-decoration: none;
+  color: #1a1a1a; /* Màu chữ đậm */
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.rightside a:hover {
+  color: #007bff; /* Màu xanh khi hover */
+}
+
+/* Get Started Button */
+.get-started-btn {
+  background-color: #1a1a1a; /* Màu nền đen */
+  color: #fff; /* Màu chữ trắng */
+  border: none;
+  border-radius: 20px; /* Bo tròn góc */
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.get-started-btn:hover {
+  background-color: #333; /* Màu đen đậm hơn khi hover */
+}
+
+/* User Info */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.username {
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+.logout-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #0056b3;
+}
+
+/* User Menu */
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.user-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 26px;
+  z-index: 10;
+}
+
+/* Định dạng chung cho các nút trong dropdown menu */
+.dropdown-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa hình ảnh và chữ */
+  width: 100%; /* Đảm bảo nút chiếm toàn bộ chiều rộng menu */
+  padding: 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333; /* Màu chữ */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Thêm hiệu ứng chuyển đổi màu */
+  border-radius: 4px; /* Bo góc nhẹ cho nút */
+}
+
+.dropdown-menu button:hover {
+  /* Màu nền khi hover */
+  color: #007bff; /* Màu chữ khi hover */
+}
+
+/* Định dạng hình ảnh trong các nút */
+.dropdown-menu button img {
+  width: 20px; /* Kích thước chiều rộng của hình ảnh */
+  height: 20px; /* Kích thước chiều cao của hình ảnh */
+  object-fit: contain; /* Đảm bảo hình ảnh không bị méo */
+  transition: filter 0.3s ease; /* Thêm hiệu ứng hover cho hình ảnh */
+}
+
+.dropdown-menu button:hover img {
+  filter: brightness(0.8); /* Làm tối hình ảnh khi hover */
+}
+
+/* Navbar Container (Rest of your navbar styles) */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  top: 0;
+  z-index: 1000;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: 1px solid #ddd; /* Thêm border */
+  border-radius: 25px; /* Bo tròn góc */
+  padding: 0.5rem 1rem; /* Khoảng cách bên trong */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+  border-color: #007bff; /* Đổi màu border khi hover */
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Thêm hiệu ứng shadow khi hover */
+}
+
+.menu-icon {
+  margin-right: 0.5rem; /* Khoảng cách giữa menu icon và user icon */
+}
+
+.rightSide img {
+  width: 30px; /* Đổi kích thước user icon */
+  height: 30px; /* Đổi kích thước user icon */
+  font-size: 1.5rem;
+}
+
+/* Left Side Links */
+.leftside a {
+  margin-right: 1.5rem;
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+}
+
+.leftside a:hover {
+  color: #007bff;
+}
+
+/* Center Logo */
+.center img {
+  height: 40px;
+}

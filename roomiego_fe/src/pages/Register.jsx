@@ -163,8 +163,8 @@ export default function Register() {
                     fontSize: "14px",
                   }}
                 >
-                  <option className="option-role" value="OWNER">OWNER</option>
-                  <option className="option-role" value="RENTER">RENTER</option>
+                  <option className="option-role" value="OWNER">Người Cho Thuê</option>
+                  <option className="option-role" value="RENTER">Người Thuê</option>
                 </select>
               </div>
               <div className="form-group">

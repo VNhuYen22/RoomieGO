@@ -1,6 +1,7 @@
 package com.c1se_01.roomiego.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -89,4 +90,9 @@ public class Room {
 
     @Column(name = "address_details")
     private String addressDetails;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ViewRequest> viewRequests;
+
 }

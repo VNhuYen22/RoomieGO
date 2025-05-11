@@ -37,7 +37,7 @@
   /* Hộp login với Glassmorphism */
   .login-box {
     display: flex;
-    width: 750px;
+    width: 900px;
     max-width: 90%;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
@@ -56,7 +56,7 @@
   .login-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: full;
   }
   
   .overlay {
@@ -64,10 +64,23 @@
     bottom: 0;
     width: 100%;
     background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
+    /* padding: 5px; */
     text-align: center;
   }
   
+  .login-image .overlay h1 {
+    font-size: 2.5rem; /* Kích thước chữ lớn hơn */
+    font-weight: normal; /* Đậm chữ */
+    font-family: 'Kirucoupage', sans-serif; /* Font chữ tùy chỉnh */
+    text-transform: uppercase; /* Viết hoa toàn bộ chữ */
+    background: linear-gradient(to right, #007bff, #00d4ff); /* Hiệu ứng gradient từ xanh đậm sang xanh nhạt */
+    -webkit-background-clip: text; /* Cắt gradient theo chữ */
+    -webkit-text-fill-color: transparent; /* Làm chữ trong suốt để hiển thị gradient */
+    text-align: center; /* Căn giữa chữ */
+    margin: 0; /* Loại bỏ khoảng cách mặc định */
+    letter-spacing: 0.2rem; /* Khoảng cách giữa các chữ */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Hiệu ứng đổ bóng nhẹ */
+  }
   /* Phần form đăng nhập */
   .login-form {
     flex: 1;
@@ -148,7 +161,7 @@
   
   /* Nút đăng nhập */
   .login-btn {
-    background: rgba(47, 26, 203, 0.9);
+    background: #69a0d4;
     color: #fff;
     padding: 12px;
     border: none;
@@ -159,7 +172,7 @@
   }
   
   .login-btn:hover {
-    background: #ea580c;
+    background:  rgba(47, 26, 203, 0.9);
   }
   
   /* Nút quay lại (cho phần quên mật khẩu) */
@@ -187,7 +200,7 @@
   }
   
   .create-account button {
-    background: rgba(47, 26, 203, 0.9);
+    background: #69a0d4;
     color: #fff;
     padding: 12px;
     border: none;
@@ -198,6 +211,6 @@
   }
   
   .create-account button:hover {
-    background: #ea580c;
+    background: rgba(47, 26, 203, 0.9);
   }
   

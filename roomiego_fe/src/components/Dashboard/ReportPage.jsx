@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReportTable from "./ReportTable";
 import "./css/ReportPage.css";
 import { axiosInstance } from "../../lib/axios";
-import { FaUser, FaRegFileAlt, FaClock, FaFlag, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+
 
 function ModalContent({ report, onClose, onViPham, onKhongViPham }) {
   if (!report) return null;
