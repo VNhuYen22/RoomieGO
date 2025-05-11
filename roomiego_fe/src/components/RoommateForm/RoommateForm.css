@@ -110,4 +110,29 @@
     color: #333;
     margin-right: 5px;
   }
+  .clean-levels {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+  }
+  
+  .clean-option {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .clean-option.selected {
+    border-color: #007bff;
+  }
+  
+  .clean-image {
+    width: 15vh;
+    height: 15vh;
+    object-fit: cover;
+    display: block;
+  }
+  
   

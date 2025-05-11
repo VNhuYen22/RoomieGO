@@ -8,7 +8,7 @@ const menuItems = [
   { label: "Requests", key: "requests" },
   { label: "Report", key: "report" },
   { label: "Invoices", key: "invoices" },
-  { label: "Setting", key: "setting" },
+  { label: "Setting", key: "invoices" },
 ];
 
 const Sidebar = () => {

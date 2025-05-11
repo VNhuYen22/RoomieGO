@@ -11,6 +11,7 @@ public class ReportResponse {
     private Long id;
     private Long roomId;
     private String roomTitle;
+    private String roomAddress; // ✅ Thêm dòng này
     private String reporterName;
     private String reason;
     private Boolean isHandled;

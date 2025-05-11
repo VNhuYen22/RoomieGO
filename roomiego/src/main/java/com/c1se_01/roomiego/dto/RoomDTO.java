@@ -30,6 +30,7 @@ public class RoomDTO {
     private String ward;
     private String street;
     private String addressDetails;
+    private String ownerName;
     private List<String> imageUrls;
 
 
