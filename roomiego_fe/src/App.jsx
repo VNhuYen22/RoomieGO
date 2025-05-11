@@ -53,7 +53,7 @@ const App = () => {
 
   // Define routes where SearchBar should not be visible
   const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match","/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests" ].includes(location.pathname);
-  const hideNavbarAndNavbarchatbox =["/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests"].includes(location.pathname);
+  const hideNavbarAndNavbarchatbox =["/dashboard/invoices"].includes(location.pathname);
 
   return (
     <div data-theme={theme}>

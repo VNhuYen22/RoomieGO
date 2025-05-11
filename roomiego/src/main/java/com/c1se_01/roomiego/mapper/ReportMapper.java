@@ -11,6 +11,7 @@ import java.util.List;
 public interface ReportMapper {
     @Mapping(source = "room.id", target = "roomId")
     @Mapping(source = "room.title", target = "roomTitle")
+    @Mapping(source = "room.addressDetails", target = "roomAddress")
     @Mapping(source = "reporter.fullName", target = "reporterName")
     ReportResponse toDto(Report report);
 

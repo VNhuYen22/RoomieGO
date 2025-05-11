@@ -16,6 +16,7 @@ public interface RoomMapper {
 
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "roomImages", target = "imageUrls", qualifiedByName = "mapRoomImagesToUrls")
+    @Mapping(source = "owner.fullName", target = "ownerName")
     RoomDTO toDTO(Room room);
 
     @Mapping(source = "ownerId", target = "owner.id")

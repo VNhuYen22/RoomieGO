@@ -23,6 +23,7 @@ public class RoomImage {
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Room room;
 
     private String imageUrl;

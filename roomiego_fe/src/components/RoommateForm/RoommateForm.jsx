@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import './RoommateForm.css';
 import { useNavigate } from 'react-router-dom';
+import clean1 from '../../assets/room1.jpeg';
+import clean2 from '../../assets/room2.jpeg';
+import clean3 from '../../assets/room3.jpeg';
+import clean4 from '../../assets/room4.jpeg';
 
 const RoommateForm = () => {
   const navigate = useNavigate();
@@ -130,7 +134,23 @@ const RoommateForm = () => {
   };
   
   
-
+  const cities = [
+    "Hà Nội", "Hồ Chí Minh", "Hải Phòng", "Đà Nẵng", "Cần Thơ", "An Giang", "Bà Rịa - Vũng Tàu",
+    "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương",
+    "Bình Phước", "Bình Thuận", "Cà Mau", "Cao Bằng", "Đắk Lắk", "Đắk Nông", "Điện Biên",
+    "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Tĩnh", "Hải Dương", "Hậu Giang",
+    "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn",
+    "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên",
+    "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La",
+    "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang",
+    "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+  ];
+  const cleanImages = [
+    { id: "1", src: clean1 },
+    { id: "2", src: clean2 },
+    { id: "3", src: clean3 },
+    { id: "4", src: clean4 },
+  ];
   return (
     <div className="roommate-form">
       <h2>Thông tin Roommate</h2>
@@ -142,22 +162,19 @@ const RoommateForm = () => {
         </select>
 
         <label>Quê quán của bạn:</label>
-        <input
-          type="text"
-          name="hometown"
-          value={formData.hometown}
-          onChange={handleChange}
-          required
-        />
-
-        <label>Nơi bạn muốn thuê (Thành Phố):</label>
-        <input
-          type="text"
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
-          required
-        />
+        <select name="hometown" value={formData.hometown} onChange={handleChange} required>
+          <option value="">-- Chọn tỉnh/thành phố --</option>
+          {cities.map((city) => (
+            <option key={city} value={city}>{city}</option>
+          ))}
+        </select>
+          <label>Nơi bạn muốn thuê (Thành Phố):</label>
+          <select name="city" value={formData.city} onChange={handleChange} required>
+            <option value="">-- Chọn tỉnh/thành phố --</option>
+            {cities.map((city) => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
 
         <label>Nơi bạn muốn thuê (Quận):</label>
         <input
@@ -220,49 +237,27 @@ const RoommateForm = () => {
           </label>
         </div>
 
-        <label>Hãy chọn căn phòng mà bạn mong muốn?</label>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="rateImage"
-              value="1"
-              checked={formData.rateImage === "1"}
-              onChange={handleChange}
-            />
-            1
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="rateImage"
-              value="2"
-              checked={formData.rateImage === "2"}
-              onChange={handleChange}
-            />
-            2
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="rateImage"
-              value="3"
-              checked={formData.rateImage === "3"}
-              onChange={handleChange}
-            />
-            3
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="rateImage"
-              value="4"
-              checked={formData.rateImage === "4"}
-              onChange={handleChange}
-            />
-            4
-          </label>
-        </div>
+        <label>Hãy chọn mức độ sạch sẽ bạn mong muốn:</label>
+          <div className="radio-group clean-levels">
+            {cleanImages.map(({ id, src }) => (
+              <label key={id} className={`clean-option ${formData.rateImage === id ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="rateImage"
+                  value={id}
+                  checked={formData.rateImage === id}
+                  onChange={handleChange}
+                  style={{ display: 'none' }}
+                />
+                <img
+                  src={src}
+                  alt={`Mức độ sạch sẽ ${id}`}
+                  className="clean-image"
+                />
+              </label>
+            ))}
+          </div>
+
 
         <label>Mô tả thêm:</label>
         <textarea
