@@ -94,7 +94,7 @@ function Room() {
 
                 <div className="card-body">
                   <p>{room.description}</p>
-                  <h2>{room.price.toLocaleString()} vnđ / Tháng</h2>
+                  <h2>{room.price?.toLocaleString() ?? "Giá không có sẵn"} vnđ / Tháng</h2>
                   <p>{room.roomSize} m²</p>
 
                   <div className="additional-images">

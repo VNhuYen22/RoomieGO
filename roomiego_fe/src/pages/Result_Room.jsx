@@ -6,12 +6,12 @@ import { axiosInstance } from "../lib/axios";
 function Result_Room() {
   const { id } = useParams(); // Lấy id từ URL
 
-  // Tất cả useState đặt ngay đầu function
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showReportForm, setShowReportForm] = useState(false);
   const [reportReason, setReportReason] = useState("");
+  const [hasBooked, setHasBooked] = useState(false); // Trạng thái đã gửi yêu cầu
 
   useEffect(() => {
     const fetchRoomDetails = async () => {
@@ -30,9 +30,40 @@ function Result_Room() {
         setLoading(false);
       }
     };
-  
+
     fetchRoomDetails();
   }, [id]);
+
+  const handleBookNow = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      alert("Bạn cần đăng nhập để đặt phòng.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/rent-requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          roomId: room.id,
+        }),
+      });
+      // Log the response object
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      alert("Yêu cầu đặt phòng đã được gửi thành công!");
+      setHasBooked(true); // Ngăn gửi trùng
+    } catch (error) {
+      console.error("Error sending booking request:", error);
+      alert("Đặt phòng thất bại. Vui lòng thử lại.");
+    }
+  };
 
   const handleReportSubmit = async () => {
     const token = localStorage.getItem("authToken");
@@ -40,7 +71,7 @@ function Result_Room() {
       alert("Bạn cần đăng nhập để gửi báo cáo.");
       return;
     }
-  
+
     try {
       const response = await fetch("http://localhost:8080/api/reports", {
         method: "POST",
@@ -53,11 +84,11 @@ function Result_Room() {
           reason: reportReason,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       alert("Đã gửi báo cáo thành công.");
       setShowReportForm(false);
       setReportReason("");
@@ -65,19 +96,17 @@ function Result_Room() {
       alert("Gửi báo cáo thất bại.");
       console.error("Error submitting report:", error);
     }
-  };  
+  };
 
-  // ✅ Kiểm tra dữ liệu để tránh lỗi null
   if (loading) return <p>Loading room details...</p>;
   if (error) return <p>{error}</p>;
   if (!room) return <p>Không tìm thấy phòng.</p>;
 
-  // Xử lý URL ảnh
   const baseURL = "http://localhost:8080/images/";
   const mainImageUrl =
     room.imageUrls?.length > 0
       ? baseURL + room.imageUrls[0]
-      : "/default-room.jpg"; // Sử dụng ảnh mặc định nếu không có ảnh
+      : "/default-room.jpg";
 
   const sideImageUrls = room.imageUrls?.slice(1).map((url) => baseURL + url);
 
@@ -118,8 +147,10 @@ function Result_Room() {
           <h4>Start Booking</h4>
           <span>${room.price.toLocaleString()} per Month</span>
           <div className="contact-button">
-          <button>Chat Now!</button>
-          <button>Book Now!</button>
+            <button>Chat Now!</button>
+            <button onClick={handleBookNow} disabled={hasBooked}>
+              {hasBooked ? "Đã gửi yêu cầu" : "Book Now!"}
+            </button>
           </div>
         </div>
 

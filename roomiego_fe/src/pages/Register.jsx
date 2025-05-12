@@ -239,7 +239,7 @@ export default function Register() {
                 </div>
               </div>
 
-              <button type="submit" className="login-btn">Đăng ký</button>
+              <button type="submit" className="regis-btn">Đăng ký</button>
             </form>
           </div>
         </div>

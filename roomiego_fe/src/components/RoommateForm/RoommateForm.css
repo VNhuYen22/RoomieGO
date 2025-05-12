@@ -1,114 +1,191 @@
+/* Container bao ngoài chứa cả step-indicator và hộp form */
+.roommate-container {
+  min-height: 100vh;
+  background: ffff; /* xanh dương gradient */
+  background-size: cover;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Hộp form với hiệu ứng glass */
 .roommate-form {
-    font-family: Arial, sans-serif; /* Thay đổi font chữ */
-    max-width: 600px; /* Điều chỉnh độ rộng tối đa */
-    margin: 20px auto; /* Căn giữa và tạo khoảng cách trên dưới */
-    padding: 20px; /* Thêm padding để nội dung không sát viền */
-    border: 1px solid #ccc; /* Thêm viền */
-    border-radius: 5px; /* Bo tròn góc */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ */
-    background: linear-gradient(to bottom, #007bff, #00d4ff);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #1a1a1a; /* Chữ mặc định trong form hiển thị đen */
+  margin-top: 20px; /* Tạo khoảng cách giữa step-indicator và hộp form */
 }
 
 .roommate-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 26px;
+  color: #5e5ce6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .roommate-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+  display: block;
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a; /* Đảm bảo label hiển thị chữ đen */
 }
 
-.roommate-form input[type="text"],
-.roommate-form input[type="number"],
+.roommate-form input,
 .roommate-form select,
 .roommate-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước phần tử */
-    font-size: 16px; /* Tăng kích thước chữ */
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #1a1a1a; /* Input, select và textarea hiển thị chữ đen */
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  transition: background 0.3s ease;
+  border: solid 1px rgba(1, 1, 1, 0.3);
 }
 
-.roommate-form select {
-    height: 40px; /* Điều chỉnh chiều cao cho select */
+/* Cập nhật màu placeholder thành dạng tối */
+.roommate-form input::placeholder,
+.roommate-form textarea::placeholder {
+  color: rgba(0, 0, 0, 0.7);
 }
 
-.roommate-form textarea {
-    height: 100px; /* Điều chỉnh chiều cao cho textarea */
+.roommate-form input:focus,
+.roommate-form textarea:focus {
+  background: rgba(255, 255, 255, 0.3);
 }
 
-.checkbox-group {
-    margin-bottom: 15px;
+.checkbox-group,
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
 }
 
-.checkbox-group label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: normal;
+.checkbox-group label,
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #1a1a1a; /* Đảm bảo chữ trong checkbox và radio hiển thị đen */
 }
 
-.roommate-form button {
-    background-color: #3f62e2; /* Màu xanh lá cây */
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
 }
 
-.roommate-form button:hover {
-    background-color: #449d44; /* Màu xanh lá cây đậm hơn khi hover */
+.form-navigation button {
+  position: relative;
+  overflow: hidden; /* Cho phép pseudo-element bên ngoài không bị hiển thị */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  background-color: #007bff; /* Màu nền mặc định */
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
 }
 
-/* CSS cho thông báo lỗi */
-.error-message {
-    color: red;
-    margin-top: -10px;
-    margin-bottom: 10px;
-    font-size: 14px;
+/* Tạo overlay chuyển động */
+.form-navigation button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%; /* Bắt đầu hoàn toàn bên trái */
+  width: 100%;
+  height: 100%;
+  background: #00d4ff; /* Màu di chuyển, hãy chọn màu có độ tương phản với nền */
+  transform: skewX(-30deg); /* Hiệu ứng góc nghiêng tạo chiều sâu */
+  transition: left 0.5s ease-out;
+  z-index: 0; /* Để pseudo-element nằm sau nội dung của nút */
 }
-/* MatchDetails.css */
-.roommate-form-container{
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f0f0f0;
+
+/* Để chữ luôn hiển thị trên overlay */
+.form-navigation button > * {
+  position: relative;
+  z-index: 1;
 }
-.match-details-container {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
-  
-  .match-details-container h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .match-details-container div {
-    margin-bottom: 15px;
-  }
-  
-  .match-details-container p {
-    margin: 5px 0;
-    color: #555;
-  }
-  
-  .match-details-container strong {
-    font-weight: bold;
-    color: #333;
-    margin-right: 5px;
-  }
-  
+
+/* Khi hover, di chuyển overlay từ trái sang phải */
+.form-navigation button:hover::after {
+  left: 100%;
+}
+
+
+
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  font-size: 16px;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.step-number {
+  background-color: #ddd;
+  color: #fff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.step-label {
+  margin-left: 10px;
+}
+
+.step:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 30px;
+  border-top: 2px solid #ddd; /* Đường nối solid */
+  transform: translateY(-50%);
+}
+
+.step:last-child:before {
+  display: none;
+}
+
+.step.completed .step-number {
+  background-color: #5e5ce6;
+}
+
+/* Khi bước được hoàn thành, thay đổi màu của đường nối */
+.step.completed:before {
+  border-top-color: #5e5ce6;
+}
+
+
