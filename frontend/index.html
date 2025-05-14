@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Contract DApp</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        input, button { padding: 10px; margin: 5px; border-radius: 4px; border: 1px solid #ddd; }
+        button { background: #007bff; color: white; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { background: #e8f5e9; padding: 15px; border-radius: 4px; margin: 10px 0; }
+        .error { background: #ffebee; color: #c62828; }
+    </style>
+</head>
+<body>
+    <h1>🏠 Quản lý Hợp đồng Thuê phòng</h1>
+
+    <!-- Connect Wallet -->
+    <div class="container">
+        <h2>Kết nối Wallet</h2>
+        <button onclick="connectWallet()">Kết nối MetaMask</button>
+        <p id="account"></p>
+    </div>
+
+    <!-- Create Rental -->
+    <div class="container">
+        <h2>Tạo Hợp đồng mới</h2>
+        <input type="text" id="contractId" placeholder="Mã hợp đồng (VD: HD001)">
+        <input type="text" id="tenantName" placeholder="Tên người thuê">
+        <input type="text" id="landlordName" placeholder="Tên người cho thuê">
+        <input type="text" id="imageHash" placeholder="Hash ảnh hợp đồng">
+        <button onclick="createRental()">Tạo Hợp đồng</button>
+        <div id="createResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Get Rental -->
+    <div class="container">
+        <h2>Xem Hợp đồng</h2>
+        <input type="text" id="searchId" placeholder="Nhập mã hợp đồng">
+        <button onclick="getRental()">Tìm kiếm</button>
+        <div id="rentalResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Get All Contracts -->
+    <div class="container">
+        <h2>Tất cả Hợp đồng</h2>
+        <button onclick="getAllContracts()">Lấy danh sách</button>
+        <div id="allContracts" class="result" style="display:none;"></div>
+    </div>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 
