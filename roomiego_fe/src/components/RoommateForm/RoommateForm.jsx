@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './RoommateForm.css';
-
+import  minimal  from "../../assets/minimal.jpg";
+import minimal2 from "../../assets/minimal2.jpg";
+import openly from "../../assets/openly.jpg";
+import warm from "../../assets/clean&warm.jpg";
 const StepIndicator = ({ step }) => {
   return (
     <div className="step-indicator">
@@ -61,7 +64,16 @@ const StepTwo = ({ formData, errors, handleChange }) => (
 );
 
 const StepThree = ({ formData, errors, handleChange }) => {
-  const hobbiesList = ["Nuôi thú cưng", "Hút thuốc", "Ăn Chay"];
+  const hobbiesList = ["Nuôi thú cưng", 
+    "Hút thuốc", "Ăn Chay"];
+
+  // Mảng chứa thông tin các phòng với tiêu chí cụ thể
+  const roomTypes = [
+    { value: "1", label: "Tối giản" , image: minimal },
+    { value: "2", label: "Sạch sẽ" , image: warm },
+    { value: "3", label: "Phóng khoáng , cá tính ",  image: openly },
+  ];
+
   return (
     <>
       <label>Thói quen sinh hoạt:</label>
@@ -83,16 +95,25 @@ const StepThree = ({ formData, errors, handleChange }) => {
 
       <label>Chọn loại phòng mong muốn:</label>
       <div className="radio-group">
-        {[1, 2, 3, 4].map((num) => (
-          <label key={num}>
+        {roomTypes.map((room) => (
+          <label
+            key={room.value}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              margin: "10px",
+            }}
+          >
             <input
               type="radio"
               name="rateImage"
-              value={String(num)}
-              checked={formData.rateImage === String(num)}
+              value={room.value}
+              checked={formData.rateImage === room.value}
               onChange={handleChange}
             />
-            {num}
+            <img src={room.image} alt=""  style={{ width: "100px", height: "auto"} }/>
+            <span>{room.label}</span>
           </label>
         ))}
       </div>
@@ -109,6 +130,7 @@ const StepThree = ({ formData, errors, handleChange }) => {
     </>
   );
 };
+
 
 const RoommateForm = () => {
   const navigate = useNavigate();

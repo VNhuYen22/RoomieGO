@@ -48,7 +48,7 @@ export default function Login() {
     if (token) {
       setError("");
       
-      alert("Đăng nhập thành công!");
+      
       console.log("Token:", token); 
      // Lưu vào localStorage
      localStorage.setItem("authToken", token);
@@ -56,7 +56,7 @@ export default function Login() {
     
 
      // Điều hướng sang trang chính hoặc dashboard
-     window.location.href = "/room";
+    navigate ("/");
      // Điều hướng sang trang chính hoặc dashboard
     } else {
       setError("Sai tài khoản hoặc mật khẩu.");

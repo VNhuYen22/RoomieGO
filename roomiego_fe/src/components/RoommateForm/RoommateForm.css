@@ -73,12 +73,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 8px;
+ 
+}
+
+
+.step-image {
+  width: 50px; /* Kích thước hình ảnh */
+  height: auto; /* Tự động điều chỉnh chiều cao */
+  margin-left: 10px; /* Khoảng cách bên trái */
 }
 
 .checkbox-group label,
 .radio-group label {
-  display: flex;
+  /* display: flex; */
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.15);

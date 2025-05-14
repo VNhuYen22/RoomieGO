@@ -36,6 +36,7 @@ function Navbar() {
       setRole(role); // Cập nhật role người dùng
       setIsLoggedIn(true);
       console.log("User role:", role);
+     
 
     } catch (error) {
       console.error("Error fetching user profile:", error);

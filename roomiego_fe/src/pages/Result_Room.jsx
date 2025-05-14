@@ -12,7 +12,7 @@ function Result_Room() {
   const [showReportForm, setShowReportForm] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const [hasBooked, setHasBooked] = useState(false); // Trạng thái đã gửi yêu cầu
-
+  
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {

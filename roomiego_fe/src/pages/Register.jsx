@@ -1,7 +1,7 @@
 import { useState } from "react";
 import '../styles/Register.css';
 import vidBeach from "../assets/beach.mp4";
-
+import { useNavigate } from "react-router-dom"; 
 export default function Register() {
   const genderOptions = [
     { value: "MALE", label: "Nam" },
@@ -74,7 +74,7 @@ export default function Register() {
       setError("");
       setEmail(""); setPassword(""); setFullName(""); setPhone("");
       setGender(""); setDob(""); setBio(""); setRole("");
-      window.location.href = "/Login";
+      navigate ("/login");
     } catch (err) {
       console.error("Lỗi khi đăng ký:", err);
       setError(err.message || "Không thể kết nối đến máy chủ. Vui lòng thử lại.");
