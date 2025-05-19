@@ -8,6 +8,8 @@ import { useLocation } from "react-router-dom";
 import logout from "../assets/logout.png";
 import dashboard from "../assets/dashboard.png";
 import user2 from "../assets/user2.png";
+import friends from "../assets/high-five.png";
+import living from "../assets/living.png";
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -83,8 +85,8 @@ function Navbar() {
 
       </div>
       <div className="rightside">
-        <Link to="/Room"><a href="">Room</a></Link>
-        <Link to="/Roommates"><a href="">Roomates</a></Link>
+        <Link to="/Room"><img src={living} alt="" className="img-living" /><a href="">Room</a></Link>
+        <Link to="/Roommates"><img src={friends} alt="" className="img-living"/><a href="">Roomates</a></Link>
         {/* <Link to="/write">Write</Link> */}
         {isLoggedIn ? (
              <div className="user-menu">
@@ -119,7 +121,7 @@ function Navbar() {
            </div>
         ) : (
           <>
-            <Link to="/Register">Sign In</Link>
+            <Link to="/Register">Sign Up</Link>
            <Link to="Login"><button className="get-started-btn">Login</button></Link> 
           </>
         )}

@@ -1,22 +1,23 @@
 import React, { useRef, useState } from "react";
 // Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
+
 import "../styles/Home.css";
 import Room from "../assets/room1.jpeg";
 import Room2 from "../assets/room2.jpeg";
 import Room3 from "../assets/room3.jpeg";
 import Room4 from "../assets/room4.jpeg";
 import Arrow from "../assets/right-arrow.png";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-
+// Import Swiper styles
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation ,Virtual} from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 export default function App() {
   return (
     <div className="home">
+      
       <Swiper
         spaceBetween={30}
         centeredSlides={true}

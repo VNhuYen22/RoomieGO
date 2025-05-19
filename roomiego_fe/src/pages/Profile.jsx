@@ -1,0 +1,102 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "../styles/Profile.css";
+import user2 from "../assets/user2.png";
+import { data } from "react-router-dom";
+
+const Profile = () => {
+  const [profile, setProfile] = useState(null);
+useEffect(() => {
+  const fetchProfile = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("Không có token");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/renterowner/get-profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Profile fetched:", result.user);
+      setProfile(result.user); // CHỈ LẤY PHẦN user
+    } catch (error) {
+      console.error("Không lấy được profile:", error);
+    }
+  };
+
+  fetchProfile(); // goi ham fetchProfile
+}, []);
+
+
+
+  return (
+    <div className="account-settings-page">
+      <div className="account-settings-wrapper">
+        {/* Sidebar */}
+        <div className="account-sidebar">
+          <img src="https://via.placeholder.com/100" alt="Avatar" />
+          <h3>{profile ? profile.fullName : "Loading..."}</h3>
+          <ul>
+            
+            <li className="active">Account</li>
+          </ul>
+        </div>
+
+        {/* Content */}
+        <div className="account-content">
+          <img src={user2} alt="" />
+          <h2>Profile</h2>
+          {profile ? (
+            <form>
+  <div className="form-group half">
+    <label>Full Name </label>
+    <input type="text" value={profile.fullName} />
+  </div>
+
+  <div className="form-group half">
+    <label>Email</label>
+    <input type="email" value={profile.email}  />
+  </div>
+
+  <div className="form-group half">
+    <label>Phone number</label>
+    <input type="text" value={profile.phone} />
+  </div>
+
+  <div className="form-group half">
+    <label>Gender</label>
+    <input type="text" value={profile.gender}  />
+  </div>
+
+  <div className="form-group">
+    <label>Bio</label>
+    <textarea value={profile.bio}  />
+  </div>
+
+  <div className="buttons">
+    <button type="submit">Update</button>
+    <button className="button-cancel" type="button">Cancel</button>
+  </div>
+</form>
+
+          ) : (
+            <p>Loading profile...</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Profile;

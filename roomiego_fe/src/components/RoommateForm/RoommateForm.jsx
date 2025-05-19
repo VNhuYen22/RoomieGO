@@ -69,9 +69,9 @@ const StepThree = ({ formData, errors, handleChange }) => {
 
   // Mảng chứa thông tin các phòng với tiêu chí cụ thể
   const roomTypes = [
-    { value: "1", label: "Tối giản" , image: minimal },
-    { value: "2", label: "Sạch sẽ" , image: warm },
-    { value: "3", label: "Phóng khoáng , cá tính ",  image: openly },
+    { value: "1", label: "" , image: minimal },
+    { value: "2", label: "" , image: warm },
+    { value: "3", label: "",  image: openly },
   ];
 
   return (

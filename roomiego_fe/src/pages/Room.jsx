@@ -5,12 +5,42 @@ import room2 from "../assets/room2.jpeg";
 import room3 from "../assets/room3.jpeg";
 import SearchBar from "../components/SearchBar";
 import "../styles/Room.css";
+import blueStar from "../assets/circle.png";
+// Import Swiper styles
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation ,Virtual} from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Radius } from "lucide-react";
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
 function Room() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const slides = [
+  { image: room1, alt: 'Phòng 1' },
+  { image: room1, alt: 'Phòng 2' },
+  { image: room1, alt: 'Phòng 3' },
+  { image: room1, alt: 'Phòng 4' },
+  { image: room1, alt: 'Phòng 5' },
+  { image: room1, alt: 'Phòng 6' },
+  { image: room1, alt: 'Phòng 7' },
+  { image: room1, alt: 'Phòng 8' },
+  { image: room1, alt: 'Phòng 9' },
+  { image: room1, alt: 'Phòng 10' },
+  { image: room1, alt: 'Phòng 11' },
+  { image: room1, alt: 'Phòng 12' },
+];
+  const [activeTab, setActiveTab] = useState('Jacket'); // mặc định active tab là 'Jacket'
 
+  const tabs = ['Đà Nẵng', 'Hồ Chí Minh', 'Hà Nội'];
   const handleSortChange = (order) => {
     setSortOrder(order);
   };
@@ -55,11 +85,73 @@ function Room() {
   if (error) return <p>Error: {error}</p>;
 
   return (
+  
+
     <div className="body">
-      
-      
-      <SearchBar onSortChange={handleSortChange} />
-      <div className="text_title"><h3>Phòng phù hợp </h3> </div>
+      <SearchBar />
+    <div className="swiper-container1">
+            <Swiper
+        spaceBetween={30}
+        centeredSlides={true}
+        // autoplay={{
+        //   delay: 2500,
+        //   disableOnInteraction: false,
+        // }}
+        pagination={{
+          clickable: true,
+        }}
+        loop={true}
+        navigation={true}
+        modules={[Autoplay, Pagination, Navigation]}
+        
+      >
+           {slides.map((slide, index) => (
+        <SwiperSlide key={index} virtualIndex={index}>
+          <img src={slide.image} alt={slide.alt} style={{ width: '90%' ,
+            borderRadius: "10px"
+          }} />
+        </SwiperSlide>
+      ))}
+        
+      </Swiper>
+    </div>
+      {/* <SearchBar onSortChange={handleSortChange} /> */}
+      <div className="swiper-container">
+   
+       <h3 ><img src={blueStar} alt="" className="img-living" />Phòng được yêu thích nhất  </h3>   
+      <Swiper
+      modules={[Virtual]}
+      virtual
+      spaceBetween={30}
+   
+      slidesPerView={3}
+    autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+    >
+      {slides.map((slide, index) => (
+        <SwiperSlide key={index} virtualIndex={index}>
+          <img src={slide.image} alt={slide.alt} style={{ width: '90%' ,
+            borderRadius: "10px"
+          }} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+      </div>
+ <div className="button-group_city">
+  {tabs.map((tab) => (
+    <div
+      key={tab}
+      className={`button-tab_city ${activeTab === tab ? "active" : ""}`}
+      onClick={() => setActiveTab(tab)}
+      style={{ cursor: "pointer" }}
+    >
+      {tab}
+    </div>
+  ))}
+</div>
+      <div className="text_title"><h3>Phòng đặc trưng </h3> </div>
       <div className="room-grid">
       
         {sortedRooms.length === 0 ? (
@@ -67,52 +159,59 @@ function Room() {
         ) : (
           sortedRooms.map((room) => (
             <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
-              <div className="card">
-                <div className="card-header">
-                  <img
-                    src={getValidImageUrl(room.imageUrls[0])}
-                    alt="User"
-                    className="card-image"
-                    onError={(e) => {
-                      e.target.src = getValidImageUrl("");
-                    }}
-                  />
-                  <div className="card-info">
-                    <h3>{room.title}</h3>
-                    <span>{new Date(room.availableFrom).toLocaleDateString()}</span>
-                  </div>
-                </div>
+  <div className="card">
+    <img
+      src={getValidImageUrl(room.imageUrls[0])}
+      alt="Room"
+      className="card-image_big"
+      onError={(e) => {
+        e.target.src = getValidImageUrl("");
+      }}
+    />
 
-                <img
-                  src={getValidImageUrl(room.imageUrls[0])}
-                  alt="Room"
-                  className="card-image_big"
-                  onError={(e) => {
-                    e.target.src = getValidImageUrl("");
-                  }}
-                />
+    <div className="card-body">
+      <div className="card-top">
+        <h2>{room.price?.toLocaleString() ?? "N/A"} vnđ</h2>
+        <div className="status-badge">For rent</div>
+      </div>
 
-                <div className="card-body">
-                  <p>{room.description}</p>
-                  <h2>{room.price?.toLocaleString() ?? "Giá không có sẵn"} vnđ / Tháng</h2>
-                  <p>{room.roomSize} m²</p>
+      <div className="card-address">
+        <i className="fas fa-map-marker-alt"></i>
+       <span>{room.city}</span> <span>{room.addressDetails ?? "Địa chỉ không có sẵn"}</span>
+      </div>
 
-                  <div className="additional-images">
-                    {Array.from(new Set(room.imageUrls)).map((url, index) => (
-                      <img
-                        key={index}
-                        src={getValidImageUrl(url)}
-                        alt={`room additional ${index}`}
-                        className="additional-room-image"
-                        onError={(e) => {
-                          e.target.src = getValidImageUrl("");
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Link>
+      <div className="card-features">
+        <div className="card-feature-item">
+          <i className="fas fa-expand-arrows-alt"></i>
+          <span>{room.roomSize} m²</span>
+        </div>
+        <div className="card-feature-item">
+          <i className="fas fa-bed"></i>
+          <span>{room.num_bedrooms ?? "?"} bed</span>
+        </div>
+        <div className="card-feature-item">
+          <i className="fas fa-bath"></i>
+          <span>{room.bathrooms ?? "?"} bath</span>
+        </div>
+      </div>
+
+      <div className="card-footer">
+        <img
+          src={getValidImageUrl(room.imageUrls[1])}
+          alt="user"
+          onError={(e) => {
+            e.target.src = getValidImageUrl("");
+          }}
+        />
+        <div className="contact-info">
+          <span>Jennifer Bloom</span>
+          <small>+44 235 123 321</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</Link>
+
           ))
         )}
       </div>

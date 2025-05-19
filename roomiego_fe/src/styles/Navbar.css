@@ -46,6 +46,13 @@
 .rightside a:hover {
   color: #007bff; /* Màu xanh khi hover */
 }
+.img-living{
+  width: 40px; /* Kích thước chiều rộng của logo */
+  height: 40px; /* Kích thước chiều cao của logo */
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+  margin-right: 10px; 
+  display: inline-block; /* Để logo và chữ nằm trên cùng một dòng */
+}
 
 /* Get Started Button */
 .get-started-btn {

@@ -54,9 +54,10 @@ export default function Login() {
      localStorage.setItem("authToken", token);
      localStorage.setItem("Email", email);
     
-
+    
      // Điều hướng sang trang chính hoặc dashboard
     navigate ("/");
+      window.location.reload();
      // Điều hướng sang trang chính hoặc dashboard
     } else {
       setError("Sai tài khoản hoặc mật khẩu.");

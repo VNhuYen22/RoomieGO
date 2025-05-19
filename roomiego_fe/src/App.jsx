@@ -3,7 +3,7 @@ import SettingsPage from "./pages/SettingsPage";
 import Chatbox from "./pages/Chatbox";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import SearchBar from "./components/SearchBar";
+// import SearchBar from "./components/SearchBar";
 import Footer from "./components/Footer";
 import Room from "./pages/Room";
 import About from "./pages/About";
@@ -24,7 +24,7 @@ import MatchDetails from "./components/RoommateForm/MatchDetails ";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ReportPage from "./components/Dashboard/ReportPage";
-
+import Profile from "./pages/Profile";
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
@@ -84,7 +84,7 @@ const App = () => {
         <Route path="/match" element={<MatchDetails />} />
         <Route path="/q" element={<ReportPage />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
-
+        <Route path="/profile" element={<Profile />} />
         {/* Add other routes here */}
       </Routes>
        
