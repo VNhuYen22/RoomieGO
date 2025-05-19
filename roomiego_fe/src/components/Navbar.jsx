@@ -10,6 +10,7 @@ import dashboard from "../assets/dashboard.png";
 import user2 from "../assets/user2.png";
 import friends from "../assets/high-five.png";
 import living from "../assets/living.png";
+import home_icon from "../assets/house.png";
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -78,7 +79,7 @@ function Navbar() {
   }
 
   return (
-    <div className="navbar">
+    <div className="navbar-container">
       <div className="leftside">
 
        <Link to="http://localhost:5173/"><h1 className="logo-text">ROOMIEGO</h1></Link>

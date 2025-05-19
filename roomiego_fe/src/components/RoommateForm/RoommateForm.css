@@ -1,5 +1,37 @@
+/* Video nền */
+.video-background {
+  position: fixed;
+  top: 0;  /* sửa từ "top: 1" -> "top: 0" để video nằm sát trên cùng */
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -10;  /* đặt z-index thấp hơn để nằm dưới navbar */
+}
+
+.video-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Lớp phủ kính mờ */
+.glass-background {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 30px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
 /* Container bao ngoài chứa cả step-indicator và hộp form */
+
 .roommate-container {
+    position: relative;
+  z-index: 1;
   min-height: 100vh;
   background: ffff; /* xanh dương gradient */
   background-size: cover;
@@ -12,7 +44,7 @@
 
 /* Hộp form với hiệu ứng glass */
 .roommate-form {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 1.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 20px;

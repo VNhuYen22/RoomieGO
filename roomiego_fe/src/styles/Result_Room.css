@@ -87,7 +87,11 @@
   background-color: #007bff;
   color: white;
 }
-
+.room-details img{
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.3125rem;
+}
 @keyframes bounce {
   0%, 100% {
     transform: translateY(0);

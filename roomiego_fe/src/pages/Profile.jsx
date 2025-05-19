@@ -58,7 +58,7 @@ useEffect(() => {
           <img src={user2} alt="" />
           <h2>Profile</h2>
           {profile ? (
-            <form>
+            <form className="form_profile">
   <div className="form-group half">
     <label>Full Name </label>
     <input type="text" value={profile.fullName} />
@@ -79,7 +79,7 @@ useEffect(() => {
     <input type="text" value={profile.gender}  />
   </div>
 
-  <div className="form-group">
+  <div className="form-group half">
     <label>Bio</label>
     <textarea value={profile.bio}  />
   </div>

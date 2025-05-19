@@ -13,7 +13,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Radius } from "lucide-react";
-
+import sink from "../assets/sink.png";
+import bedrooms from "../assets/bedroom.png"; 
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -38,9 +39,9 @@ function Room() {
   { image: room1, alt: 'Phòng 11' },
   { image: room1, alt: 'Phòng 12' },
 ];
-  const [activeTab, setActiveTab] = useState('Jacket'); // mặc định active tab là 'Jacket'
+  const [activeTab, setActiveTab] = useState('Tất Cả'); // mặc định active tab là 'Jacket'
 
-  const tabs = ['Đà Nẵng', 'Hồ Chí Minh', 'Hà Nội'];
+
   const handleSortChange = (order) => {
     setSortOrder(order);
   };
@@ -73,13 +74,17 @@ function Room() {
     }
     return url;
   };
-
-  const sortedRooms = [...rooms];
-  if (sortOrder === "asc") {
-    sortedRooms.sort((a, b) => a.price - b.price);
-  } else if (sortOrder === "desc") {
-    sortedRooms.sort((a, b) => b.price - a.price);
-  }
+  // loc theo thanh pho 
+    const tabs = ['Tất Cả' ,'Đà Nẵng', 'Thành phố Hồ Chí Minh', 'Hà Nội'];
+ const filteredRooms = activeTab === 'Tất Cả' 
+  ? rooms 
+  : rooms.filter(room => room.city?.toLowerCase().includes(activeTab.toLowerCase()));
+const sortedRooms = [...filteredRooms];
+if (sortOrder === "asc") {
+  sortedRooms.sort((a, b) => a.price - b.price);
+} else if (sortOrder === "desc") {
+  sortedRooms.sort((a, b) => b.price - a.price);
+}
 
   if (loading) return <p>Loading rooms...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -88,7 +93,9 @@ function Room() {
   
 
     <div className="body">
-      <SearchBar />
+      <SearchBar onSortChange={handleSortChange}
+       />
+      
     <div className="swiper-container1">
             <Swiper
         spaceBetween={30}
@@ -115,7 +122,7 @@ function Room() {
         
       </Swiper>
     </div>
-      {/* <SearchBar onSortChange={handleSortChange} /> */}
+      
       <div className="swiper-container">
    
        <h3 ><img src={blueStar} alt="" className="img-living" />Phòng được yêu thích nhất  </h3>   
@@ -187,11 +194,11 @@ function Room() {
         </div>
         <div className="card-feature-item">
           <i className="fas fa-bed"></i>
-          <span>{room.num_bedrooms ?? "?"} bed</span>
+          <span><img src={bedrooms} alt="" />{room.numBedrooms ?? "?"} bed</span>
         </div>
         <div className="card-feature-item">
           <i className="fas fa-bath"></i>
-          <span>{room.bathrooms ?? "?"} bath</span>
+          <span><img src={sink} alt="" />{room.numBathrooms ?? "?"} bath</span>
         </div>
       </div>
 

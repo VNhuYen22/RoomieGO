@@ -1,7 +1,7 @@
 import { useState } from "react";
 import '../styles/Register.css';
-import vidBeach from "../assets/beach.mp4";
 import { useNavigate } from "react-router-dom"; 
+import bulding from "../assets/4k_building.mp4"; // Import icon nếu cần
 export default function Register() {
   const genderOptions = [
     { value: "MALE", label: "Nam" },
@@ -85,13 +85,13 @@ export default function Register() {
   return (
     <div className="login-wrapper">
       <video autoPlay muted loop id="bg-video">
-        <source src={vidBeach} type="video/mp4" />
+        <source src={bulding} type="video/mp4" />
         Trình duyệt của bạn không hỗ trợ video.
       </video>
 
       <div className="video-overlay"></div>
 
-      <div className="login-container">
+      <div className="register-container">
         <div className="login-box">
           <div className="login-image">
             <img 

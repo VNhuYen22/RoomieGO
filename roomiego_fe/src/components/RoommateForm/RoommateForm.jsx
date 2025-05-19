@@ -5,6 +5,14 @@ import  minimal  from "../../assets/minimal.jpg";
 import minimal2 from "../../assets/minimal2.jpg";
 import openly from "../../assets/openly.jpg";
 import warm from "../../assets/clean&warm.jpg";
+import friend_vid from "../../assets/4k_friend.mp4"; // Import icon nếu cần
+import Select from "react-select"; // Import Select component from react-select
+import {getProvinces} from "sub-vn"; // Import getProvinces function
+const provincesOptions = getProvinces().map((province) => ({
+  value: province.name,
+  label: province.name,
+}));
+
 const StepIndicator = ({ step }) => {
   return (
     <div className="step-indicator">
@@ -33,12 +41,19 @@ const StepOne = ({ formData, errors, handleChange }) => (
     </select>
 
     <label>Quê quán:</label>
-    <input
-      type="text"
-      name="hometown"
-      value={formData.hometown}
-      onChange={handleChange}
-    />
+    <Select
+  options={provincesOptions}
+  value={provincesOptions.find((opt) => opt.value === formData.hometown)}
+  onChange={(selected) =>
+    handleChange({
+      target: {
+        name: "hometown",
+        value: selected ? selected.value : "",
+      },
+    })
+  }
+/>
+
     {errors.hometown && <div className="error">{errors.hometown}</div>}
 
     <label>Năm sinh:</label>
@@ -93,7 +108,7 @@ const StepThree = ({ formData, errors, handleChange }) => {
       </div>
       {errors.hobbies && <div className="error">{errors.hobbies}</div>}
 
-      <label>Chọn loại phòng mong muốn:</label>
+      <label>Vui lòng chọn một trong ba bức ảnh dưới đây :</label>
       <div className="radio-group">
         {roomTypes.map((room) => (
           <label
@@ -261,6 +276,12 @@ const RoommateForm = () => {
 
   return (
     <div className="roommate-container">
+      {/* Video nền động */}
+      <div className="video-background">
+        <video autoPlay loop muted>
+          <source src={friend_vid} type="video/mp4" />
+        </video> 
+        </div>
       {/* Step Indictor nằm ngoài hộp form để hiển thị phía trên */}
       <StepIndicator step={step} />
       <div className="roommate-form glass-background">

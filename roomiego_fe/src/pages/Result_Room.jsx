@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "../styles/Result_Room.css";
 import { axiosInstance } from "../lib/axios";
-
+import sink from "../assets/sink.png";
+import bedrooms from "../assets/bedroom.png";
 function Result_Room() {
   const { id } = useParams(); // Lấy id từ URL
 
@@ -136,8 +137,8 @@ function Result_Room() {
           <p>{room.description}</p>
           <div className="room-details">
             <span><strong>Room Size:</strong> {room.roomSize} m²</span>
-            <span><strong>Bedrooms:</strong> {room.numBedrooms}</span>
-            <span><strong>Bathrooms:</strong> {room.numBathrooms}</span>
+            <span><img src={bedrooms} alt="" /><strong>Bedrooms:</strong> {room.numBedrooms}</span>
+            <span><img src={sink} alt="" /><strong>Bathrooms:</strong> {room.numBathrooms}</span>
           </div>
           <p><strong>Available From:</strong> {new Date(room.availableFrom).toLocaleDateString()}</p>
           <p><strong>Is Available:</strong> {room.isRoomAvailable ? "Yes" : "No"}</p>

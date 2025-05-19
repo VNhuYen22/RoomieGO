@@ -1,9 +1,10 @@
 import { useState } from "react";
 import '../styles/Login.css';
-import vidBeach from "../assets/beach.mp4";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
 import logo from "../assets/logo.png"; // Import logo nếu cần
+import building from "../assets/4k_building.mp4"; // Import icon nếu cần
+ // Import icon nếu cần
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -72,7 +73,7 @@ export default function Login() {
     <div className="login-wrapper">
       {/* Video nền động */}
       <video autoPlay muted loop id="bg-video">
-        <source src={vidBeach} type="video/mp4" />
+        <source src={building} type="video/mp4" />
         Trình duyệt của bạn không hỗ trợ video.
       </video>
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/SearchBar.css";
-
+import filter from "../assets/funnel.png";
 const SearchBar = ({ onSortChange }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -13,7 +13,7 @@ const SearchBar = ({ onSortChange }) => {
       <div className="floating-button-container">
         {/* Nút duy nhất để toggle */}
         <button className="circle-button" onClick={toggleDropdown}>
-          <span className={showDropdown ? "close-x" : "arrow-up"}></span>
+         <img src={filter} alt="" /> <span className={showDropdown ? "close-x" : ""}></span>
         </button>
 
         {/* Dropdown Min / Max */}
@@ -22,7 +22,7 @@ const SearchBar = ({ onSortChange }) => {
             <button className="circle-min"
               onClick={() => {
                 onSortChange("asc");
-                setShowDropdown(false);
+                setShowDropdown(true);
               }}
             >
               Min
@@ -30,7 +30,7 @@ const SearchBar = ({ onSortChange }) => {
             <button className="circle-max"
               onClick={() => {
                 onSortChange("desc");
-                setShowDropdown(false);
+                setShowDropdown(true);
               }}
             >
               Max
