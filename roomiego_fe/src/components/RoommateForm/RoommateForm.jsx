@@ -5,7 +5,7 @@ import  minimal  from "../../assets/minimal.jpg";
 import minimal2 from "../../assets/minimal2.jpg";
 import openly from "../../assets/openly.jpg";
 import warm from "../../assets/clean&warm.jpg";
-import friend_vid from "../../assets/4k_friend.mp4";
+import friend_vid from "../../assets/4k_building.mp4";
 import Select from "react-select"; // Import Select component from react-select
 import {getProvinces} from "sub-vn"; // Import getProvinces function
 const provincesOptions = getProvinces().map((province) => ({

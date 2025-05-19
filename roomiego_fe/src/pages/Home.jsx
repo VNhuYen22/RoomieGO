@@ -16,7 +16,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { icon } from "@fortawesome/fontawesome-svg-core";
-import videoSrc from "../assets/4k_friend.mp4"; // Import video file
+import videoSrc from "../assets/4k_building.mp4"; // Import video file
 export default function App() {
   return (
     <div className="home-containercontainer">
