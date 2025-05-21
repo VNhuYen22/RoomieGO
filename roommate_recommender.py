@@ -1,73 +1,69 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from db_connection import get_db_connection  # Import hàm kết nối MySQL
+from db_connection import get_db_connection
 
-# Kết nối đến cơ sở dữ liệu MySQL
-db_connection = get_db_connection()
+# Kết nối DB
+db = get_db_connection()
+if db is None:
+    print("Không thể kết nối DB!")
+    exit()
 
-# Tải dữ liệu từ bảng 'roommates'
-query = "SELECT * FROM roommates"
-roommates = pd.read_sql(query, con=db_connection)
+# Load roommates
+roommates = pd.read_sql("SELECT * FROM roommates", con=db)
 
-# Gộp các đặc điểm thành chuỗi mô tả
+# Load ratings
+ratings = pd.read_sql("SELECT * FROM ratings", con=db)
+
+# Gộp đặc điểm cá nhân
 def combine_features(row):
-    return f"{row['hobbies']} {row['sleep_schedule']} {row['cleanliness']}"
+    h = str(row.get('hobbies', '')) if pd.notna(row.get('hobbies')) else ''
+    s = str(row.get('sleep_schedule', '')) if pd.notna(row.get('sleep_schedule')) else ''
+    c = str(row.get('cleanliness', '')) if pd.notna(row.get('cleanliness')) else ''
+    return f"{h} {s} {c}"
 
 roommates['combined'] = roommates.apply(combine_features, axis=1)
 
-# Vector hóa văn bản bằng TF-IDF
+# TF-IDF vectorization
 tfidf = TfidfVectorizer(stop_words='english')
 tfidf_matrix = tfidf.fit_transform(roommates['combined'])
+cosine_sim = cosine_similarity(tfidf_matrix)
 
-# Tính độ tương đồng cosine
-cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+# Hàm lấy collaborative filtering score trung bình
+def get_cf_scores(user_id):
+    """Trả về dict: {roommate_id: average_rating} mà user_id đã đánh giá người khác."""
+    user_ratings = ratings[ratings['rater_id'] == user_id]
+    return dict(zip(user_ratings['ratee_id'], user_ratings['score']))
 
-# Hàm gợi ý bạn cùng phòng
-def recommend_roommates(name, top_n=5):
+# Hybrid Recommender
+def hybrid_recommend(name, top_n=5, alpha=0.7):
+    """alpha: trọng số TF-IDF, (1 - alpha): trọng số Collaborative"""
     if name not in roommates['name'].values:
         return f"Không tìm thấy người tên '{name}'."
 
-    # Lấy thông tin người dùng
     idx = roommates.index[roommates['name'] == name][0]
-    user = roommates.iloc[idx]
+    user_id = roommates.loc[idx, 'id']  # Cần cột 'id' trong bảng roommates
+    cb_scores = list(enumerate(cosine_sim[idx]))
 
-    # Lọc những người cùng giới tính
-    same_gender = roommates[roommates['gender'] == user['gender']]
+    # Lấy điểm CF
+    cf_dict = get_cf_scores(user_id)
 
-    # Nếu có nhiều người cùng giới tính -> tiếp tục lọc theo quê quán
-    filtered = same_gender.copy()
-    filtered['priority_score'] = 0
+    # Kết hợp điểm: tổng hợp theo công thức hybrid_score = alpha * CB + (1 - alpha) * CF
+    hybrid_scores = []
+    for i, cb in cb_scores:
+        if i == idx:
+            continue
+        roommate_id = roommates.loc[i, 'id']
+        cf = cf_dict.get(roommate_id, None)
 
-    # Ưu tiên người cùng quê quán
-    filtered.loc[filtered['hometown'] == user['hometown'], 'priority_score'] += 3
+        # Nếu không có đánh giá CF, chỉ dùng CB
+        if cf is None:
+            score = cb
+        else:
+            score = alpha * cb + (1 - alpha) * (cf / 5.0)  # Chuẩn hóa score CF về [0,1]
+        hybrid_scores.append((i, score))
 
-    # Ưu tiên người cùng thành phố
-    filtered.loc[filtered['city'] == user['city'], 'priority_score'] += 2
+    hybrid_scores = sorted(hybrid_scores, key=lambda x: x[1], reverse=True)
+    top_indices = [i[0] for i in hybrid_scores[:top_n]]
 
-    # Ưu tiên người cùng quận
-    filtered.loc[filtered['district'] == user['district'], 'priority_score'] += 1
-
-    # Tính điểm tương đồng cosine
-    similarity_scores = list(enumerate(cosine_sim[idx]))
-
-    # Giữ lại chỉ những người trong danh sách đã lọc
-    filtered_indices = filtered.index.tolist()
-    filtered_scores = [s for s in similarity_scores if s[0] in filtered_indices and s[0] != idx]
-
-    # Cộng điểm ưu tiên vào điểm tương đồng
-    scored = []
-    for i, score in filtered_scores:
-        extra = filtered.loc[i, 'priority_score']
-        scored.append((i, score + extra))
-
-    # Sắp xếp theo điểm tổng
-    scored = sorted(scored, key=lambda x: x[1], reverse=True)
-
-    # Trả về top N gợi ý
-    top_matches = [i[0] for i in scored[:top_n]]
-    return roommates[['name', 'gender', 'hometown', 'city', 'district', 'yob', 'hobbies', 'job', 'more', 'rate_image']].iloc[top_matches]
-
-# Ví dụ sử dụng
-print("Gợi ý bạn cùng phòng cho Alice:")
-print(recommend_roommates('Alice'))
+    return roommates[['name', 'gender', 'hometown', 'city', 'district', 'yob', 'hobbies', 'job', 'more', 'rate_image']].iloc[top_indices]
