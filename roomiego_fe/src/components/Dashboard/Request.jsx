@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 // import { useNotifications } from "../NotificationComponent/NotificationContext";
-import "./Request.css";
+import "./css/Request.css";
 
 const Request = () => {
   const [requests, setRequests] = useState([]);
