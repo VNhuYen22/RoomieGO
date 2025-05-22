@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ReportTable from "./ReportTable";
+import Header from "./Header";
 import "./css/ReportPage.css";
 import { axiosInstance } from "../../lib/axios";
-
 
 function ModalContent({ report, onClose, onViPham, onKhongViPham }) {
   if (!report) return null;
@@ -98,12 +98,12 @@ function ModalContent({ report, onClose, onViPham, onKhongViPham }) {
           <button style={styles.dangerButton} onClick={() => onViPham(report.id)}>Vi phạm</button>
           <button style={styles.button} onClick={() => onKhongViPham(report.id)}>Không vi phạm</button>
           <button style={styles.button} onClick={onClose}>Đóng</button>
+
         </div>
       </div>
     </div>
   );
 }
-
 
 const ReportPage = () => {
   const [reports, setReports] = useState([]);
@@ -113,6 +113,7 @@ const ReportPage = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Số lượng báo cáo trên mỗi trang
+
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -130,7 +131,6 @@ const ReportPage = () => {
 
         const reportList = response.data.data?.data || [];
         if (!Array.isArray(reportList)) throw new Error("Dữ liệu trả về không hợp lệ.");
-
         setReports(reportList);
         setLoading(false);
       } catch (error) {
@@ -144,24 +144,26 @@ const ReportPage = () => {
         setLoading(false);
       }
     };
-
+  
     fetchReports();
   }, []);
 
+  // Show or hide the modal when a report is selected
   useEffect(() => {
-    setShowModal(!!selectedReport);
+    if (selectedReport) {
+      setShowModal(true);
+    } else {
+      setShowModal(false);
+    }
   }, [selectedReport]);
 
   const handleView = (report) => {
-    console.log("Đang xem báo cáo: ", report);  // Debug log
-    setSelectedReport(report);  // Cập nhật selectedReport khi click vào Xem
+    setSelectedReport(report);
   };
-  const handleClose = () => { setShowModal(false); setSelectedReport(null); };
 
-  const updateStatus = (id) => {
-    setReports((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status: "Đã xử lý" } : r))
-    );
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedReport(null);
   };
 
   const handleViPham = async (id) => {
@@ -169,16 +171,18 @@ const ReportPage = () => {
       const token = localStorage.getItem("authToken");
       const response = await axiosInstance.post(`http://localhost:8080/api/reports/${id}/handle`, {
         isViolation: true,
-        adminNote: "Đăng tin giả, đã xóa bài.",
+        adminNote: "Đăng tin giả, đã xóa bài."
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       });
 
       if (response.status === 200) {
-        updateStatus(id);
+        setReports((prev) =>
+          prev.map((r) => (r.id === id ? { ...r, status: "Đã xử lý" } : r))
+        );
         alert("Đã xóa bài và gửi thông báo cho chủ bài viết.");
         handleClose();
       }
@@ -193,16 +197,18 @@ const ReportPage = () => {
       const token = localStorage.getItem("authToken");
       const response = await axiosInstance.post(`http://localhost:8080/api/reports/${id}/handle`, {
         isViolation: false,
-        adminNote: "Không vi phạm.",
+        adminNote: "Không vi phạm."
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       });
 
       if (response.status === 200) {
-        updateStatus(id);
+        setReports((prev) =>
+          prev.map((r) => (r.id === id ? { ...r, status: "Đã xử lý" } : r))
+        );
         alert("Đã phản hồi cho người báo cáo.");
         handleClose();
       }
@@ -261,5 +267,5 @@ const ReportPage = () => {
     </div>
   );
 };
-
 export default ReportPage;
+

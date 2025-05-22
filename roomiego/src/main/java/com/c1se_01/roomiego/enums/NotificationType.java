@@ -9,4 +9,5 @@ public enum NotificationType {
     ROOM_HIDDEN,
     TENANT_CONFIRMED_VIEWING,
     RENT_REQUEST_VIEW_ROOM
+
 }

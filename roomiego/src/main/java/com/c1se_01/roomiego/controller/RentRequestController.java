@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RentRequestController {
     private final RentRequestService rentRequestService;
-
     @PostMapping
     public RentRequestResponse createRentRequest(@RequestBody RentRequestCreateRequest request) {
         return rentRequestService.createRentRequest(request);
     }
-
     @PutMapping("/{requestId}")
     public RentRequestResponse updateRentRequestStatus(
             @PathVariable Long requestId,
@@ -34,5 +32,4 @@ public class RentRequestController {
     public RentRequestResponse confirmFinalize(@PathVariable Long requestId) {
         return rentRequestService.confirmFinalize(requestId);
     }
-
 }

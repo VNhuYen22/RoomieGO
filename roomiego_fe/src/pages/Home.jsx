@@ -1,21 +1,36 @@
 import React, { useRef, useState } from "react";
 // Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Link } from "react-router-dom";
 
+import "../styles/Home.css";
+import Room from "../assets/minimal.jpg";
+import Room2 from "../assets/minimal2.jpg";
+import Room3 from "../assets/openly.jpg";
+import Room4 from "../assets/room4.jpeg";
+import Arrow from "../assets/right-arrow.png";
+import home_icon from "../assets/house.png";
 // Import Swiper styles
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation ,Virtual} from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "../styles/Home.css";
-import Room from "../assets/room1.jpeg";
-import Room2 from "../assets/room2.jpeg";
-import Room3 from "../assets/room3.jpeg";
-import Room4 from "../assets/room4.jpeg";
-import Arrow from "../assets/right-arrow.png";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-
+import { icon } from "@fortawesome/fontawesome-svg-core";
+import videoSrc from "../assets/4k_building.mp4"; // Import video file
 export default function App() {
   return (
+    <div className="home-containercontainer">
+          <div className="video-banner">
+      <video autoPlay muted loop className="video-background_home">
+        <source src={videoSrc} type="video/mp4" />
+        Trình duyệt của bạn không hỗ trợ video.
+      </video>
+      <div className="video-content">
+        <h1>Chào mừng bạn đến với Roommate Finder</h1>
+        <p>Nơi tìm kiếm bạn cùng phòng lý tưởng dành cho bạn</p>
+        
+      </div>
+    </div>
     <div className="home">
       <Swiper
         spaceBetween={30}
@@ -39,12 +54,13 @@ export default function App() {
       </Swiper>
       <div className="home-content">
         <h1>
-          Go from <span className="highlight">solo</span> to{" "}
-          <span className="highlight">social</span>, in just a few taps!
+          Chia sẻ  <span className="highlight"><img src={home_icon} alt="" /></span> và cả sự {" "}
+          <span className="highlight">ngạc nhiên </span>, mỗi lần gặp được người bạn mới
         </h1>
-        <p>Join Linkups to explore and hang out with travellers.</p>
-        <button className="home-arrow">Find your room</button>
+        <p>Bạn đã sẵn sàng cho điều đó chưa 😉!!!</p>
+       <Link to="/Room"><button className="home-arrow">Find your room</button></Link> 
       </div>
+    </div>
     </div>
   );
 }
