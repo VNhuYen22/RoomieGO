@@ -44,6 +44,11 @@
   font-size: 1rem;
   font-weight: 500;
 }
+.rightside {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Khoảng cách giữa các phần tử */
+}
 
 .rightside a:hover {
   color: #007bff; /* Màu xanh khi hover */
@@ -149,6 +154,7 @@
   object-fit: cover;
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
   top: 50px;
@@ -184,6 +190,7 @@
   transition: background-color 0.3s ease, color 0.3s ease; /* Thêm hiệu ứng chuyển đổi màu */
   border-radius: 4px; /* Bo góc nhẹ cho nút */
 }
+
 /* Định dạng cho phần tử <a> */
 .dropdown-menu a {
   font-weight: bold;
@@ -210,60 +217,3 @@
 .dropdown-menu button:hover img {
   filter: brightness(0.8); /* Làm tối hình ảnh khi hover */
 }
-
-/* Navbar Container (Rest of your navbar styles) */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  top: 0;
-  z-index: 1000;
-}
-
-.dropdown-toggle {
-  background: none;
-  border: 1px solid #ddd; /* Thêm border */
-  border-radius: 25px; /* Bo tròn góc */
-  padding: 0.5rem 1rem; /* Khoảng cách bên trong */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.dropdown-toggle:hover {
-  border-color: #007bff; /* Đổi màu border khi hover */
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Thêm hiệu ứng shadow khi hover */
-}
-
-.menu-icon {
-  margin-right: 0.5rem; /* Khoảng cách giữa menu icon và user icon */
-}
-
-.rightSide img {
-  width: 30px; /* Đổi kích thước user icon */
-  height: 30px; /* Đổi kích thước user icon */
-  font-size: 1.5rem;
-}
-
-/* Left Side Links */
-.leftside a {
-  margin-right: 1.5rem;
-  text-decoration: none;
-  color: #333;
-  font-size: 1rem;
-}
-
-.leftside a:hover {
-  color: #007bff;
-}
-
-/* Center Logo */
-.center img {
-  height: 40px;
-}
-

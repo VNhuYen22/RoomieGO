@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../styles/Room.css";
 import { Link } from "react-router-dom";
 import room1 from "../assets/room1.jpeg";
 import room2 from "../assets/room2.jpeg";
@@ -25,32 +24,6 @@ function Room() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({
-    price: 500,
-    location: "all",
-    roomFor: "any-room"
-  });
-
-  // Handle filter changes
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value
-    }));
-  };
-
-  const applyFilters = () => {
-    fetch(`http://localhost:8080/api/rooms?price=${filters.price}&location=${filters.location}&roomFor=${filters.roomFor}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Expected JSON but received: " + contentType);
-        }
-
   const [sortOrder, setSortOrder] = useState(null);
   const slides = [
   { image: room1, alt: 'Phòng 1' },
@@ -90,13 +63,8 @@ function Room() {
   };
 
   useEffect(() => {
-
-    applyFilters(); // Apply initial filters when component mounts
-  }, []); // Empty array to ensure it runs only once
-
     fetchRooms();
   }, []);
-
 
   const getValidImageUrl = (url) => {
     if (!url || typeof url !== "string" || url.trim() === "") {
@@ -157,7 +125,7 @@ if (sortOrder === "asc") {
       
       <div className="swiper-container">
    
-       <h3 ><img src={blueStar} alt="" className="img-living" />Phòng được yêu thích nhất  </h3>   
+       <h3 ><img src={blueStar} alt="" className="img-living" />Chọn phòng theo phong cách của bạn  </h3>   
       <Swiper
       modules={[Virtual]}
       virtual
@@ -257,5 +225,5 @@ if (sortOrder === "asc") {
     </div>
   );
 }
-}
+
 export default Room;
