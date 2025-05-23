@@ -79,6 +79,7 @@ const BookingsPage = () => {
 
   return (
     <div className="BookingsPage-content">
+      <Header />
       <FilterBar onAddClick={() => setShowRegisterForm(true)} />
       {showRegisterForm && (
         <RegisterForm

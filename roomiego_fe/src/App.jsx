@@ -3,7 +3,8 @@ import SettingsPage from "./pages/SettingsPage";
 import Chatbox from "./pages/Chatbox";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import SearchBar from "./components/SearchBar";
+
+// import SearchBar from "./components/SearchBar";
 import Footer from "./components/Footer";
 import Room from "./pages/Room";
 import About from "./pages/About";
@@ -24,7 +25,7 @@ import MatchDetails from "./components/RoommateForm/MatchDetails ";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ReportPage from "./components/Dashboard/ReportPage";
-
+import Profile from "./pages/Profile";
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
@@ -53,7 +54,9 @@ const App = () => {
 
   // Define routes where SearchBar should not be visible
   const hideSearchBar = ["/invoices","/maps","/test1","/roommates","/match","/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests" ].includes(location.pathname);
-  const hideNavbarAndNavbarchatbox =["/dashboard/invoices"].includes(location.pathname);
+
+  const hideNavbarAndNavbarchatbox =["/dashboard/invoices","/dashboard/report","/dashboard/bookings","/dashboard/requests"].includes(location.pathname);
+
 
   return (
     <div data-theme={theme}>
@@ -64,7 +67,11 @@ const App = () => {
         ) : (
           <>
             <Navbar />
-            {!hideSearchBar && <SearchBar />}
+
+            {/* {!hideSearchBar && } */}
+
+            {/* {!hideSearchBar && <SearchBar />} */}
+
           </>
         )
       )}
@@ -85,6 +92,9 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/q" element={<ReportPage />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/q" element={<ReportPage />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
 
         {/* Add other routes here */}
       </Routes>

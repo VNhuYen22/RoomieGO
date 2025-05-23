@@ -125,3 +125,95 @@
     height: 30px;
   }
 }
+
+/* đoạn sau */
+
+
+.circle-button {
+  width: 4%;
+  height: 4%;
+  /* border-radius: 50%;
+  background: radial-gradient(circle at center, #444, #000);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  border: none; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 20px;
+  /* Đặt vị trí cố định ở góc trái phía dưới */
+  position: fixed;
+  bottom: 40px;  /* Khoảng cách từ mép dưới, bạn có thể điều chỉnh */
+  left: 30px;    /* Khoảng cách từ mép trái */
+}
+
+/* Arrow up icon */
+.arrow-up::before,
+.arrow-up::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background: white;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+}
+
+.arrow-up::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.arrow-up::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Close X icon */
+.close-x::before,
+.close-x::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: white;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+}
+
+.close-x::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-x::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.circle-dropdown-menu-inside {
+  position: fixed;
+  bottom: 100px;    /* Khoảng cách từ mép dưới */
+  left: 10px;       /* Khoảng cách từ mép trái */
+  z-index: 999;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: none;
+  border-radius: 50%;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+ 
+}
+
+.circle-min,.circle-max {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+background-color: #5e5ce6;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+}

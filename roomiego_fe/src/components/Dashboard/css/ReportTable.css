@@ -36,6 +36,7 @@
 
 .report-table th:nth-child(6) {
   width: 10%; /* Hành động */
+
 }
 
 .pending {
@@ -60,3 +61,14 @@
 .view-btn:hover {
   opacity: 0.9;
 }
+
+.resolved {
+  color: green;
+  font-weight: bold;
+}
+
+.pending {
+  color: red;
+  font-weight: bold;
+}
+
