@@ -9,13 +9,38 @@ const Request = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [selectedRenterInfo, setSelectedRenterInfo] = useState(null);
+  const [roomDetails, setRoomDetails] = useState({});
   // const { sendNotification } = useNotifications();
-  
-  // Add pagination state
+
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Function to fetch room details
+  const fetchRoomDetails = async (roomId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/rooms/${roomId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch room details");
+      }
+
+      const data = await response.json();
+      return data.data; // Return the room data
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+      return null;
+    }
+  };
+
+  // Fetch all requests for the owner
   const fetchRequests = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await fetch("http://localhost:8080/api/view-requests/owner", {
         headers: {
@@ -23,14 +48,34 @@ const Request = () => {
         },
       });
 
+      console.log("Response status:", response.status);
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response text:", errorText);
         throw new Error("Failed to fetch requests");
       }
 
       const data = await response.json();
-      setRequests(data);
+      console.log("Fetched requests data:", data);
+
+      // Fetch room details for each request
+      const requestsWithRoomDetails = await Promise.all(
+        data.map(async (request) => {
+          if (request.roomId) {
+            const roomData = await fetchRoomDetails(request.roomId);
+            if (roomData) {
+              return { ...request, room: roomData };
+            }
+          }
+          return request;
+        })
+      );
+
+      console.log("Requests with room details:", requestsWithRoomDetails);
+      setRequests(requestsWithRoomDetails);
     } catch (error) {
-      setError(error.message);
+      console.error("Fetch error:", error);
+      setError(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -40,14 +85,16 @@ const Request = () => {
     fetchRequests();
   }, []);
 
-  // Calculate pagination values
+  // Pagination calculations
   const totalPages = Math.ceil(requests.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentRequests = requests.slice(startIndex, endIndex);
 
-  const showRenterInfo = async (renterId) => {
+  // Show renter info modal
+  const showRenterInfo = async (renterId, request) => {
     try {
+      // Gọi API để lấy thông tin người thuê
       const response = await fetch(`http://localhost:8080/owner/get-users/${renterId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -58,12 +105,29 @@ const Request = () => {
         throw new Error("Failed to fetch renter information");
       }
 
-      const data = await response.json();
-      setSelectedRenterInfo(data);
+      const renterData = await response.json();
+      console.log("Raw renter data:", renterData); // Debug log
+
+      // Lấy thông tin người dùng từ mảng usersList
+      const userData = renterData.usersList?.[0] || {};
+      console.log("User data:", userData); // Debug log
+
+      const renterInfo = {
+        fullName: userData.fullName || userData.name || userData.username || "Chưa cập nhật",
+        email: userData.email || "Chưa cập nhật",
+        phone: userData.phone || userData.phoneNumber || "Chưa cập nhật",
+        dateOfBirth: userData.dateOfBirth || userData.birthDate || "Chưa cập nhật",
+        gender: userData.gender || "Chưa cập nhật"
+      };
+      
+      console.log("Processed renter info:", renterInfo); // Debug log
+      
+      setSelectedRenterInfo(renterInfo);
+      setSelectedRequest(request);
       setIsModalOpen(true);
     } catch (error) {
-      console.error("Error fetching renter info:", error);
-      alert("Failed to fetch renter information");
+      console.error("Error showing renter info:", error);
+      alert("Failed to show renter information");
     }
   };
 
@@ -73,7 +137,9 @@ const Request = () => {
     setSelectedRenterInfo(null);
   };
 
+  // Respond to a view request (accept/reject)
   const handleRespond = async (requestId, accept, adminNote = null) => {
+    console.log("Handling response:", { requestId, accept, adminNote }); // Debug log
     try {
       const response = await fetch("http://localhost:8080/api/view-requests/respond", {
         method: "POST",
@@ -82,55 +148,36 @@ const Request = () => {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
         body: JSON.stringify({
-          requestId,
-          accept,
-          adminNote,
+          requestId: requestId,
+          accept: accept,
+          adminNote: adminNote || ""
         }),
       });
 
+      console.log("Response status:", response.status); // Debug log
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Error response:", errorData); // Debug log
         throw new Error(errorData.message || "Failed to respond to request");
       }
 
       const responseData = await response.json();
-      
-      // Lấy thông tin người thuê
-      const renterResponse = await fetch(`http://localhost:8080/owner/get-users/${responseData.renterId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      });
+      console.log("Response data:", responseData); // Debug log
 
-      if (!renterResponse.ok) {
-        throw new Error("Failed to fetch renter information");
-      }
+      // Refresh requests list to update status
+      await fetchRequests();
 
-      const renterData = await renterResponse.json();
-      if (!renterData.email) {
-        throw new Error("Renter email not found");
-      }
-
-      // Gửi thông báo cho người thuê
-      const notificationMessage = accept
-        ? `Yêu cầu xem phòng của bạn đã được chấp nhận. ${adminNote ? `Lưu ý: ${adminNote}` : ""}`
-        : `Yêu cầu xem phòng của bạn đã bị từ chối. ${adminNote ? `Lý do: ${adminNote}` : ""}`;
-
-      // await sendNotification(
-      //   responseData.renterId,
-      //   notificationMessage,
-      //   "VIEW_REQUEST_RESPONSE",
-      //   { roomId: responseData.roomId }
-      // );
-
-      // Cập nhật danh sách yêu cầu
-      fetchRequests();
-      
-      // Đóng modal
+      // Close modal if it was open
       setSelectedRequest(null);
+      setIsModalOpen(false);
+      setSelectedRenterInfo(null);
+
+      // Show success message
+      alert(accept ? "Đã chấp nhận yêu cầu" : "Đã từ chối yêu cầu");
     } catch (error) {
       console.error("Error responding to request:", error);
-      alert(error.message);
+      alert(error.message || "Có lỗi xảy ra khi xử lý yêu cầu");
     }
   };
 
@@ -156,65 +203,75 @@ const Request = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRequests.map((req) => (
-                <tr key={req.id}>
-                  <td>{req.roomTitle}</td>
-                  <td>
-                    <button onClick={() => showRenterInfo(req.renterId)}>
-                      View Renter
-                    </button>
-                  </td>
-                  <td>{req.message}</td>
-                  <td>
-                    {req.status === "PENDING" ? (
-                      <span className="status-pending">Pending</span>
-                    ) : (
-                      <span className="status-message">
-                        {req.status === "ACCEPTED" ? "Đã chấp nhận" : "Đã từ chối"}
-                        {req.adminNote && ` - ${req.adminNote}`}
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    {req.status === "PENDING" && (
-                      <div className="action-buttons">
-                        <button
-                          className="accept-btn"
-                          onClick={() => handleRespond(req.id, true)}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="reject-btn"
-                          onClick={() => {
-                            const adminNote = prompt("Lý do từ chối:");
-                            if (adminNote !== null) {
-                              handleRespond(req.id, false, adminNote);
-                            }
-                          }}
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {currentRequests.map((req) => {
+                console.log("Rendering request:", req); // Debug log
+                return (
+                  <tr key={req.id}>
+                    <td>{req.room?.title || "Unknown Room"}</td>
+                    <td>
+                      <button 
+                        className="view-renter-btn"
+                        onClick={() => showRenterInfo(req.renterId, req)}
+                      >
+                        View Renter
+                      </button>
+                    </td>
+                    <td>{req.message}</td>
+                    <td>
+                      {req.status === "PENDING" ? (
+                        <span className="status-pending">Pending</span>
+                      ) : (
+                        <span className="status-message">
+                          {req.status === "ACCEPTED" ? "Đã chấp nhận" : "Đã từ chối"}
+                          {req.adminNote && ` - ${req.adminNote}`}
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      {req.status === "PENDING" && (
+                        <div className="action-buttons">
+                          <button
+                            className="accept-btn"
+                            onClick={() => {
+                              console.log("Accept button clicked for request:", req.id); // Debug log
+                              handleRespond(req.id, true);
+                            }}
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className="reject-btn"
+                            onClick={() => {
+                              console.log("Reject button clicked for request:", req.id); // Debug log
+                              const adminNote = prompt("Lý do từ chối:");
+                              if (adminNote !== null) {
+                                handleRespond(req.id, false, adminNote);
+                              }
+                            }}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 
-          {/* Add pagination controls */}
+          {/* Pagination controls */}
           {totalPages > 1 && (
             <div className="pagination">
-              <button 
-                onClick={() => setCurrentPage(1)} 
+              <button
+                onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
                 className="pagination-btn"
               >
                 Trang đầu
               </button>
-              <button 
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} 
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="pagination-btn"
               >
@@ -229,15 +286,15 @@ const Request = () => {
                   {i + 1}
                 </button>
               ))}
-              <button 
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} 
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 className="pagination-btn"
               >
                 Tiếp
               </button>
-              <button 
-                onClick={() => setCurrentPage(totalPages)} 
+              <button
+                onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
                 className="pagination-btn"
               >
@@ -248,27 +305,44 @@ const Request = () => {
         </>
       )}
 
-      {/* Modal hiển thị người thuê */}
+      {/* Modal for showing renter info */}
       {isModalOpen && selectedRequest && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Tenant Info</h3>
+            <h3>Thông tin người thuê</h3>
             {selectedRenterInfo ? (
               <>
-                <p><strong>Full Name:</strong> {selectedRenterInfo.fullName}</p>
-                <p><strong>Email:</strong> {selectedRenterInfo.email}</p>
-                <p><strong>Phone:</strong> {selectedRenterInfo.phone || "Không có số điện thoại"}</p>
+                <p>
+                  <strong>Họ và tên:</strong> {selectedRenterInfo.fullName}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedRenterInfo.email}
+                </p>
+                <p>
+                  <strong>Số điện thoại:</strong> {selectedRenterInfo.phone}
+                </p>
+                <p>
+                  <strong>Giới tính:</strong> {selectedRenterInfo.gender}
+                </p>
               </>
             ) : (
               <p>Đang tải thông tin người thuê...</p>
             )}
             <hr />
-            <p><strong>Request Message:</strong> {selectedRequest.message}</p>
-            <p><strong>Status:</strong> {selectedRequest.status}</p>
+            <p>
+              <strong>Tin nhắn yêu cầu:</strong> {selectedRequest.message}
+            </p>
+            <p>
+              <strong>Trạng thái:</strong> {selectedRequest.status}
+            </p>
             {selectedRequest.adminNote && (
-              <p><strong>Admin Note:</strong> {selectedRequest.adminNote}</p>
+              <p>
+                <strong>Ghi chú:</strong> {selectedRequest.adminNote}
+              </p>
             )}
-            <button className="close-modal-btn" onClick={closeModal}>&times;</button>
+            <button className="close-modal-btn" onClick={closeModal}>
+              &times;
+            </button>
           </div>
         </div>
       )}
