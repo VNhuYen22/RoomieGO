@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 // import { useNotifications } from "../NotificationComponent/NotificationContext";
 import "./css/Request.css";
-
+import { showErrorToast ,showSuccessToast} from "../toast";
 const Request = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -174,10 +174,10 @@ const Request = () => {
       setSelectedRenterInfo(null);
 
       // Show success message
-      alert(accept ? "Đã chấp nhận yêu cầu" : "Đã từ chối yêu cầu");
+      showSuccessToast(accept ? "Đã chấp nhận yêu cầu" : "Đã từ chối yêu cầu");
     } catch (error) {
       console.error("Error responding to request:", error);
-      alert(error.message || "Có lỗi xảy ra khi xử lý yêu cầu");
+      showErrorToast(error.message || "Có lỗi xảy ra khi xử lý yêu cầu");
     }
   };
 
