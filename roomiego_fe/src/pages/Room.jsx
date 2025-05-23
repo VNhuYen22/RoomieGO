@@ -5,6 +5,8 @@ import room1 from "../assets/room1.jpeg";
 import room2 from "../assets/room2.jpeg";
 import room3 from "../assets/room3.jpeg";
 
+const baseURL = "http://localhost:8080/images/";
+
 function Room() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +17,6 @@ function Room() {
     roomFor: "any-room"
   });
 
-  // Handle filter changes
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -47,8 +48,8 @@ function Room() {
   };
 
   useEffect(() => {
-    applyFilters(); // Apply initial filters when component mounts
-  }, []); // Empty array to ensure it runs only once
+    applyFilters(); // Run once on mount
+  }, []);
 
   const getValidImageUrl = (url) => {
     if (!url || typeof url !== "string" || url.trim() === "") {
@@ -56,11 +57,10 @@ function Room() {
       const randomIndex = Math.floor(Math.random() * defaultImages.length);
       return defaultImages[randomIndex];
     }
-    return url;
+    return baseURL + url;
   };
 
   if (loading) return <p>Loading rooms...</p>;
-
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -70,7 +70,7 @@ function Room() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            applyFilters(); // Re-fetch rooms when filters are applied
+            applyFilters();
           }}
         >
           <div className="filter-group">
@@ -149,35 +149,35 @@ function Room() {
       {rooms.length === 0 ? (
         <p>No rooms found.</p>
       ) : (
-        rooms.map((room) => (
-          <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
-            <div className="card">
-              <div className="card-header">
-                <img
-                  src={getValidImageUrl(room.imageUrls[0] || "")}
-                  alt={room.title}
-                  className="card-image"
-                  onError={(e) => {
-                    e.target.src = getValidImageUrl("");
-                  }}
-                />
-                <div className="card-info">
-                  <h3>{room.title}</h3>
-                  <span>{new Date(room.availableFrom).toLocaleDateString()}</span>
+        rooms.map((room) => {
+        const mainImageUrl =
+        room.imageUrls?.length > 0 ? getValidImageUrl(room.imageUrls[0]) : getValidImageUrl("");
+        const sideImageUrls = [mainImageUrl]; 
+          return (
+            <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
+              <div className="card">
+                <div className="card-header">
+                  <img
+                    src={mainImageUrl}
+                    alt={room.title}
+                    className="card-image"
+                    onError={(e) => {
+                      e.target.src = getValidImageUrl("");
+                    }}
+                  />
+                  <div className="card-info">
+                    <h3>{room.title}</h3>
+                    <span>{new Date(room.availableFrom).toLocaleDateString()}</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="card-body">
-                <h2>${room.price} / month</h2>
-                <p>{room.description}</p>
-                <p>{room.roomSize} m²</p>
-                <p>{room.location}</p>
+                <div className="card-body">
 
-                <div className="additional-images">
-                  {Array.from(new Set(room.imageUrls)).map((url, index) => (
+                  <div className="additional-images">
+                  {sideImageUrls.map((url, index) => (
                     <img
                       key={index}
-                      src={getValidImageUrl(url)}
+                      src={url}
                       alt={`${room.title} additional ${index}`}
                       className="additional-room-image"
                       onError={(e) => {
@@ -185,11 +185,17 @@ function Room() {
                       }}
                     />
                   ))}
+                  <h2>{room.price} VND / Tháng</h2>
+                  <p>{room.roomSize} m²</p>
+                  <p>{room.location}</p>
+                  <p>{room.description}</p>
+
+                </div>
                 </div>
               </div>
-            </div>
-          </Link>
-        ))
+            </Link>
+          );
+        })
       )}
     </div>
   );
