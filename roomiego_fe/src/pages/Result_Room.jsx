@@ -5,6 +5,7 @@ import { axiosInstance } from "../lib/axios";
 // import { useNotifications } from "../components/NotificationComponent/NotificationContext";
 import sink from "../assets/sink.png";
 import bedroom from "../assets/bedroom.png";
+import { showErrorToast ,showSuccessToast,showInfoToast} from "../components/toast";
 function Result_Room() {
   const { id } = useParams();
   // const { sendNotification, isConnected } = useNotifications(); 
@@ -43,7 +44,7 @@ function Result_Room() {
   const handleReportSubmit = async () => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      alert("Bạn cần đăng nhập để gửi báo cáo.");
+      showInfoToast("Bạn cần đăng nhập để gửi báo cáo.");
       return;
     }
 
@@ -64,11 +65,11 @@ function Result_Room() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      alert("Đã gửi báo cáo thành công.");
+      showInfoToast("Đã gửi báo cáo thành công.");
       setShowReportForm(false);
       setReportReason("");
     } catch (error) {
-      alert("Gửi báo cáo thất bại.");
+      showErrorToast("Gửi báo cáo thất bại.");
       console.error("Error submitting report:", error);
     }
   };
@@ -76,12 +77,12 @@ function Result_Room() {
  const handleSendViewRequest = async () => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      alert("Vui lòng đăng nhập để gửi yêu cầu.");
+      showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
       return;
     }
 
     if (!viewRequestMessage.trim()) {
-      alert("Vui lòng nhập lời nhắn.");
+      showErrorToast("Vui lòng nhập lời nhắn.");
       return;
     }
 
@@ -100,7 +101,7 @@ function Result_Room() {
 
       if (!response.ok) throw new Error("Gửi yêu cầu thất bại");
 
-      alert("Gửi yêu cầu thành công.");
+     showInfoToast("Đã gửi yêu cầu xem phòng thành công.");
       setShowViewRequestForm(false);
       setViewRequestMessage("");
 
@@ -133,7 +134,7 @@ function Result_Room() {
       // }
     } catch (error) {
       console.error(error);
-      alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+      showErrorToast("Đã xảy ra lỗi khi gửi yêu cầu.");
     }
   };
 

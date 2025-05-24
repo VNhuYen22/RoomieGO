@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
 import logo from "../assets/logo.png"; // Import logo nếu cần
 import building from "../assets/4k_building.mp4"; // Import icon nếu cần
+import { showErrorToast ,showSuccessToast} from "../components/toast"; // Import toast thông báo
  // Import icon nếu cần
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -55,13 +56,19 @@ export default function Login() {
      localStorage.setItem("authToken", token);
      localStorage.setItem("Email", email);
     
-    
+   
      // Điều hướng sang trang chính hoặc dashboard
-    navigate ("/");
-      window.location.reload();
+      showSuccessToast("Đăng nhập thành công!");
+   
+           setTimeout(() => {
+  navigate("/");
+  window.location.reload();
+}, 2000);
+ 
      // Điều hướng sang trang chính hoặc dashboard
+
     } else {
-      setError("Sai tài khoản hoặc mật khẩu.");
+      showErrorToast("Đăng nhập thất bại!");
     } 
   }catch (err) {
       console.error('Login failed:', err.response?.data || err.message);

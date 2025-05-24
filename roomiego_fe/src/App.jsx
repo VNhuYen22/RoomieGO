@@ -26,6 +26,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ReportPage from "./components/Dashboard/ReportPage";
 import Profile from "./pages/Profile";
+import { ToastContainer } from "react-toastify";
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
@@ -95,11 +96,11 @@ const App = () => {
         <Route path="/q" element={<ReportPage />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
-
+         
         {/* Add other routes here */}
       </Routes>
-       
-
+       <ToastContainer position="top-right" autoClose={5000} />
+      {/* Conditionally render Footer */}
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
       <Toaster />
     </div>
