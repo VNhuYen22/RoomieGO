@@ -195,12 +195,12 @@ if (sortOrder === "asc") {
           <span>{room.roomSize} m²</span>
         </div>
         <div className="card-feature-item">
-          <i className="fas fa-bed"></i>
-          <span><img src={bedrooms} alt="" />{room.numBedrooms ?? "?"} bed</span>
+         
+          <span><img src={bedrooms} alt="" />{room.numBedrooms ?? "?"} <b>Bed</b> </span>
         </div>
         <div className="card-feature-item">
-          <i className="fas fa-bath"></i>
-          <span><img src={sink} alt="" />{room.numBathrooms ?? "?"} bath</span>
+          
+          <span><img src={sink} alt="" />{room.numBathrooms ?? "?"} <b>Bath</b> </span>
         </div>
       </div>
 
