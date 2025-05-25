@@ -40,4 +40,12 @@ public class ViewRequestController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/cancel-rental")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
+    public ResponseEntity<ViewRequestDTO> cancelRental(@RequestBody ViewRespondDTO viewRespondDTO) {
+        ViewRequestDTO response = viewRequestService.cancelRental(viewRespondDTO);
+        return ResponseEntity.ok(response);
+    }
 }
+
+

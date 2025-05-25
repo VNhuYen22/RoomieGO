@@ -20,6 +20,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class RentRequestServiceImpl implements RentRequestService {
@@ -141,6 +144,56 @@ public class RentRequestServiceImpl implements RentRequestService {
         }
 
         RentRequest updated = rentRequestRepository.save(rentRequest);
+        return rentRequestMapper.toDto(updated);
+    }
+
+    @Override
+    public List<RentRequestResponse> getRequestsByOwner() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<RentRequest> requests = rentRequestRepository.findByRoomOwnerId(currentUser.getId());
+        
+        // Log để debug
+        System.out.println("Current user ID: " + currentUser.getId());
+        System.out.println("Found rent requests: " + requests.size());
+        
+        return requests.stream()
+                .map(request -> {
+                    RentRequestResponse dto = rentRequestMapper.toDto(request);
+                    // Log để debug
+                    System.out.println("Processing rent request: " + request.getId());
+                    System.out.println("Room ID: " + request.getRoom().getId());
+                    System.out.println("Tenant ID: " + request.getTenant().getId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RentRequestResponse cancelRental(Long requestId) {
+        RentRequest rentRequest = rentRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Rent request not found"));
+
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!rentRequest.getRoom().getOwner().getId().equals(currentUser.getId())) {
+            throw new RuntimeException("You are not the owner of this room");
+        }
+
+        if (rentRequest.getStatus() != RentRequestStatus.APPROVED) {
+            throw new RuntimeException("Can only cancel APPROVED rental requests");
+        }
+
+        rentRequest.setStatus(RentRequestStatus.REJECTED);
+        RentRequest updated = rentRequestRepository.save(rentRequest);
+
+        // Send notification to tenant
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setUserId(rentRequest.getTenant().getId());
+        notificationDto.setMessage("Chủ phòng đã hủy cho thuê phòng");
+        notificationDto.setType(NotificationType.RENT_REQUEST_REJECTED);
+
+        messagingTemplate.convertAndSend("/topic/notifications/" + rentRequest.getTenant().getId(), notificationDto);
+
         return rentRequestMapper.toDto(updated);
     }
 

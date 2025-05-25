@@ -3,6 +3,7 @@ import ReportTable from "./ReportTable";
 import Header from "./Header";
 import "./css/ReportPage.css";
 import { axiosInstance } from "../../lib/axios";
+import { showErrorToast } from "../toast";
 
 function ModalContent({ report, onClose, onViPham, onKhongViPham }) {
   if (!report) return null;
@@ -76,7 +77,7 @@ function ModalContent({ report, onClose, onViPham, onKhongViPham }) {
           <h3>Chi tiết báo cáo</h3>
         </div>
         <p><b>Tiêu đề bài viết:</b> {report.roomTitle}</p>
-        <p><b>Người đăng bài:</b> {report.roomOwnerName}</p>
+        <p><b>Người đăng bài:</b> {report.roomOwnerName || "Không xác định"}</p>
         <p><b>Địa chỉ phòng:</b> {report.roomAddress}</p>
         <p><b>Người báo cáo:</b> {report.reporterName}</p>
         <p><b>Lý do:</b> {report.reason}</p>
@@ -157,8 +158,43 @@ const ReportPage = () => {
     }
   }, [selectedReport]);
 
-  const handleView = (report) => {
-    setSelectedReport(report);
+  const handleView = async (report) => {
+    try {
+      // Fetch room details if roomId exists
+      if (report.roomId) {
+        const roomResponse = await axiosInstance.get(`http://localhost:8080/api/rooms/${report.roomId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
+
+        if (roomResponse.data) {
+          const roomData = roomResponse.data.data;
+          report.roomContent = roomData.description;
+          
+          // Fetch owner information
+          if (roomData.ownerId) {
+            const ownerResponse = await axiosInstance.get(`http://localhost:8080/owner/get-users/${roomData.ownerId}`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+              },
+            });
+
+            if (ownerResponse.data) {
+              const ownerInfo = ownerResponse.data.usersList?.[0];
+              if (ownerInfo) {
+                report.roomOwnerName = ownerInfo.fullName;
+              }
+            }
+          }
+        }
+      }
+      
+      setSelectedReport(report);
+    } catch (error) {
+      console.error("Error fetching report details:", error);
+      showErrorToast("Không thể tải thông tin báo cáo");
+    }
   };
 
   const handleClose = () => {

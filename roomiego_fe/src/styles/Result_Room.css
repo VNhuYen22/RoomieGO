@@ -128,12 +128,23 @@
   border-radius: 0.3125rem;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.detail_price-booking button:last-child {
+  background-color: #28a745;
 }
 
 .detail_price-booking button:hover {
   background-color: #0056b3;
   transform: scale(1.05);
 }
+
+.detail_price-booking button:last-child:hover {
+  background-color: #218838;
+}
+
 .report-overlay {
   position: fixed;
   top: 0;

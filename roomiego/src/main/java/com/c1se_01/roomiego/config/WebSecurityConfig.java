@@ -37,7 +37,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file", "/ws/**").permitAll() // ✅ Cho phép API này truy cập công khai
                         .requestMatchers("/owner/**", "/api/rooms/**", "/api/contracts").hasAnyAuthority("OWNER")
-                        .requestMatchers("/renter/**", "/api/roommates/**", "/api/rent-requests/**", "/api/contracts/**").hasAnyAuthority("RENTER")
+                        .requestMatchers("/renter/**", "/api/roommates/**", "/api/contracts/**").hasAnyAuthority("RENTER")
+                        .requestMatchers("/api/rent-requests/**").hasAnyAuthority("RENTER", "OWNER", "ADMIN")
                         .requestMatchers("/renterowner/**", "/api/reports/**").hasAnyAuthority("OWNER", "RENTER", "ADMIN")
                         .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated()

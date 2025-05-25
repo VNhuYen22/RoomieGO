@@ -12,4 +12,6 @@ public interface ViewRequestService {
     List<ViewRequestDTO> getRequestsByOwner();
 
     ViewRequestDTO respondToRequest(ViewRespondDTO viewRespondDTO);
+
+    ViewRequestDTO cancelRental(ViewRespondDTO viewRespondDTO);
 }
