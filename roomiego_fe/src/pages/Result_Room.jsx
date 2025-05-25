@@ -3,7 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import "../styles/Result_Room.css";
 import { axiosInstance } from "../lib/axios";
 // import { useNotifications } from "../components/NotificationComponent/NotificationContext";
-
+import sink from "../assets/sink.png";
+import bedroom from "../assets/bedroom.png";
+import { showErrorToast ,showSuccessToast,showInfoToast} from "../components/toast";
 function Result_Room() {
   const { id } = useParams();
   // const { sendNotification, isConnected } = useNotifications(); 
@@ -42,7 +44,7 @@ function Result_Room() {
   const handleReportSubmit = async () => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      alert("Bạn cần đăng nhập để gửi báo cáo.");
+      showInfoToast("Bạn cần đăng nhập để gửi báo cáo.");
       return;
     }
 
@@ -63,11 +65,11 @@ function Result_Room() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      alert("Đã gửi báo cáo thành công.");
+      showInfoToast("Đã gửi báo cáo thành công.");
       setShowReportForm(false);
       setReportReason("");
     } catch (error) {
-      alert("Gửi báo cáo thất bại.");
+      showErrorToast("Gửi báo cáo thất bại.");
       console.error("Error submitting report:", error);
     }
   };
@@ -75,12 +77,12 @@ function Result_Room() {
  const handleSendViewRequest = async () => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      alert("Vui lòng đăng nhập để gửi yêu cầu.");
+      showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
       return;
     }
 
     if (!viewRequestMessage.trim()) {
-      alert("Vui lòng nhập lời nhắn.");
+      showErrorToast("Vui lòng nhập lời nhắn.");
       return;
     }
 
@@ -99,7 +101,7 @@ function Result_Room() {
 
       if (!response.ok) throw new Error("Gửi yêu cầu thất bại");
 
-      alert("Gửi yêu cầu thành công.");
+     showInfoToast("Đã gửi yêu cầu xem phòng thành công.");
       setShowViewRequestForm(false);
       setViewRequestMessage("");
 
@@ -132,7 +134,7 @@ function Result_Room() {
       // }
     } catch (error) {
       console.error(error);
-      alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+      showErrorToast("Đã xảy ra lỗi khi gửi yêu cầu.");
     }
   };
 
@@ -170,8 +172,8 @@ function Result_Room() {
           <p>{room.description}</p>
           <div className="room-details">
             <span><strong>Room Size:</strong> {room.roomSize} m²</span>
-            <span><strong>Bedrooms:</strong> {room.numBedrooms}</span>
-            <span><strong>Bathrooms:</strong> {room.numBathrooms}</span>
+            <span><img src={bedroom} alt="" /><strong>Bedrooms:</strong> {room.numBedrooms}</span>
+            <span><img src={sink} alt="" /><strong>Bathrooms:</strong> {room.numBathrooms}</span>
           </div>
           <p><strong>Available From:</strong> {new Date(room.availableFrom).toLocaleDateString()}</p>
           <p><strong>Is Available:</strong> {room.isRoomAvailable ? "Yes" : "No"}</p>
@@ -212,7 +214,7 @@ function Result_Room() {
                 placeholder="Nhập lời nhắn cho chủ phòng..."
               />
               <div className="report-buttons">
-                <button onClick={handleSendViewRequest}>Gửi yêu cầu</button>
+                <button className="send-request" onClick={handleSendViewRequest}>Gửi yêu cầu</button>
                 <button onClick={() => setShowViewRequestForm(false)}>Hủy</button>
               </div>
             </div>

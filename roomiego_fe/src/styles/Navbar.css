@@ -6,14 +6,21 @@
   font-style: normal;
 }
 
-.navbar {
+.navbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  overflow: visible;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #fdfcf7; /* Màu nền nhạt */
-  border-bottom: 1px solid #e6e6e6; /* Đường viền dưới */
+  /* background-color: rgba(255, 255, 255, 0.2); mau trong suot  */
+  background-color: #fff; /* Màu nền trắng */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   font-family: 'Arial', sans-serif;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
+  height: 60px;
 }
 
 /* Logo */
@@ -27,7 +34,7 @@
   -webkit-text-fill-color: transparent; /* Làm chữ trong suốt để hiển thị gradient */
   text-align: center; /* Căn giữa chữ */
   letter-spacing: 0.2rem; /* Khoảng cách giữa các chữ */
-  margin: 0 50px;
+  margin: 0 0 0 100px; 
 }
 
 /* Right Side Links */
@@ -38,14 +45,34 @@
   font-size: 1rem;
   font-weight: 500;
 }
+.rightside {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Khoảng cách giữa các phần tử */
+}
 
 .rightside a:hover {
   color: #007bff; /* Màu xanh khi hover */
 }
-
+.img-living{
+  width: 40px; /* Kích thước chiều rộng của logo */
+  height: 40px; /* Kích thước chiều cao của logo */
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+  margin-right: 10px; 
+  display: inline-block; /* Để logo và chữ nằm trên cùng một dòng */
+}
+.leftside img{
+  width: 40px; /* Kích thước chiều rộng của logo */
+  height: 40px; /* Kích thước chiều cao của logo */
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+  display: inline-block; /* Để logo và chữ nằm trên cùng một dòng */
+  margin-right: 10px;
+}
 /* Get Started Button */
 .get-started-btn {
-  background-color: #1a1a1a; /* Màu nền đen */
+  position: relative;
+  overflow: hidden; /* Đảm bảo pseudo-element không tràn ra ngoài nút */
+  background-color: #007bff; /* Màu nền đen */
   color: #fff; /* Màu chữ trắng */
   border: none;
   border-radius: 20px; /* Bo tròn góc */
@@ -53,11 +80,31 @@
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.get-started-btn:hover {
-  background-color: #333; /* Màu đen đậm hơn khi hover */
+/* Pseudo-element overlay tạo hiệu ứng chạy */
+.get-started-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%; /* Bắt đầu hoàn toàn bên trái */
+  width: 100%;
+  height: 100%;
+  background: #00d4ff; /* Màu hover (đen đậm) */
+  transform: skewX(-30deg); /* Tạo hiệu ứng góc nghiêng cho overlay */
+  transition: left 0.3s ease; /* Hiệu ứng di chuyển mượt 0.3 giây */
+  z-index: 0; /* Để overlay nằm dưới nội dung của nút */
+}
+
+/* Nếu nút có nội dung (ví dụ, text nằm trong thẻ span), đảm bảo nội dung hiển thị trên overlay */
+.get-started-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Khi hover, overlay di chuyển từ trái sang phải */
+.get-started-btn:hover::after {
+  left: 100%;
 }
 
 /* User Info */
@@ -84,12 +131,12 @@
 .logout-button:hover {
   background-color: #0056b3;
 }
-
 /* User Menu */
 .user-menu {
   position: relative;
   display: flex;
   align-items: center;
+  z-index: 100;
 }
 
 .user-avatar {
@@ -97,6 +144,8 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  border: 2px solid #310ced; /* Đường viền xung quanh avatar */
+  border-radius: 50%; /* Bo tròn avatar */
 }
 
 .user-avatar img {
@@ -106,6 +155,7 @@
   object-fit: cover;
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
   top: 50px;
@@ -114,10 +164,18 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 26px;
-  z-index: 10;
+  padding: 10px;
+  z-index: 9999; 
+  width: 200px; /* Giới hạn chiều rộng menu nếu cần */
+  text-align: left; /* Căn chỉnh văn bản trong menu sang trái */
 }
-
+.rightside a{
+  margin-right: 1.5rem;
+  text-decoration: none;
+  color: #1a1a1a; /* Màu chữ đậm */
+  font-size: 1rem;
+  font-weight: bold;
+}
 /* Định dạng chung cho các nút trong dropdown menu */
 .dropdown-menu button {
   display: flex;
@@ -127,16 +185,25 @@
   padding: 10px;
   background: none;
   border: none;
-  text-align: left;
+  text-align: left; /* Căn chỉnh chữ bên trái */
   cursor: pointer;
-  font-size: 14px;
   color: #333; /* Màu chữ */
   transition: background-color 0.3s ease, color 0.3s ease; /* Thêm hiệu ứng chuyển đổi màu */
   border-radius: 4px; /* Bo góc nhẹ cho nút */
 }
 
+/* Định dạng cho phần tử <a> */
+.dropdown-menu a {
+  font-weight: bold;
+  display: block;
+  padding: 10px;
+  color: #333;
+  text-align: left; /* Căn chỉnh chữ bên trái */
+  cursor: pointer;
+}
+
+/* Hiệu ứng hover cho các nút */
 .dropdown-menu button:hover {
-  /* Màu nền khi hover */
   color: #007bff; /* Màu chữ khi hover */
 }
 
@@ -150,60 +217,4 @@
 
 .dropdown-menu button:hover img {
   filter: brightness(0.8); /* Làm tối hình ảnh khi hover */
-}
-
-/* Navbar Container (Rest of your navbar styles) */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  top: 0;
-  z-index: 1000;
-}
-
-.dropdown-toggle {
-  background: none;
-  border: 1px solid #ddd; /* Thêm border */
-  border-radius: 25px; /* Bo tròn góc */
-  padding: 0.5rem 1rem; /* Khoảng cách bên trong */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.dropdown-toggle:hover {
-  border-color: #007bff; /* Đổi màu border khi hover */
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Thêm hiệu ứng shadow khi hover */
-}
-
-.menu-icon {
-  margin-right: 0.5rem; /* Khoảng cách giữa menu icon và user icon */
-}
-
-.rightSide img {
-  width: 30px; /* Đổi kích thước user icon */
-  height: 30px; /* Đổi kích thước user icon */
-  font-size: 1.5rem;
-}
-
-/* Left Side Links */
-.leftside a {
-  margin-right: 1.5rem;
-  text-decoration: none;
-  color: #333;
-  font-size: 1rem;
-}
-
-.leftside a:hover {
-  color: #007bff;
-}
-
-/* Center Logo */
-.center img {
-  height: 40px;
 }
