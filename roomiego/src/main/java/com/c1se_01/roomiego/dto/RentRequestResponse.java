@@ -12,4 +12,8 @@ public class RentRequestResponse {
     private Long roomId;
     private RentRequestStatus status;
     private Date createdAt;
+    private Boolean tenantFinalize;
+    private Boolean ownerFinalize;
+    private String message;
+    private String adminNote;
 }

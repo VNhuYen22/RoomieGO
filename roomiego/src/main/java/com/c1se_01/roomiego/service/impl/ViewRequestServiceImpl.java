@@ -1,9 +1,6 @@
 package com.c1se_01.roomiego.service.impl;
 
-import com.c1se_01.roomiego.dto.NotificationDto;
-import com.c1se_01.roomiego.dto.ViewRequestCreateDTO;
-import com.c1se_01.roomiego.dto.ViewRequestDTO;
-import com.c1se_01.roomiego.dto.ViewRespondDTO;
+import com.c1se_01.roomiego.dto.*;
 import com.c1se_01.roomiego.enums.NotificationType;
 import com.c1se_01.roomiego.enums.ViewRequestStatus;
 import com.c1se_01.roomiego.exception.NotFoundException;
@@ -67,9 +64,19 @@ public class ViewRequestServiceImpl implements ViewRequestService {
 
     @Override
     public List<ViewRequestDTO> getRequestsByOwner() {
-        List<ViewRequest> requests = viewRequestRepository.findAll();
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("Current user ID: " + currentUser.getId());
+
+        List<ViewRequest> requests = viewRequestRepository.findByOwnerId(currentUser.getId());
+        System.out.println("Found view requests: " + requests.size());
+
         return requests.stream()
-                .map(viewRequestMapper::toDTO)
+                .map(request -> {
+                    System.out.println("Processing view request: " + request.getId());
+                    System.out.println("Room ID: " + request.getRoom().getId());
+                    System.out.println("Renter ID: " + request.getRenter().getId());
+                    return viewRequestMapper.toDTO(request);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -99,6 +106,34 @@ public class ViewRequestServiceImpl implements ViewRequestService {
                     "Yêu cầu xem phòng bị từ chối. Lý do: " + request.getAdminNote()
             );
         }
+
+        return viewRequestMapper.toDTO(updatedRequest);
+    }
+
+    @Override
+    public ViewRequestDTO cancelRental(ViewRespondDTO viewRespondDTO) {
+        ViewRequest request = viewRequestRepository.findById(viewRespondDTO.getRequestId())
+                .orElseThrow(() -> new NotFoundException("Request not found"));
+
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!request.getOwnerId().equals(currentUser.getId())) {
+            throw new RuntimeException("You are not the owner of this room");
+        }
+
+        if (request.getStatus() != ViewRequestStatus.ACCEPTED) {
+            throw new RuntimeException("Can only cancel ACCEPTED view requests");
+        }
+
+        request.setStatus(ViewRequestStatus.REJECTED);
+        request.setAdminNote(viewRespondDTO.getAdminNote());
+        ViewRequest updatedRequest = viewRequestRepository.save(request);
+
+        // Gửi thông báo cho người thuê
+        notificationService.sendNotificationToUser(
+                request.getRenter().getId(),
+                "Yêu cầu xem phòng đã bị hủy. Lý do: " + request.getAdminNote()
+        );
 
         return viewRequestMapper.toDTO(updatedRequest);
     }

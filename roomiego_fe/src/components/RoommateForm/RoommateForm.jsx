@@ -221,6 +221,36 @@ const RoommateForm = () => {
     }
 
     try {
+      // Get user ID from JWT token
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // First, get user information from backend
+      const userResponse = await fetch("http://localhost:8080/renterowner/get-profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!userResponse.ok) {
+        throw new Error("Failed to get user information");
+      }
+
+      const response = await userResponse.json();
+      console.log("User profile response:", response);
+
+      if (!response || !response.user || !response.user.id) {
+        console.error("User data structure:", JSON.stringify(response, null, 2));
+        throw new Error("User ID not found in response");
+      }
+
+      const userId = response.user.id;
+
+      // 1. Create roommate record
       const dataToSend = {
         hometown: formData.hometown,
         city: formData.city,
@@ -230,11 +260,12 @@ const RoommateForm = () => {
         hobbies: formData.hobbies.join(", "),
         rateImage: formData.rateImage,
         more: formData.more,
-        userId: formData.userId ? parseInt(formData.userId) : null,
+        userId: userId,
       };
 
-      const token = localStorage.getItem("authToken");
-      await fetch("http://localhost:8080/api/roommates", {
+      console.log("Sending data to backend:", dataToSend);
+
+      const createResponse = await fetch("http://localhost:8080/api/roommates", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -243,34 +274,49 @@ const RoommateForm = () => {
         body: JSON.stringify(dataToSend),
       });
 
-      await fetch("http://localhost:8080/api/roommates/export-to-file", {
+      const responseData = await createResponse.json();
+      console.log("Roommate creation response:", responseData);
+
+      if (!createResponse.ok) {
+        throw new Error(`Failed to create roommate: ${responseData.message || createResponse.statusText}`);
+      }
+
+      // Use the userId from the response for recommendations
+      if (!responseData.userId) {
+        console.error("Roommate response structure:", JSON.stringify(responseData, null, 2));
+        throw new Error("User ID not found in roommate response");
+      }
+
+      // 2. Get AI model recommendations
+      const recommendResponse = await fetch(`http://localhost:8000/recommend?user_id=${responseData.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          "Access-Control-Allow-Origin": "*",
         },
+        credentials: "include",
       });
 
-      const formDataToSend = new FormData();
-      formDataToSend.append("hometown", formData.hometown);
-      formDataToSend.append("yob", formData.dob);
-      formDataToSend.append("city", formData.city);
-      formDataToSend.append("district", formData.district);
-      formDataToSend.append("job", formData.job);
-      formData.hobbies.forEach((hobby) =>
-        formDataToSend.append("hobbies", hobby)
-      );
-      formDataToSend.append("rateImage", formData.rateImage);
-      formDataToSend.append("more", formData.more);
+      if (!recommendResponse.ok) {
+        const errorData = await recommendResponse.json();
+        throw new Error(`Failed to get recommendations: ${errorData.message || recommendResponse.statusText}`);
+      }
 
-      const submitResponse = await fetch("http://127.0.0.1:8000/submit", {
-        method: "POST",
-        body: formDataToSend,
-      });
-      const responseJson = await submitResponse.json();
+      const responseJson = await recommendResponse.json();
+      
+      // 3. Navigate to match page with results
       navigate("/match", { state: { match: responseJson } });
     } catch (err) {
       console.error("Error during submission:", err);
+      console.error("Error details:", {
+        message: err.message,
+        stack: err.stack,
+        name: err.name
+      });
+      setErrors(prev => ({
+        ...prev,
+        submit: err.message || "An error occurred during submission"
+      }));
     }
   };
 

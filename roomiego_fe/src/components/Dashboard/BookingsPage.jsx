@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
 import BookingCard from "./BookingCard";
 import FilterBar from "./FilterBar";
 import RegisterForm from "./RegisterForm";
@@ -10,31 +9,48 @@ const BookingsPage = () => {
   const [hotels, setHotels] = useState([]);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [editingHotel, setEditingHotel] = useState(null);
-  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setError("Vui lòng đăng nhập để xem danh sách phòng");
+      setLoading(false);
+      return;
+    }
 
     const fetchMyRooms = async () => {
       try {
+        setLoading(true);
         const response = await fetch("http://localhost:8080/api/rooms/my", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (!response.ok) throw new Error("Không thể lấy danh sách phòng");
+        
+        if (!response.ok) {
+          throw new Error("Không thể lấy danh sách phòng");
+        }
+        
         const result = await response.json();
         console.log("Dữ liệu lấy được từ API:", result);
-
-        // Ensure 'result.data' is a valid array and contains valid hotel objects
-        if (Array.isArray(result?.data)) {
-          setHotels(result.data.filter((hotel) => hotel && hotel.id)); // Ensure each hotel object has an 'id' property
+        
+        // Kiểm tra và xử lý dữ liệu trước khi set state
+        if (result && result.data) {
+          const validHotels = Array.isArray(result.data) 
+            ? result.data.filter(hotel => hotel && hotel.id) // Lọc ra các hotel hợp lệ
+            : [];
+          setHotels(validHotels);
         } else {
           setHotels([]);
         }
       } catch (err) {
         console.error("Lỗi khi fetch danh sách phòng:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -42,22 +58,32 @@ const BookingsPage = () => {
   }, [token]);
 
   const handleAddHotel = (newHotel) => {
-    setHotels((prev) => [...prev, newHotel]);
-    setShowRegisterForm(false);
+    if (newHotel && newHotel.id) {
+      setHotels((prev) => [...prev, newHotel]);
+      setShowRegisterForm(false);
+    }
   };
 
-  const handleEditClick = (hotel) => setEditingHotel(hotel);
+  const handleEditClick = (hotel) => {
+    if (hotel && hotel.id) {
+      setEditingHotel(hotel);
+    }
+  };
 
   const handleUpdateHotel = (updatedHotel) => {
-    setHotels((prev) =>
-      prev.map((h) => (h.id === updatedHotel.id ? updatedHotel : h))
-    );
-    setEditingHotel(null);
+    if (updatedHotel && updatedHotel.id) {
+      setHotels((prev) =>
+        prev.map((h) => (h.id === updatedHotel.id ? updatedHotel : h))
+      );
+      setEditingHotel(null);
+    }
   };
 
   const handleDeleteHotel = async (hotelId) => {
+    if (!hotelId) return;
+    
     if (!window.confirm("Bạn có chắc muốn xóa phòng này?")) return;
-
+  
     try {
       const response = await fetch(`http://localhost:8080/api/rooms/${hotelId}`, {
         method: "DELETE",
@@ -65,28 +91,37 @@ const BookingsPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Xóa phòng thất bại");
       }
-
+  
       setHotels((prev) => prev.filter((hotel) => hotel.id !== hotelId));
     } catch (err) {
       alert("Lỗi khi xóa phòng: " + err.message);
     }
   };
 
+  if (loading) {
+    return <div className="BookingsPage-content">Đang tải...</div>;
+  }
+
+  if (error) {
+    return <div className="BookingsPage-content error">{error}</div>;
+  }
+
   return (
     <div className="BookingsPage-content">
-      <Header />
       <FilterBar onAddClick={() => setShowRegisterForm(true)} />
+      
       {showRegisterForm && (
         <RegisterForm
           onClose={() => setShowRegisterForm(false)}
           onRegister={handleAddHotel}
         />
       )}
+      
       {editingHotel && (
         <EditForm
           hotel={editingHotel}
@@ -94,6 +129,7 @@ const BookingsPage = () => {
           onUpdate={handleUpdateHotel}
         />
       )}
+      
       <div className="booking-list">
         {hotels.length > 0 ? (
           hotels.map((hotel) => (

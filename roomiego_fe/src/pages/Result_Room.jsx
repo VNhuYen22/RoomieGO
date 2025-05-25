@@ -20,6 +20,9 @@ function Result_Room() {
   const [showViewRequestForm, setShowViewRequestForm] = useState(false);
   const [viewRequestMessage, setViewRequestMessage] = useState("");
 
+  const [showRentalRequestForm, setShowRentalRequestForm] = useState(false);
+  const [rentalRequestMessage, setRentalRequestMessage] = useState("");
+
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
@@ -95,46 +98,64 @@ function Result_Room() {
         },
         body: JSON.stringify({
           roomId: room.id,
-          message: viewRequestMessage,
+          message: viewRequestMessage
         }),
       });
 
-      if (!response.ok) throw new Error("Gửi yêu cầu thất bại");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Gửi yêu cầu thất bại");
+      }
 
-     showInfoToast("Đã gửi yêu cầu xem phòng thành công.");
+      showInfoToast("Đã gửi yêu cầu xem phòng thành công.");
       setShowViewRequestForm(false);
       setViewRequestMessage("");
-
-      // const ownerId = room.ownerId;
-      // if (ownerId) {
-      //   if (isConnected) {
-      //     sendNotification(ownerId, "Bạn có một yêu cầu xem phòng mới từ người thuê.", "VIEW_REQUEST");
-      //   } else {
-      //     let retryCount = 0;
-      //     const maxRetries = 3;
-      //     const retryInterval = 2000; // 2 seconds
-
-      //     const attemptNotification = () => {
-      //       if (retryCount < maxRetries) {
-      //         retryCount++;
-      //         console.log(`Attempting to send notification (attempt ${retryCount}/${maxRetries})...`);
-              
-      //         if (isConnected) {
-      //           sendNotification(ownerId, "Bạn có một yêu cầu xem phòng mới từ người thuê.", "VIEW_REQUEST");
-      //         } else {
-      //           setTimeout(attemptNotification, retryInterval);
-      //         }
-      //       } else {
-      //         console.warn("Failed to send notification after maximum retries");
-      //       }
-      //     };
-
-      //     attemptNotification();
-      //   }
-      // }
     } catch (error) {
       console.error(error);
-      showErrorToast("Đã xảy ra lỗi khi gửi yêu cầu.");
+      showErrorToast(error.message || "Đã xảy ra lỗi khi gửi yêu cầu.");
+    }
+  };
+
+  const handleSendRentalRequest = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+      return;
+    }
+
+    if (!rentalRequestMessage.trim()) {
+      showErrorToast("Vui lòng nhập lời nhắn.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/rent-requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          roomId: room.id,
+          message: rentalRequestMessage
+        }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("Bạn không có quyền gửi yêu cầu thuê phòng. Vui lòng đăng nhập với tài khoản người thuê.");
+        }
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Gửi yêu cầu thất bại");
+      }
+
+      const data = await response.json();
+      showInfoToast("Đã gửi yêu cầu thuê phòng thành công.");
+      setShowRentalRequestForm(false);
+      setRentalRequestMessage("");
+    } catch (error) {
+      console.error("Error sending rental request:", error);
+      showErrorToast(error.message || "Đã xảy ra lỗi khi gửi yêu cầu.");
     }
   };
 
@@ -180,9 +201,10 @@ function Result_Room() {
         </div>
 
         <div className="detail_price-booking">
-          <h4>Gửi yêu cầu xem phòng</h4>
+          <h4>Gửi yêu cầu</h4>
           <span>${room.price.toLocaleString()} per Month</span>
           <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
+          <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button>
         </div>
 
         <button onClick={() => setShowReportForm(true)}>Báo cáo bài viết</button>
@@ -216,6 +238,23 @@ function Result_Room() {
               <div className="report-buttons">
                 <button className="send-request" onClick={handleSendViewRequest}>Gửi yêu cầu</button>
                 <button onClick={() => setShowViewRequestForm(false)}>Hủy</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showRentalRequestForm && (
+          <div className="report-overlay">
+            <div className="report-form">
+              <h3>Yêu cầu thuê phòng</h3>
+              <textarea
+                value={rentalRequestMessage}
+                onChange={(e) => setRentalRequestMessage(e.target.value)}
+                placeholder="Nhập lời nhắn cho chủ phòng..."
+              />
+              <div className="report-buttons">
+                <button className="send-request" onClick={handleSendRentalRequest}>Gửi yêu cầu</button>
+                <button onClick={() => setShowRentalRequestForm(false)}>Hủy</button>
               </div>
             </div>
           </div>

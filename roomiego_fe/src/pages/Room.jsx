@@ -20,6 +20,8 @@ import bedrooms from "../assets/bedroom.png";
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 />
 
+const baseURL = "http://localhost:8080/images/";
+
 function Room() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +74,7 @@ function Room() {
       const randomIndex = Math.floor(Math.random() * defaultImages.length);
       return defaultImages[randomIndex];
     }
-    return url;
+    return baseURL + url;
   };
   // loc theo thanh pho 
     const tabs = ['Tất Cả' ,'Đà Nẵng', 'Thành phố Hồ Chí Minh', 'Hà Nội'];

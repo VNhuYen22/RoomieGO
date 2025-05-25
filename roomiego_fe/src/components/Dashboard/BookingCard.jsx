@@ -15,7 +15,7 @@ const BookingCard = ({ initialHotel, onEditClick, onDeleteClick }) => {
             }
             alt={hotelInfo.title}
           />
-        <div className="price-tag">${hotelInfo.price} per month</div>
+        <div className="price-tag">{hotelInfo.price} VND/Tháng</div>
       </div>
       <div className="booking-info">
         <div className="hotel-name">{hotelInfo.title}</div>

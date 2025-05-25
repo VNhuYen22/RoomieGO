@@ -1,8 +1,16 @@
 from fastapi import FastAPI, HTTPException, Query
 from typing import List
 from .recommender import recommend
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="Roommate AI Recommender")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # hoặc ["*"] cho dev tạm thời
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/recommend")
 def recommend_users(user_id: int = Query(...), top_n: int = Query(5)) -> List[dict]:
