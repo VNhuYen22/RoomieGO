@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
 import BookingCard from "./BookingCard";
 import FilterBar from "./FilterBar";
 import RegisterForm from "./RegisterForm";
@@ -72,7 +71,6 @@ const BookingsPage = () => {
   };
   return (
     <div className="BookingsPage-content">
-      <Header />
       <FilterBar onAddClick={() => setShowRegisterForm(true)} />
       {showRegisterForm && (
         <RegisterForm
