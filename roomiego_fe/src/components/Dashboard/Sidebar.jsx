@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 
 const menuItems = [
   { label: "Bookings", key: "bookings" },
-  { label: "Requests", key: "requests" },
-  { label: "Report", key: "report" },
-  { label: "Invoices", key: "invoices" },
-  { label: "Setting", key: "invoices" },
+  { label: "Yêu Cầu", key: "requests" },
+  { label: "Báo Cáo", key: "report" },
+  { label: "Hóa đơn", key: "invoices" },
+  { label: "Cài đặt", key: "invoices" },
 
 ];
 
