@@ -1,4 +1,3 @@
-
 /* Video nền */
 .video-background {
   position: fixed;
@@ -17,9 +16,10 @@
 
 /* Lớp phủ kính mờ */
 .glass-background {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 30px;
   margin-top: 30px;
@@ -55,7 +55,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #1a1a1a; /* Chữ mặc định trong form hiển thị đen */
-  margin-top: 20px; /* Tạo khoảng cách giữa step-indicator và hộp form */
+  margin-top: 10vh; /* Tạo khoảng cách giữa step-indicator và hộp form */
 }
 
 .roommate-form h2 {
@@ -226,4 +226,72 @@
 /* Khi bước được hoàn thành, thay đổi màu của đường nối */
 .step.completed:before {
   border-top-color: #5e5ce6;
+}
+
+/* Match Details Styles */
+.match-details-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.match-details-content {
+    margin-top: 2rem;
+}
+
+.match-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.match-section h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.match-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.match-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.match-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.match-item label {
+    font-weight: 600;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.match-item span {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .match-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .match-details-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
 }
