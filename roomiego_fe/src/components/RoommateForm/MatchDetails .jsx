@@ -1,5 +1,5 @@
 // MatchDetails.jsx
-import React from 'react';
+// import React from 'react';
 import { useLocation } from 'react-router-dom';
 import './RoommateForm.css'; // Import CSS
 
@@ -22,85 +22,33 @@ const MatchDetails = () => {
     // Get up to 5 recommendations
     const recommendations = Array.isArray(match) ? match.slice(0, 5) : [match];
 
-    // Function to format gender
-    const formatGender = (gender) => {
-        if (!gender) return 'Không xác định';
-        const genderStr = String(gender).toUpperCase();
-        return genderStr === 'MALE' || genderStr === 'NAM' ? 'Nam' : 
-               genderStr === 'FEMALE' || genderStr === 'NỮ' ? 'Nữ' : 
-               genderStr;
-    };
-
     return (
         <div className="roommate-form-container">
-            <div className="match-details-container glass-background">
+            <div className="match-details-container card-listing-container">
                 <h2>Danh sách người phù hợp</h2>
-                <div className="match-details-content">
+                <div className="card-listing-grid">
                     {recommendations.map((recommendation, index) => (
-                        <div key={index} className="match-section">
-                            <h3>Người phù hợp #{index + 1}</h3>
-                            <div className="match-grid">
-                                <div className="match-item">
-                                    <label>Giới tính:</label>
-                                    <span>{formatGender(recommendation.gender)}</span>
-                                </div>
-                                <div className="match-item">
-                                    <label>Quê quán:</label>
-                                    <span>{recommendation.hometown}</span>
-                                </div>
-                                <div className="match-item">
-                                    <label>Thành phố:</label>
-                                    <span>{recommendation.city}</span>
-                                </div>
-                                <div className="match-item">
-                                    <label>Quận:</label>
-                                    <span>{recommendation.district}</span>
-                                </div>
-                                <div className="match-item">
-                                    <label>Năm sinh:</label>
-                                    <span>{recommendation.yob}</span>
-                                </div>
-                                <div className="match-item">
-                                    <label>Nghề nghiệp:</label>
-                                    <span>{recommendation.job}</span>
-                                </div>
-                                <div className="match-item full-width">
-                                    <label>Sở thích:</label>
-                                    <span>
-                                        {typeof recommendation.hobbies === 'string' 
-                                            ? recommendation.hobbies 
-                                            : Array.isArray(recommendation.hobbies) 
-                                                ? recommendation.hobbies.join(', ') 
-                                                : 'Không có'}
-                                    </span>
-                                </div>
-                                <div className="match-item full-width">
-                                    <label>Mô tả thêm:</label>
-                                    <span>{recommendation.more || 'Không có'}</span>
-                                </div>
-                                {/* <div className="match-item full-width">
-                                    <label>Phong cách phòng mong muốn:</label>
-                                    <span>
-                                        {recommendation.rateImage === 1 ? 'Tối giản' : 
-                                         recommendation.rateImage === 2 ? 'Sạch sẽ & ấm áp' : 
-                                         recommendation.rateImage === 3 ? 'Thoáng đãng' : 'Không xác định'}
-                                    </span>
-                                </div> */}
+                        <div key={index} className="match-card">
+                            <div className="match-card-avatar-wrapper">
+                                <img
+                                    className="match-card-avatar"
+                                    src={recommendation.avatarUrl || 'https://randomuser.me/api/portraits/lego/1.jpg'}
+                                    alt={recommendation.fullName || 'Avatar'}
+                                />
                             </div>
+                            <div className="match-card-header">
+                                <span className="match-card-name">{recommendation.fullName || recommendation.username || `Người phù hợp #${index + 1}`}</span>
+                            </div>
+                            <div className="match-card-job">{recommendation.job || 'Chưa cập nhật nghề nghiệp'}</div>
+                            <div className="match-card-field"><b>Số điện thoại:</b> {recommendation.phone || '--'}</div>
+                            <div className="match-card-field"><b>Sở thích:</b> {Array.isArray(recommendation.hobbies) ? recommendation.hobbies.join(', ') : (recommendation.hobbies || 'Không có')}</div>
+                            <div className="match-card-field"><b>Thành phố:</b> {recommendation.city || '--'}</div>
+                            <div className="match-card-field"><b>Quận:</b> {recommendation.district || '--'}</div>
+                            <div className="match-card-field"><b>Quê quán:</b> {recommendation.hometown || '--'}</div>
+                            <div className="match-card-field"><b>Giới tính:</b> {recommendation.gender || '--'}</div>
+                            <div className="match-card-desc">{recommendation.more || recommendation.description || 'Không có mô tả'}</div>
                         </div>
                     ))}
-
-                    {Array.isArray(match) && match.length > 5 && (
-                        <div className="match-section">
-                            <h3>Thông tin thêm</h3>
-                            <div className="match-grid">
-                                <div className="match-item full-width">
-                                    <label>Tổng số người phù hợp:</label>
-                                    <span>{match.length} người</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>

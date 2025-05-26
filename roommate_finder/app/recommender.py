@@ -25,7 +25,9 @@ def get_roommates():
 
 
 def recommend(user_id: int, top_n: int = 5):
+    #Lấy dữ liệu từ bảng roommates
     roommates = get_roommates()
+    #Kiểm tra xem có dữ liệu không và user_id có tồn tại không
     if roommates.empty or user_id not in roommates['user_id'].values:
         return []
 
@@ -38,12 +40,12 @@ def recommend(user_id: int, top_n: int = 5):
     ])
 
     user_vec = embeddings[idx].reshape(1, -1)
-
+    #Tạo mảng mask để lọc ra những người cùng giới tính và khác user_id
     mask = (roommates['gender'] == gender) & (roommates['user_id'] != user_id)
     candidates = roommates[mask].index.tolist()
     if not candidates:
         candidates = roommates[roommates['user_id'] != user_id].index.tolist()
-
+    #Tính toán độ tương tác giữa user và các ứng viên
     scores = cosine_similarity(user_vec, embeddings[candidates])[0]
     scored = list(zip(candidates, scores))
     top = sorted(scored, key=lambda x: x[1], reverse=True)[:top_n]

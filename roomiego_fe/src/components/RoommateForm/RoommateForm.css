@@ -295,3 +295,172 @@
         padding: 1rem;
     }
 }
+
+/* Card Listing Styles for MatchDetails */
+.card-listing-container {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  max-width: 1200px;
+}
+
+.card-listing-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 36px 28px;
+  justify-content: center;
+  align-items: stretch;
+  padding: 36px 0 28px 0;
+  min-height: 200px;
+}
+
+.match-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  padding: 24px 20px 18px 20px;
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.22s, transform 0.18s;
+  position: relative;
+}
+.match-card:hover {
+  box-shadow: 0 10px 32px rgba(0,0,0,0.18);
+  transform: translateY(-4px) scale(1.025);
+}
+
+.match-card-avatar-wrapper {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.match-card-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e0e0;
+  background: #f7f7f7;
+}
+
+.match-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.match-card-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 2px;
+}
+.match-card-badge-id {
+  font-size: 0.95rem;
+  color: #00b894;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.match-card-age {
+  font-size: 0.95rem;
+  color: #888;
+  font-weight: 500;
+}
+.match-card-job {
+  font-size: 1.05rem;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 6px;
+  text-align: center;
+}
+.match-card-desc {
+  font-size: 0.98rem;
+  color: #444;
+  margin-bottom: 12px;
+  text-align: center;
+  min-height: 40px;
+}
+.match-card-listing {
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 10px 12px;
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.listing-label {
+  font-size: 0.95rem;
+  color: #888;
+  margin-bottom: 2px;
+}
+.listing-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.listing-price {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #1976d2;
+}
+.listing-date {
+  background: #e0f7fa;
+  color: #009688;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-weight: 500;
+}
+.listing-location {
+  font-size: 0.98rem;
+  color: #555;
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .card-listing-grid {
+    gap: 20px 10px;
+    padding: 18px 0 12px 0;
+  }
+  .match-card {
+    width: 90vw;
+    max-width: 340px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-listing-grid {
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    padding: 8px 0 4px 0;
+  }
+  .match-card {
+    width: 98vw;
+    max-width: 98vw;
+    padding: 14px 4vw 10px 4vw;
+  }
+}
+
+.match-card-field {
+  width: 100%;
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 4px;
+  text-align: left;
+  padding-left: 2px;
+  word-break: break-word;
+}
+.match-card-field b {
+  color: #1976d2;
+  font-weight: 600;
+  margin-right: 4px;
+}
