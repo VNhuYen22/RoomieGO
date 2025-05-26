@@ -107,7 +107,7 @@ function Result_Room() {
         throw new Error(errorData.message || "Gửi yêu cầu thất bại");
       }
 
-      showInfoToast("Đã gửi yêu cầu xem phòng thành công.");
+      showSuccessToast("Đã gửi yêu cầu xem phòng thành công.");
       setShowViewRequestForm(false);
       setViewRequestMessage("");
     } catch (error) {

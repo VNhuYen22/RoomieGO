@@ -18,7 +18,7 @@ const Footer = () => {
           <a href="/contact">Contact Us</a>
           <a href="/team">Our Team</a>
         </div>
-        <div className="copyright">
+        <div className="footer-copy">
           <p>Copyright ©2025; Designed by C1SE.01</p>
         </div>
       </div>
