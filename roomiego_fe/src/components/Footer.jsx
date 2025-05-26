@@ -2,25 +2,27 @@ import React from 'react'
 import '../styles/Footer.css';
 const Footer = () => {
   return (
-    <div>
-     <footer className='footer'>
-        <div className="left-side">
-            <h3>Newsletter & Special Promo</h3>
-            <input type="text" placeholder='Enter your email here' />
-            <button className='button'>Subscribe</button>
+    <footer className="footer">
+      <div className='footer-container'>
+        <div className="social-icons">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com"target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
+          <a href="https://twitter.com"target="_blank" rel="noopener noreferrer"><i className="fab fa-twitter"></i></a>
+          <a href="https://linkedin.com"target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin-in"></i></a>
+          <a href="https://youtube.com"target="_blank" rel="noopener noreferrer"><i className="fab fa-youtube"></i></a>
         </div>
-        <div className="right-side">
-            <ul>
-                <li><a href="/">About Us</a></li>
-                <li><a href="/">Contact</a></li>
-                <li><a href="/">Location</a></li>
-                <li><a href="/">FAQ</a></li>
-                <li><a href="/">Term of Use</a></li>
-                <li><a href="/">Privacy Police</a></li>
-            </ul>
+        <div className="nav-links">
+          <a href="/">Home</a>
+          <a href="/news">News</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact Us</a>
+          <a href="/team">Our Team</a>
         </div>
-        </footer> 
-    </div>
+        <div className="copyright">
+          <p>Copyright ©2025; Designed by C1SE.01</p>
+        </div>
+      </div>
+    </footer>
   )
 }
 

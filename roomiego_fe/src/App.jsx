@@ -27,6 +27,8 @@ import Dashboard from "./pages/Dashboard";
 import ReportPage from "./components/Dashboard/ReportPage";
 import Profile from "./pages/Profile";
 import { ToastContainer } from "react-toastify";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
