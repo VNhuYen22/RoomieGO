@@ -41,6 +41,8 @@ public class Roommate {
     @Column
     private Integer yob;
 
+    @Column(length = 20)
+    private String phone;
     @Column
     private String job;
 

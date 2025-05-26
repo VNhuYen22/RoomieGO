@@ -2,6 +2,7 @@ package com.c1se_01.roomiego.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
@@ -18,4 +19,5 @@ public class RoommateResponseDTO {
     private String hobbies;
     private String more;
     private Long userId;
+    private String phone;
 }

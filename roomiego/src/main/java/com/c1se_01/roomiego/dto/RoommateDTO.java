@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class RoommateDTO {
     private String hometown;
+
     private String city;
     private String district;
     private Integer rateImage;
@@ -13,7 +14,7 @@ public class RoommateDTO {
     private String job;
     private String hobbies;
     private String more;
-
+    private String phone;
     @NotNull(message = "userId không được để trống")
     private Long userId;// để ánh xạ với entity User
 }
