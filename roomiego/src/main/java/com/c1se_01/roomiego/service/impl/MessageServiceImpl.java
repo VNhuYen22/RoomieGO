@@ -1,6 +1,8 @@
 package com.c1se_01.roomiego.service.impl;
 
+import com.c1se_01.roomiego.dto.NotificationDto;
 import com.c1se_01.roomiego.dto.SendMessageRequest;
+import com.c1se_01.roomiego.enums.NotificationType;
 import com.c1se_01.roomiego.exception.NotFoundException;
 import com.c1se_01.roomiego.model.Conversation;
 import com.c1se_01.roomiego.model.Message;
@@ -9,6 +11,7 @@ import com.c1se_01.roomiego.repository.ConversationRepository;
 import com.c1se_01.roomiego.repository.MessageRepository;
 import com.c1se_01.roomiego.repository.UserRepository;
 import com.c1se_01.roomiego.service.MessageService;
+import com.c1se_01.roomiego.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class MessageServiceImpl implements MessageService {
     private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final NotificationService notificationService;
 
     @Override
     public Message sendMessage(SendMessageRequest request) {
@@ -49,8 +53,17 @@ public class MessageServiceImpl implements MessageService {
         message.setMessage(request.getContent());
         Message savedMessage = messageRepository.save(message);
 
+        // Send notification to tenant
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setUserId(receiver.getId());
+        notificationDto.setMessage(request.getContent());
+        notificationDto.setType(NotificationType.NOTIFICATION_TYPE);
+
+        // Save the notification to the database
+        notificationService.saveNotification(notificationDto);
+
         // Gửi tin nhắn real-time đến người nhận
-        messagingTemplate.convertAndSend("/topic/chat/" + conversation.getId(), savedMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + conversation.getId(), notificationDto);
 
         return savedMessage;
     }
