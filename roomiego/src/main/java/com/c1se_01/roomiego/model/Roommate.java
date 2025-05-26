@@ -9,14 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @Table(name = "roommates")
@@ -28,20 +23,36 @@ public class Roommate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String gender;
+
+    @Column
+    private String hometown;
+
+    @Column
+    private String city;
+
+    @Column
+    private String district;
+
+    @Column
+    private Integer rateImage;
+
+    @Column
+    private Integer yob;
+
+    @Column(length = 20)
+    private String phone;
+    @Column
+    private String job;
+
+    @Column
+    private String hobbies;
+
+    @Column(columnDefinition = "TEXT")
+    private String more;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
-
-    private BigDecimal budget;
-
-    @Column(columnDefinition = "TEXT")
-    private String preferences;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", updatable = false)
-    private Date createdAt = new Date();
 }

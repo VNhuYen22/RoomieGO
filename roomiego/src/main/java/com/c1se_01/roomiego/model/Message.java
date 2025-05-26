@@ -40,4 +40,8 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "sent_at", updatable = false)
     private Date sentAt = new Date();
+
+    @ManyToOne
+    @JoinColumn(name = "conversation_id", nullable = false)
+    private Conversation conversation;
 }

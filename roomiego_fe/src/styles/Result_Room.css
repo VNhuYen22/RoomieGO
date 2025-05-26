@@ -1,0 +1,245 @@
+.result-room {
+  padding: 2rem;
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: #888;
+  margin-bottom: 0.625rem;
+}
+
+.hotel-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin: 0.625rem 0;
+}
+
+.hotel-location {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.25rem;
+}
+
+.image-gallery {
+  display: flex;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.main-image img {
+  width: 47vw;
+  height: 64vh;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.side-images {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.side-images img {
+  width: 27vw;
+  height: 31vh;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.detail-room {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.detail_about-place {
+  flex: 1;
+  padding: 0.625rem;
+  border-right: 0.0625rem solid #ddd;
+}
+
+.room-details {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.room-details span {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  background-color: #e0e0e0;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+}
+
+.room-details strong {
+  margin-right: 0.5rem;
+}
+
+.contact-button button {
+  animation: bounce 1.5s infinite;
+  margin: 0 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+}
+.room-details img{
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.3125rem;
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.detail_price-booking {
+  margin-left: 3rem;
+  flex: 1;
+  padding: 0.625rem;
+  text-align: center;
+}
+
+.detail_price-booking h4 {
+  margin-bottom: 0.625rem;
+}
+
+.detail_price-booking span {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 0.9375rem;
+}
+
+.detail_price-booking button {
+  padding: 0.625rem 3.25rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.detail_price-booking button:last-child {
+  background-color: #28a745;
+}
+
+.detail_price-booking button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.detail_price-booking button:last-child:hover {
+  background-color: #218838;
+}
+
+.report-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* mờ nền */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.report-form {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.report-form h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.report-form textarea {
+  width: 100%;
+  height: 100px;
+  padding: 8px;
+  resize: none;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.send-request {
+  position: relative;
+  overflow: hidden; /* Đảm bảo pseudo-element không tràn ra ngoài nút */
+  background-color: #007bff; /* Màu nền đen */
+  color: #fff; /* Màu chữ trắng */
+  border: none;
+  border-radius: 20px; /* Bo tròn góc */
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+    margin-right: 2rem;
+}
+.send-request::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%; /* Bắt đầu hoàn toàn bên trái */
+  width: 100%;
+  height: 100%;
+  background: #00d4ff; /* Màu hover (đen đậm) */
+  transform: skewX(-30deg); /* Tạo hiệu ứng góc nghiêng cho overlay */
+  transition: left 0.3s ease; /* Hiệu ứng di chuyển mượt 0.3 giây */
+  z-index: 0; /* Để overlay nằm dưới nội dung của nút */
+}
+.send-request > * {
+  position: relative;
+  z-index: 1;
+}
+.send-request:hover::after {
+  left: 100%;
+}
+/* .report-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+} */
+/* 
+.report-buttons button:first-child {
+  background-color:  #007bff;
+  color: #fff;
+}
+
+.report-buttons button:last-child {
+  background-color: #ccc;
+  color: #333;
+} */ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

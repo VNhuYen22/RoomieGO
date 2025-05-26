@@ -1,0 +1,13 @@
+package com.c1se_01.roomiego.enums;
+
+public enum NotificationType {
+    RENT_REQUEST_CREATED,
+    RENT_REQUEST_APPROVED,
+    RENT_REQUEST_REJECTED,
+    VIEW_CONFIRMED,
+    CONTRACT_CREATED,
+    ROOM_HIDDEN,
+    TENANT_CONFIRMED_VIEWING,
+    RENT_REQUEST_VIEW_ROOM
+
+}
