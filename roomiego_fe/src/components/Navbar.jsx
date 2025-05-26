@@ -113,10 +113,10 @@ function Navbar() {
           <img src={note.avatar} alt="avatar" />
         </div>
         <div className="notification-content">
-          <p className="notification-title"><a href="">trirrtr</a></p>
-          <p className="notification-message"><a href="">toihhsfaafaf</a></p>
+          <p className="notification-title"><a href="">Tiêu đề thông báo</a></p>
+          <p className="notification-message"><a href="">Nội dung thông báo</a></p>
+          <span className="notification-icon"><a href="">icon </a></span>
           <div className="notification-footer">
-            <span className="notification-icon"><a href="">icon </a></span>
             <span className="notification-time"><a href="">22h30phut ago </a></span>
           </div>
         </div>
