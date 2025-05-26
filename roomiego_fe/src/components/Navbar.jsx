@@ -104,9 +104,8 @@ function Navbar() {
               </div>
               {notificationOpen && (
                 <div className="notification-bell_dropdown">
-                  <div className="title-notification">
+                  <div className="notification-header">
                     <h3>Thông báo</h3>
-                   
                   </div>
                   {notifications.map((note, index) => (
                         <div key={index} className="notification-card">
