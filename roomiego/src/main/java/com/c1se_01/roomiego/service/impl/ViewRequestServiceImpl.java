@@ -56,6 +56,9 @@ public class ViewRequestServiceImpl implements ViewRequestService {
         notificationDto.setMessage("Bạn có yêu cầu xem phòng mới từ " + renter.getFullName());
         notificationDto.setType(NotificationType.RENT_REQUEST_VIEW_ROOM);
 
+        // Save the notification to the database
+        notificationService.saveNotification(notificationDto);
+
         System.out.println("Sending notification to topic: /topic/notifications/" + room.getOwner().getId());
         messagingTemplate.convertAndSend("/topic/notifications/" + room.getOwner().getId(), notificationDto);
 
@@ -93,19 +96,26 @@ public class ViewRequestServiceImpl implements ViewRequestService {
         request.setAdminNote(viewRespondDTO.getAdminNote());
         ViewRequest updatedRequest = viewRequestRepository.save(request);
 
+
+        // Send notification to tenant
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setUserId(request.getRenter().getId());
+
         if (request.getStatus() == ViewRequestStatus.ACCEPTED) {
             // Gửi Thông báo cho người thuê
-            notificationService.sendNotificationToUser(
-                    request.getRenter().getId(),
-                    "Yêu cầu xem phòng đã được chấp nhận. Liên hệ Zalo: " + request.getRoom().getOwner().getPhone()
-            );
+            notificationDto.setMessage("Yêu cầu xem phòng đã được chấp nhận. Liên hệ Zalo: " + request.getRoom().getOwner().getPhone());
+            notificationDto.setType(NotificationType.OWNER_APPROVED);
+
+            messagingTemplate.convertAndSend("/topic/notifications/" + request.getRenter().getId(), notificationDto);
         } else {
             // Gửi Thông báo cho người thuê
-            notificationService.sendNotificationToUser(
-                    request.getRenter().getId(),
-                    "Yêu cầu xem phòng bị từ chối. Lý do: " + request.getAdminNote()
-            );
+            notificationDto.setMessage("Yêu cầu xem phòng bị từ chối. Lý do: " + request.getAdminNote());
+            notificationDto.setType(NotificationType.OWNER_REJECTED);
+            messagingTemplate.convertAndSend("/topic/notifications/" + request.getRenter().getId(), notificationDto);
         }
+
+        // Save the notification to the database
+        notificationService.saveNotification(notificationDto);
 
         return viewRequestMapper.toDTO(updatedRequest);
     }
@@ -129,11 +139,17 @@ public class ViewRequestServiceImpl implements ViewRequestService {
         request.setAdminNote(viewRespondDTO.getAdminNote());
         ViewRequest updatedRequest = viewRequestRepository.save(request);
 
+
+        // Send notification to tenant
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setUserId(request.getRenter().getId());
+        notificationDto.setMessage("Yêu cầu xem phòng đã bị hủy. Lý do:" + request.getAdminNote());
+        notificationDto.setType(NotificationType.OWNER_REJECTED);
+        // Save the notification to the database
+        notificationService.saveNotification(notificationDto);
+
         // Gửi thông báo cho người thuê
-        notificationService.sendNotificationToUser(
-                request.getRenter().getId(),
-                "Yêu cầu xem phòng đã bị hủy. Lý do: " + request.getAdminNote()
-        );
+        messagingTemplate.convertAndSend("/topic/notifications/" + request.getRenter().getId(), notificationDto);
 
         return viewRequestMapper.toDTO(updatedRequest);
     }

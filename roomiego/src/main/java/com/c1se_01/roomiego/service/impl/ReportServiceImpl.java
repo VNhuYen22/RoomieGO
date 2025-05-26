@@ -4,14 +4,20 @@ import com.c1se_01.roomiego.common.PageCustom;
 import com.c1se_01.roomiego.common.PageableCustom;
 import com.c1se_01.roomiego.common.ResponseData;
 import com.c1se_01.roomiego.dto.HandleReportRequest;
+import com.c1se_01.roomiego.dto.NotificationDto;
 import com.c1se_01.roomiego.dto.ReportRequest;
 import com.c1se_01.roomiego.dto.ReportResponse;
+import com.c1se_01.roomiego.enums.NotificationType;
+import com.c1se_01.roomiego.enums.RentRequestStatus;
+import com.c1se_01.roomiego.enums.Role;
+import com.c1se_01.roomiego.mapper.RentRequestMapper;
 import com.c1se_01.roomiego.model.Report;
 import com.c1se_01.roomiego.mapper.ReportMapper;
 import com.c1se_01.roomiego.model.Room;
 import com.c1se_01.roomiego.model.User;
 import com.c1se_01.roomiego.repository.ReportRepository;
 import com.c1se_01.roomiego.repository.RoomRepository;
+import com.c1se_01.roomiego.repository.UserRepository;
 import com.c1se_01.roomiego.service.NotificationService;
 import com.c1se_01.roomiego.service.ReportService;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +43,8 @@ public class ReportServiceImpl implements ReportService {
     private final RoomRepository roomRepository;
     private final ReportMapper reportMapper;
     private final NotificationService notificationService;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final UserRepository userRepository;
 
     @Override
     public void reportRoom(ReportRequest request) {
@@ -52,6 +61,19 @@ public class ReportServiceImpl implements ReportService {
                 .isHandled(false)
                 .build();
         reportRepository.save(report);
+
+        // Gửi thông báo WebSocket cho tenant
+        User user = userRepository.findByRole(Role.ADMIN).orElse(null);
+
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setUserId(user.getId());
+        notificationDto.setMessage("Bạn có bài báo cáo phòng từ: " + reporter.getFullName());
+        notificationDto.setType(NotificationType.NOTIFICATION_TYPE);
+
+        // Save the notification to the database
+        notificationService.saveNotification(notificationDto);
+
+        messagingTemplate.convertAndSend("/topic/notifications/" + user.getId(), notificationDto);
     }
 
     @Override
@@ -90,6 +112,9 @@ public class ReportServiceImpl implements ReportService {
         report.setHandledAt(new Date());
         reportRepository.save(report);
 
+        // Send notification to tenant
+        NotificationDto notificationDto = new NotificationDto();
+
         if (Boolean.TRUE.equals(request.getIsViolation())) {
             Room roomToDelete = report.getRoom();
 
@@ -99,18 +124,23 @@ public class ReportServiceImpl implements ReportService {
             // Xóa Room
             roomRepository.delete(roomToDelete);
 
+            notificationDto.setUserId(report.getRoom().getOwner().getId());
+            notificationDto.setMessage("Bài đăng của bạn đã bị xóa do vi phạm!");
+            notificationDto.setType(NotificationType.BREACH);
+
             // Gửi thông báo cho chủ bài đăng
-            notificationService.sendNotificationToUser(
-                    report.getRoom().getOwner().getId(),
-                    "Bài đăng của bạn đã bị xóa do vi phạm!"
-            );
+            messagingTemplate.convertAndSend("/topic/notifications/" + report.getRoom().getOwner().getId(), notificationDto);
         } else {
+            notificationDto.setUserId(report.getReporter().getId());
+            notificationDto.setMessage("Báo cáo bài đăng không vi phạm.");
+            notificationDto.setType(NotificationType.NON_BREACH);
+
             // Không vi phạm → Gửi thông báo cho người report
-            notificationService.sendNotificationToUser(
-                    report.getReporter().getId(),
-                    "Báo cáo bài đăng không vi phạm."
-            );
+            messagingTemplate.convertAndSend("/topic/notifications/" + report.getReporter().getId(), notificationDto);
         }
+
+        // Save the notification to the database
+        notificationService.saveNotification(notificationDto);
     }
 
     @Override
