@@ -15,49 +15,65 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
 
-    private final ContractRepository contractRepository;
-    private final RoomRepository roomRepository;
-    private final UserRepository userRepository;
-    private final ContractMapper contractMapper;
+        private final ContractRepository contractRepository;
+        private final RoomRepository roomRepository;
+        private final UserRepository userRepository;
+        private final ContractMapper contractMapper;
 
-    @Override
-    public ContractResponse createContract(ContractCreateRequest request) {
-        Room room = roomRepository.findById(request.getRoomId())
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+        @Override
+        public ContractResponse createContract(ContractCreateRequest request) {
+                // Validate input data
+                if (request.getStartDate() == null || request.getEndDate() == null) {
+                        throw new RuntimeException("Start date and end date are required");
+                }
+                if (request.getStartDate().after(request.getEndDate())) {
+                        throw new RuntimeException("Start date must be before end date");
+                }
+                if (request.getPricePerMonth() == null || request.getPricePerMonth().compareTo(BigDecimal.ZERO) <= 0) {
+                        throw new RuntimeException("Price per month must be greater than 0");
+                }
 
-        User tenant = userRepository.findById(request.getTenantId())
-                .orElseThrow(() -> new RuntimeException("Tenant not found"));
+                Room room = roomRepository.findById(request.getRoomId())
+                                .orElseThrow(() -> new RuntimeException("Room not found"));
 
-        User owner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                User tenant = userRepository.findById(request.getTenantId())
+                                .orElseThrow(() -> new RuntimeException("Tenant not found"));
 
-        // Kiểm tra người tạo hợp đồng phải là chủ phòng
-//        if (!room.getOwner().getId().equals(owner.getId())) {
-//            throw new RuntimeException("Only owner of the room can create contract");
-//        }
+                User owner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Contract contract = new Contract();
-        contract.setRoom(room);
-        contract.setTenant(tenant);
-        contract.setOwner(owner);
-        contract.setStartDate(request.getStartDate());
-        contract.setEndDate(request.getEndDate());
-        contract.setPricePerMonth(request.getPricePerMonth());
-        contract.setPaymentStatus(PaymentStatus.PENDING);
+                // Check if room is available for the given period
+                boolean isRoomAvailable = contractRepository.findByRoomAndDateRange(
+                                room, request.getStartDate(), request.getEndDate()).isEmpty();
+                if (!isRoomAvailable) {
+                        throw new RuntimeException("Room is not available for the selected period");
+                }
 
-        Contract saved = contractRepository.save(contract);
-        return contractMapper.toDto(saved);
-    }
+                Contract contract = new Contract();
+                contract.setRoom(room);
+                contract.setTenant(tenant);
+                contract.setOwner(owner);
+                contract.setStartDate(request.getStartDate());
+                contract.setEndDate(request.getEndDate());
+                contract.setPricePerMonth(request.getPricePerMonth());
+                contract.setPaymentStatus(PaymentStatus.PENDING);
 
-    @Override
-    public ContractResponse getContractById(Long contractId) {
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new RuntimeException("Contract not found"));
+                Contract saved = contractRepository.save(contract);
+                return contractMapper.toDto(saved);
+        }
 
-        return contractMapper.toDto(contract);
-    }
+        @Override
+        public ContractResponse getContractById(Long contractId) {
+                Contract contract = contractRepository.findById(contractId)
+                                .orElseThrow(() -> new RuntimeException("Contract not found"));
+
+                return contractMapper.toDto(contract);
+        }
 
 }
