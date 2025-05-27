@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
-import Stomp from "stompjs";
-import SockJS from "sockjs-client";
+// import Stomp from "stompjs";
+// import SockJS from "sockjs-client";
 import "../styles/Navbar.css";
 // import chatbox from "../assets/chatbox.png";
 // import user from "../assets/user.png";

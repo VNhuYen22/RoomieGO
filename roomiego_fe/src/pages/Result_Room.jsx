@@ -207,18 +207,18 @@ function Result_Room() {
           <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button>
         </div>
 
-        <button onClick={() => setShowReportForm(true)}>Báo cáo bài viết</button>
+        <button className="report-button" onClick={() => setShowReportForm(true)}> Báo cáo bài viết </button>
 
         {showReportForm && (
           <div className="report-overlay">
             <div className="report-form">
-              <h3>Báo cáo bài viết</h3>
+              <h3><b>Báo cáo bài viết</b></h3>
               <textarea
                 value={reportReason}
                 onChange={(e) => setReportReason(e.target.value)}
                 placeholder="Nhập lý do báo cáo..."
               />
-              <div className="report-buttons">
+              <div className="report_inside-buttons">
                 <button onClick={handleReportSubmit}>Gửi báo cáo</button>
                 <button onClick={() => setShowReportForm(false)}>Hủy</button>
               </div>
