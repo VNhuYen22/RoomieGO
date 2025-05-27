@@ -58,7 +58,7 @@ export default function App() {
           <span className="highlight">ngạc nhiên </span>, mỗi lần gặp được người bạn mới
         </h1>
         <p>Bạn đã sẵn sàng cho điều đó chưa 😉!!!</p>
-       <Link to="/Room"><button className="home-arrow">Find your room</button></Link> 
+       <Link to="/Room"><button className="home-arrow">Tìm phòng trọ</button></Link> 
       </div>
     </div>
     </div>

@@ -42,6 +42,7 @@ const StepOne = ({ formData, errors, handleChange }) => (
 
     <label>Quê quán:</label>
     <Select
+      placeholder="Chọn quê quán của bạn"
       options={provincesOptions}
       value={provincesOptions.find((opt) => opt.value === formData.hometown)}
       onChange={(selected) =>
@@ -365,7 +366,7 @@ const RoommateForm = () => {
       {/* Step Indictor nằm ngoài hộp form để hiển thị phía trên */}
       <StepIndicator step={step} />
       <div className="roommate-form glass-background">
-        <h2>Thông tin Roommate - Bước {step}/3</h2>
+        <h2>Thông tin bạn cùng phòng - Bước {step}/3</h2>
         <form onSubmit={handleSubmit}>
           {step === 1 && (
             <StepOne

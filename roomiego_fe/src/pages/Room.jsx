@@ -88,8 +88,8 @@ if (sortOrder === "asc") {
   sortedRooms.sort((a, b) => b.price - a.price);
 }
 
-  if (loading) return <p>Loading rooms...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p>Đang tải phòng trọ...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
 
   return (
   
@@ -164,7 +164,7 @@ if (sortOrder === "asc") {
       <div className="room-grid">
       
         {sortedRooms.length === 0 ? (
-          <p>No rooms found.</p>
+          <p>Không tìm thấy phòng trọ.</p>
         ) : (
           sortedRooms.map((room) => (
             <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
@@ -181,7 +181,7 @@ if (sortOrder === "asc") {
     <div className="card-body">
       <div className="card-top">
         <h2>{room.price?.toLocaleString() ?? "N/A"} vnđ</h2>
-        <div className="status-badge">For rent</div>
+        <div className="status-badge">Cho thuê</div>
       </div>
 
       <div className="card-address">
@@ -196,11 +196,11 @@ if (sortOrder === "asc") {
         </div>
         <div className="card-feature-item">
          
-          <span><img src={bedrooms} alt="" />{room.numBedrooms ?? "?"} <b>Bed</b> </span>
+          <span><img src={bedrooms} alt="" />{room.numBedrooms ?? "?"} <b>Giường</b> </span>
         </div>
         <div className="card-feature-item">
           
-          <span><img src={sink} alt="" />{room.numBathrooms ?? "?"} <b>Bath</b> </span>
+          <span><img src={sink} alt="" />{room.numBathrooms ?? "?"} <b>Bồn tắm</b> </span>
         </div>
       </div>
 
