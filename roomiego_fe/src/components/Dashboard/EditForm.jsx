@@ -93,7 +93,7 @@ const EditForm = ({ hotel, onClose, onUpdate }) => {
             </div>
 
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
-              <label>Room Availability</label>
+              <label>Phòng trọ còn trống</label>
               <input
                 type="checkbox"
                 name="isRoomAvailable"
