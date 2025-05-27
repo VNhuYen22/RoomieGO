@@ -1,34 +1,57 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
 import "../styles/Navbar.css";
-import chatbox from "../assets/chatbox.png";
-import user from "../assets/user.png";
+// import chatbox from "../assets/chatbox.png";
+// import user from "../assets/user.png";
 import logout from "../assets/logout.png";
 import dashboard from "../assets/dashboard.png";
 import user2 from "../assets/user2.png";
 import friends from "../assets/high-five.png";
 import living from "../assets/living.png";
-import home_icon from "../assets/house.png";
+// import home_icon from "../assets/house.png";
 import bell from "../assets/bell.png";
 
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notificationOpen, setNotificationOpen] = useState(false); // dropdown thông báo
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [fullName, setFullName] = useState("");
+  const [role, setRole] = useState("");
+  const [notifications, setNotifications] = useState([]); // Danh sách thông báo động
+  const [userId, setUserId] = useState(null); // Store userId
   const location = useLocation();
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
-  const [role, setRole] = useState("");
+  const stompClientRef = useRef(null);
 
-  // Fake danh sách thông báo
-  const notifications = [
-    "Yêu cầu thuê phòng của bạn đã được chấp nhận!",
-    "Có 1 người vừa nhắn tin cho bạn.",
-    "Tin mới từ chủ phòng A123.",
-  ];
+  // Fetch historical notifications
+  const fetchNotifications = async (userId) => {
+    const token = localStorage.getItem("authToken");
+    if (!token || !userId) return;
 
+    try {
+      const response = await axios.get("http://localhost:8080/api/notifications", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const fetchedNotifications = response.data.map((notification) => ({
+        message: notification.message || "No message",
+        type: notification.type || "Unknown",
+        userId: notification.userId || "Unknown",
+        timestamp: new Date().toLocaleTimeString(), // You can adjust this based on the BE response
+      }));
+      setNotifications(fetchedNotifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  // Lấy thông tin người dùng và userId để đăng ký WebSocket
   const fetchUserProfile = async () => {
     const token = localStorage.getItem("authToken");
     if (!token) return;
@@ -42,36 +65,91 @@ function Navbar() {
       });
 
       const { user } = response.data;
-      const { fullName, role } = user;
+      const { fullName, role, id } = user;
+      console.log("Current user ID:", id);
       setFullName(fullName);
       setRole(role);
+      setUserId(id); // Save userId
       setIsLoggedIn(true);
 
+      // Fetch historical notifications
+      fetchNotifications(id);
+
+      // Kết nối WebSocket sau khi lấy userId
+      connectWebSocket(id);
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
   };
 
+  // Kết nối WebSocket và đăng ký topic thông báo
+  const connectWebSocket = (userId) => {
+    if (typeof window === "undefined" || !userId) return;
+
+    try {
+      const socket = new SockJS("http://localhost:8080/api/socket");
+      const stompClient = Stomp.over(socket);
+
+      stompClient.connect(
+        {},
+        (frame) => {
+          console.log("Connected to WebSocket with frame:", frame);
+          stompClientRef.current = stompClient;
+
+          stompClient.subscribe(`/topic/notifications/${userId}`, (message) => {
+            console.log("Received raw message:", message);
+            try {
+              const notification = JSON.parse(message.body || "{}");
+              console.log("Parsed notification:", notification);
+              setNotifications((prev) => [
+                ...prev,
+                {
+                  message: notification.message || "No message",
+                  type: notification.type || "Unknown",
+                  userId: notification.userId || "Unknown",
+                  timestamp: new Date().toLocaleTimeString(),
+                },
+              ]);
+            } catch (parseError) {
+              console.error("Error parsing WebSocket message:", parseError, "Body:", message.body);
+            }
+          });
+        },
+        (error) => {
+          console.error("WebSocket connection error:", error);
+          // Reconnection logic
+          setTimeout(() => connectWebSocket(userId), 5000); // Retry after 5 seconds
+        }
+      );
+    } catch (error) {
+      console.error("Error initializing WebSocket:", error);
+    }
+  };
+
+  // Xử lý đăng xuất
   const handleLogout = () => {
+    if (stompClientRef.current) {
+      stompClientRef.current.disconnect(() => {
+        console.log("Disconnected from WebSocket");
+      });
+    }
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setFullName("");
+    setNotifications([]);
+    setUserId(null);
     window.location.href = "http://localhost:5173/";
   };
 
+  // useEffect để lấy profile và xử lý click ngoài
   useEffect(() => {
     fetchUserProfile();
 
     const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current && !dropdownRef.current.contains(event.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
-
-      if (
-        notificationRef.current && !notificationRef.current.contains(event.target)
-      ) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
         setNotificationOpen(false);
       }
     };
@@ -79,9 +157,15 @@ function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      if (stompClientRef.current) {
+        stompClientRef.current.disconnect(() => {
+          console.log("Disconnected from WebSocket on unmount");
+        });
+      }
     };
   }, []);
 
+  // Ẩn Navbar trên trang Login và Register
   if (location.pathname === "/Login" || location.pathname === "/Register") {
     return null;
   }
@@ -89,11 +173,19 @@ function Navbar() {
   return (
     <div className="navbar-container">
       <div className="leftside">
-        <Link to="/"><h1 className="logo-text">ROOMIEGO</h1></Link>
+        <Link to="/">
+          <h1 className="logo-text">ROOMIEGO</h1>
+        </Link>
       </div>
       <div className="rightside">
-        <Link to="/Room"><img src={living} alt="" className="img-living" /><a href="">Room</a></Link>
-        <Link to="/Roommates"><img src={friends} alt="" className="img-living" /><a href="">Roommates</a></Link>
+        <Link to="/Room">
+          <img src={living} alt="" className="img-living" />
+          <a href="">Room</a>
+        </Link>
+        <Link to="/Roommates">
+          <img src={friends} alt="" className="img-living" />
+          <a href="">Roommates</a>
+        </Link>
 
         {isLoggedIn ? (
           <>
@@ -107,32 +199,32 @@ function Navbar() {
                   <div className="notification-header">
                     <h3>Thông báo</h3>
                   </div>
-                  {notifications.map((note, index) => (
-                        <div key={index} className="notification-card">
-        <div className="notification-avatar">
-          <img src={note.avatar} alt="avatar" />
-        </div>
-        <div className="notification-content">
-          <p className="notification-title"><a href="">Tiêu đề thông báo</a></p>
-          <p className="notification-message"><a href="">Nội dung thông báo</a></p>
-          <span className="notification-icon"><a href="">icon </a></span>
-          <div className="notification-footer">
-            <span className="notification-time"><a href="">22h30phut ago </a></span>
-          </div>
-        </div>
-        <div className="notification-status-dot"></div>
-      </div>
-                  ))}
+                  {notifications.length > 0 ? (
+                    notifications.map((note, index) => (
+                      <div key={index} className="notification-card">
+                        <div className="notification-avatar">
+                          <img src={user2} alt="avatar" />
+                        </div>
+                        <div className="notification-content">
+                          <p className="notification-title">{note.type}</p>
+                          <p className="notification-message">{note.message}</p>
+                          <div className="notification-footer">
+                            <span className="notification-time">{note.timestamp}</span>
+                          </div>
+                        </div>
+                        <div className="notification-status-dot"></div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>Không có thông báo mới</p>
+                  )}
                 </div>
               )}
             </div>
 
             {/* User menu */}
             <div className="user-menu">
-              <div
-                className="user-avatar"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
+              <div className="user-avatar" onClick={() => setDropdownOpen(!dropdownOpen)}>
                 <img src={user2} alt="User Avatar" />
               </div>
               {dropdownOpen && (
@@ -156,7 +248,9 @@ function Navbar() {
         ) : (
           <>
             <Link to="/Register">Sign Up</Link>
-            <Link to="/Login"><button className="get-started-btn">Login</button></Link>
+            <Link to="/Login">
+              <button className="get-started-btn">Login</button>
+            </Link>
           </>
         )}
       </div>
