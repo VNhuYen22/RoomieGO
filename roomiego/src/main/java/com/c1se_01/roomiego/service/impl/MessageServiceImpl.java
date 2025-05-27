@@ -57,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
         NotificationDto notificationDto = new NotificationDto();
         notificationDto.setUserId(receiver.getId());
         notificationDto.setMessage(request.getContent());
-        notificationDto.setType(NotificationType.NOTIFICATION_TYPE);
+        notificationDto.setType(NotificationType.RENT_REQUEST_CREATED);
 
         // Save the notification to the database
         notificationService.saveNotification(notificationDto);

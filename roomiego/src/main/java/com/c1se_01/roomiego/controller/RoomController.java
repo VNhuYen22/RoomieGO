@@ -126,8 +126,14 @@ public class RoomController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa phòng thành công", null));
     }
 
-    @GetMapping("/my")
-    public ResponseEntity<ApiResponse<List<RoomDTO>>> getRoomsByOwner() {
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<ApiResponse<List<RoomDTO>>> getRoomsByOwnerId(@PathVariable Long ownerId) {
+        List<RoomDTO> rooms = roomService.getRoomsByOwner(ownerId);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Danh sách phòng của owner", rooms));
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<ApiResponse<List<RoomDTO>>> getMyRooms() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
@@ -136,7 +142,6 @@ public class RoomController {
 
         return ResponseEntity.ok(new ApiResponse<>(200, "Danh sách phòng của owner", rooms));
     }
-
 
     @PostMapping("/{roomId}/hide")
     public String hideRoom(@PathVariable Long roomId) {

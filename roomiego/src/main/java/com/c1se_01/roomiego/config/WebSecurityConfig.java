@@ -35,8 +35,8 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file", "/ws/**").permitAll() // ✅ Cho phép API này truy cập công khai
-                        .requestMatchers("/owner/**", "/api/rooms/**", "/api/contracts").hasAnyAuthority("OWNER")
+                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms","/api/rooms/{id}","/api/roommates/export-to-file", "/ws/**").permitAll() // ✅ Cho phép API này truy cập công khai
+                        .requestMatchers("/owner/**", "/api/rooms/owner", "/api/rooms/owner/{ownerId}", "/api/contracts", "/owner/get-users/**", "/owner/get-all-users").hasAnyAuthority("OWNER","ADMIN")
                         .requestMatchers("/renter/**", "/api/roommates/**", "/api/contracts/**").hasAnyAuthority("RENTER")
                         .requestMatchers("/api/rent-requests/**").hasAnyAuthority("RENTER", "OWNER", "ADMIN")
                         .requestMatchers("/renterowner/**", "/api/reports/**").hasAnyAuthority("OWNER", "RENTER", "ADMIN")
