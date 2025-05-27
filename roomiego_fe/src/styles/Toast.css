@@ -38,17 +38,6 @@
   color: #ffffff; /* White text */
 }
 
-/* Info toast */
-.info-toast {
-  background: linear-gradient(
-   to right,
-    #1e1e2f 10%,
-    #0072ff 30%,
-    #00c6ff 60%,
-        rgba(0, 198, 255, 0.0) 100%
-  ); /* Cyan for info */
-  color: #ffffff; /* White text */
-}
 
 /* Warning toast */
 .warning-toast {

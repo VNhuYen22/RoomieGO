@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
-import SockJS from 'sockjs-client';
-import * as Stomp from 'stompjs';
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
 import "../styles/Navbar.css";
 import trash from "../assets/trash.png";
 // import chatbox from "../assets/chatbox.png";
@@ -29,12 +29,34 @@ function Navbar() {
   const notificationRef = useRef(null);
   const stompClientRef = useRef(null);
 
+
   // delete notification function
 const handleDeleteNotification = (indexToDelete) => {
   setNotifications((prev) =>
     prev.filter((_, index) => index !== indexToDelete)
   );
 };
+
+  // Function to translate notification type to Vietnamese
+  const translateNotificationType = (type) => {
+    const translations = {
+      'RENT_REQUEST_CREATED': 'Yêu cầu thuê phòng mới',
+      'RENT_REQUEST_APPROVED': 'Yêu cầu thuê phòng được chấp nhận',
+      'RENT_REQUEST_REJECTED': 'Yêu cầu thuê phòng bị từ chối',
+      'VIEW_CONFIRMED': 'Xác nhận xem phòng',
+      'CONTRACT_CREATED': 'Hợp đồng mới được tạo',
+      'ROOM_HIDDEN': 'Phòng đã bị ẩn',
+      'TENANT_CONFIRMED_VIEWING': 'Người thuê đã xác nhận xem phòng',
+      'RENT_REQUEST_VIEW_ROOM': 'Yêu cầu xem phòng',
+      'OWNER_REJECTED': 'Chủ nhà đã từ chối',
+      'OWNER_APPROVED': 'Chủ nhà đã chấp nhận',
+      'BREACH': 'Vi phạm hợp đồng',
+      'NON_BREACH': 'Không vi phạm hợp đồng'
+    };
+    return translations[type] || type;
+  };
+
+
   // Fetch historical notifications
   const fetchNotifications = async (userId) => {
     const token = localStorage.getItem("authToken");
@@ -216,7 +238,7 @@ const handleDeleteNotification = (indexToDelete) => {
                           <img src={user2} alt="avatar" />
                         </div>
                         <div className="notification-content">
-                          <p className="notification-title">{note.type}</p>
+                          <p className="notification-title">{translateNotificationType(note.type)}</p>
                           <p className="notification-message">{note.message}</p>
                           <div className="notification-footer">
                             <span className="notification-time">{note.timestamp}</span>
@@ -246,7 +268,7 @@ const handleDeleteNotification = (indexToDelete) => {
                   <button onClick={() => window.location.href = "/profile"}>
                     <img src={user2} alt="" /> Profile
                   </button>
-                  {role === "OWNER" && (
+                {(role === "OWNER" || role === "ADMIN")  && (
                     <button onClick={() => window.location.href = "/dashboard"}>
                       <img src={dashboard} alt="" className="dashboard-user" /> Dashboard
                     </button>

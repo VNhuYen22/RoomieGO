@@ -68,7 +68,7 @@ public class ReportServiceImpl implements ReportService {
         NotificationDto notificationDto = new NotificationDto();
         notificationDto.setUserId(user.getId());
         notificationDto.setMessage("Bạn có bài báo cáo phòng từ: " + reporter.getFullName());
-        notificationDto.setType(NotificationType.NOTIFICATION_TYPE);
+        notificationDto.setType(NotificationType.BREACH);
 
         // Save the notification to the database
         notificationService.saveNotification(notificationDto);
