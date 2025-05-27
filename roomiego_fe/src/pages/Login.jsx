@@ -1,11 +1,10 @@
 import { useState } from "react";
 import '../styles/Login.css';
-import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
 import logo from "../assets/logo.png"; // Import logo nếu cần
 import building from "../assets/4k_building.mp4"; // Import icon nếu cần
-import { showErrorToast ,showSuccessToast} from "../components/toast"; // Import toast thông báo
- // Import icon nếu cần
+import { showErrorToast, showSuccessToast } from "../components/toast"; // Import toast thông báo
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,10 +13,10 @@ export default function Login() {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
   const navigate = useNavigate(); 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Kiểm tra dữ liệu đầu vào
     if (email.trim() === "" || password.length < 6) {
       setError("Username không được để trống và mật khẩu phải có ít nhất 6 ký tự.");
       return;
@@ -36,43 +35,59 @@ export default function Login() {
         },
         body: JSON.stringify(data),
       });
-        // Kiểm tra nếu phản hồi không thành công
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Đăng nhập thất bại.");
-    }
-     // Xử lý phản hồi từ API
-     const responseData = await response.json();
-     
-     const { token } = responseData; // Lấy token và full_name từ phản hồi
-      // Lấy token từ phản hồi
-      console.log("Response data:", responseData);
-    if (token) {
-      setError("");
-      
-      
-      console.log("Token:", token); 
-     // Lưu vào localStorage
-     localStorage.setItem("authToken", token);
-     localStorage.setItem("Email", email);
-    
-   
-     // Điều hướng sang trang chính hoặc dashboard
-      showSuccessToast("Đăng nhập thành công!");
-   
-           setTimeout(() => {
-  navigate("/");
-  window.location.reload();
-}, 2000);
- 
-     // Điều hướng sang trang chính hoặc dashboard
 
-    } else {
-      showErrorToast("Đăng nhập thất bại!");
-    } 
-  }catch (err) {
-      console.error('Login failed:', err.response?.data || err.message);
-      setError('Sai tài khoản hoặc mật khẩu');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Đăng nhập thất bại.");
+      }
+
+      const responseData = await response.json();
+      console.log("Response data:", responseData);
+      
+      if (!responseData.token) {
+        throw new Error("Token không tồn tại trong response");
+      }
+
+      // Lưu token
+      localStorage.setItem("authToken", responseData.token);
+      localStorage.setItem("Email", email);
+
+      // Lấy thông tin user từ API profile
+      const profileResponse = await fetch("http://localhost:8080/renterowner/get-profile", {
+        headers: {
+          Authorization: `Bearer ${responseData.token}`,
+        },
+      });
+
+      if (!profileResponse.ok) {
+        throw new Error("Không thể lấy thông tin user");
+      }
+
+      const profileData = await profileResponse.json();
+      console.log("Profile data:", profileData);
+
+      if (profileData && profileData.user) {
+        const userData = profileData.user;
+        console.log("User data:", userData);
+        
+        // Lưu role và thông tin user
+        localStorage.setItem("userRole", userData.role);
+        localStorage.setItem("userData", JSON.stringify(userData));
+      } else {
+        throw new Error("Không tìm thấy thông tin user");
+      }
+
+      showSuccessToast("Đăng nhập thành công!");
+      
+      setTimeout(() => {
+        navigate("/");
+        window.location.reload();
+      }, 2000);
+
+    } catch (err) {
+      console.error('Login failed:', err);
+      setError(err.message || 'Sai tài khoản hoặc mật khẩu');
+      showErrorToast(err.message || "Đăng nhập thất bại!");
     }
   };
       
@@ -159,9 +174,9 @@ export default function Login() {
                   <button type="submit" className="login-btn">Đăng nhập</button>
                 </form>
                 <div className="create-account">
-                <button onClick={() => navigate("/Register")}> {/* Chuyển hướng đến /Register */}
-                  Đăng ký tài khoản
-                </button>
+                  <button onClick={() => navigate("/Register")}>
+                    Đăng ký tài khoản
+                  </button>
                 </div>
               </>
             )}

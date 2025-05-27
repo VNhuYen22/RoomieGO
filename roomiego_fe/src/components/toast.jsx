@@ -16,7 +16,7 @@ export const showErrorToast = (message) => {
 
 export const showInfoToast = (message) => {
   toast.info(message || "Đặt phòng thành công", {
-    className: "custom-toast info-toast",
+    className: "custom-toast success-toast",
      
   });
 };

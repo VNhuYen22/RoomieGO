@@ -3,7 +3,7 @@ import ReportTable from "./ReportTable";
 import Header from "./Header";
 import "./css/ReportPage.css";
 import { axiosInstance } from "../../lib/axios";
-import { showErrorToast } from "../toast";
+import { showErrorToast, showSuccessToast } from "../toast";
 
 function ModalContent({ report, onClose, onViPham, onKhongViPham }) {
   if (!report) return null;
@@ -207,7 +207,8 @@ const ReportPage = () => {
       const token = localStorage.getItem("authToken");
       const response = await axiosInstance.post(`http://localhost:8080/api/reports/${id}/handle`, {
         isViolation: true,
-        adminNote: "Đăng tin giả, đã xóa bài."
+        adminNote: "Đăng tin giả, đã xóa bài.",
+        type: "BREACH"
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -216,15 +217,16 @@ const ReportPage = () => {
       });
 
       if (response.status === 200) {
+        // Cập nhật trạng thái báo cáo trong danh sách
         setReports((prev) =>
-          prev.map((r) => (r.id === id ? { ...r, status: "Đã xử lý" } : r))
+          prev.map((r) => (r.id === id ? { ...r, isHandled: true } : r))
         );
-        alert("Đã xóa bài và gửi thông báo cho chủ bài viết.");
+        showSuccessToast("Đã xử lý báo cáo thành công");
         handleClose();
       }
     } catch (error) {
       console.error("Lỗi xử lý vi phạm:", error);
-      alert("Xử lý thất bại");
+      showErrorToast(error.response?.data?.message || "Xử lý báo cáo thất bại");
     }
   };
 
@@ -233,7 +235,8 @@ const ReportPage = () => {
       const token = localStorage.getItem("authToken");
       const response = await axiosInstance.post(`http://localhost:8080/api/reports/${id}/handle`, {
         isViolation: false,
-        adminNote: "Không vi phạm."
+        adminNote: "Không vi phạm.",
+        type: "NON_BREACH"
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -242,15 +245,16 @@ const ReportPage = () => {
       });
 
       if (response.status === 200) {
+        // Cập nhật trạng thái báo cáo trong danh sách
         setReports((prev) =>
-          prev.map((r) => (r.id === id ? { ...r, status: "Đã xử lý" } : r))
+          prev.map((r) => (r.id === id ? { ...r, isHandled: true } : r))
         );
-        alert("Đã phản hồi cho người báo cáo.");
+        showSuccessToast("Đã xử lý báo cáo thành công");
         handleClose();
       }
     } catch (error) {
       console.error("Lỗi xử lý không vi phạm:", error);
-      alert("Xử lý thất bại");
+      showErrorToast(error.response?.data?.message || "Xử lý báo cáo thất bại");
     }
   };
 
