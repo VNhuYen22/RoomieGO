@@ -19,7 +19,7 @@ const Sidebar = () => {
   }, []);
 
   const menuItems = [
-    { label: "Bookings", key: "bookings" },
+    { label: "Đặt phòng", key: "bookings" },
     { label: "Yêu Cầu", key: "requests" },
     ...(userRole === "ADMIN" ? [{ label: "Báo Cáo", key: "report" }] : []),
     { label: "Hóa đơn", key: "invoices" },

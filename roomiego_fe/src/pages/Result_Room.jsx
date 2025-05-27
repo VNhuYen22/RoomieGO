@@ -159,7 +159,7 @@ function Result_Room() {
     }
   };
 
-  if (loading) return <p>Loading room details...</p>;
+  if (loading) return <p>Đang tải chi tiết phòng...</p>;
   if (error) return <p>{error}</p>;
   if (!room) return <p>Không tìm thấy phòng.</p>;
 
@@ -170,7 +170,7 @@ function Result_Room() {
   return (
     <div className="result-room">
       <div className="breadcrumb">
-        <Link to="/Room">Room</Link> / <span>Chi tiết phòng</span>
+        <Link to="/Room">Phòng trọ</Link> / <span>Chi tiết phòng</span>
       </div>
 
       <h1 className="hotel-title">{room.title}</h1>

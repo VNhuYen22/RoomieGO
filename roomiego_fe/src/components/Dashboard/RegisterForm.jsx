@@ -89,22 +89,22 @@ const RegisterForm = ({ onClose, onRegister }) => {
   return (
     <div className="register-form-overlay">
       <div className="register-form">
-        <h2>Register Your Room</h2>
+        <h2>Đăng ký phòng trọ của bạn</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-section">
             {[ 
-              { label: "Title", name: "title" },
-              { label: "Location", name: "location" },
-              { label: "Address", name: "addressDetails" },
-              { label: "Price", name: "price" },
-              { label: "Room Size", name: "roomSize" },
-              { label: "Number Of Bedrooms", name: "numBedrooms" },
-              { label: "Number Of Bathrooms", name: "numBathrooms" },
-              { label: "Available From", name: "availableFrom", type: "date" },
-              { label: "City", name: "city" },
-              { label: "District", name: "district" },
-              { label: "Ward", name: "ward" },
-              { label: "Street", name: "street" },
+              { label: "Tiêu đề", name: "title" },
+              { label: "Vị trí", name: "location" },
+              { label: "Địa Chỉ", name: "addressDetails" },
+              { label: "Giá", name: "price" },
+              { label: "Diện tích phòng", name: "roomSize" },
+              { label: "Số phòng ngủ", name: "numBedrooms" },
+              { label: "Số phòng tắm", name: "numBathrooms" },
+              { label: "Có sẵn từ", name: "availableFrom", type: "date" },
+              { label: "Thành phố", name: "city" },
+              { label: "Quận/Huyện", name: "district" },
+              { label: "Phường/Xã", name: "ward" },
+              { label: "Đường phố", name: "street" },
             ].map(({ label, name, type = "text" }) => (
               <div className="form-field" key={name}>
                 <label>{label}</label>
@@ -119,7 +119,7 @@ const RegisterForm = ({ onClose, onRegister }) => {
             ))}
 
             <div className="form-field">
-              <label>Image</label>
+              <label>Hình ảnh</label>
               <input
                 type="file"
                 name="image"
@@ -142,17 +142,17 @@ const RegisterForm = ({ onClose, onRegister }) => {
             </div>
 
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
-              <label>Description</label>
+              <label>Mô tả</label>
               <textarea
                 name="description"
-                placeholder="Description"
+                placeholder="Mô tả chi tiết"
                 value={formData.description || ""}
                 onChange={handleChange}
               />
             </div>
 
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
-              <label>Room Availability</label>
+              <label>Tình trạng phòng trọ</label>
               <input
                 type="checkbox"
                 name="isRoomAvailable"
@@ -164,10 +164,10 @@ const RegisterForm = ({ onClose, onRegister }) => {
 
           <div style={{ marginTop: "20px", display: "flex", gap: "12px" }}>
             <button type="submit" className="register-btn1">
-              Register
+              Đăng Ký
             </button>
             <button type="button" onClick={onClose}>
-              Close
+              Đóng
             </button>
           </div>
         </form>

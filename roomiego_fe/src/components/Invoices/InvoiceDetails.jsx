@@ -46,11 +46,11 @@ const InvoiceDetails = ({ invoiceId, onClose, invoices }) => {
   }, [invoiceId, invoices]);
 
   if (loading) {
-    return <p>Loading invoice details...</p>;
+    return <p>Đang tải thông tin chi tiết hóa đơn...</p>;
   }
 
   if (!invoice) {
-    return <p>Could not load invoice details.</p>;
+    return <p>Không thể tải thông tin chi tiết hóa đơn.</p>;
   }
 
   return (

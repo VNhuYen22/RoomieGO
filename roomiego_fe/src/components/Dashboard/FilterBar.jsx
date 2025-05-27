@@ -19,7 +19,7 @@ const FilterBar = ({ onAddClick }) =>{
         <input
         className="search-input"
         type="text"
-        placeholder="Search documents"
+        placeholder="Tìm kiếm phòng trọ"
         />
         <div className="filter-actions">
         <button className="icon-btn"><FontAwesomeIcon icon={faClipboard} /></button>
@@ -29,14 +29,14 @@ const FilterBar = ({ onAddClick }) =>{
         <button className="icon-btn"><FontAwesomeIcon icon={faTrash} /></button>
         </div>
         <select className="dropdown">
-        <option>Booking</option>
-        <option>Reservation</option>
-        <option>Completed</option>
+        <option>Đặt phòng</option>
+        <option>Đặt chỗ</option>
+        <option>Hoàn tất</option>
         </select>
         <select className="dropdown">
-        <option>Refund</option>
-        <option>Pending</option>
-        <option>Processed</option>
+        <option>Hoàn tiền</option>
+        <option>Đang chờ</option>
+        <option>Đã xử lý</option>
         </select>
         <button className="add-btn" onClick={onAddClick}>
         <FontAwesomeIcon icon={faPlus} />

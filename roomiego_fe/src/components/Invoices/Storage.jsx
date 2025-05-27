@@ -34,7 +34,7 @@ const Storage = () => {
       render: `sender${i + 2}@example.com`,
       subject: `Subject ${i + 2}`,
       status: i % 2 === 0 ? "Đã xử lý" : "Lỗi",
-      notification: i % 3 === 0 ? "Important" : "",
+      notification: i % 3 === 0 ? "Quan trọng" : "",
       receivedDate: `25/06/2021 09:${40 + (i % 20)}:41`,
       image: room1,
     })),

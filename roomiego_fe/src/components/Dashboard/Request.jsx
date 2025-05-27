@@ -447,15 +447,15 @@ const Request = () => {
   if (!isAuthenticated) {
     return (
       <div className="request-container">
-        <h2>Room Requests</h2>
-        <p>Please log in to view your requests.</p>
+        <h2>Yêu cầu phòng trọ</h2>
+        <p>Vui lòng đăng nhập để xem yêu cầu của bạn.</p>
       </div>
     );
   }
 
   return (
     <div className="request-container">
-      <h2>Room Requests</h2>
+      <h2>Yêu cầu phòng trọ</h2>
       <div className="request-type-selector">
         <button 
           className={requestType === "VIEW" ? "active" : ""} 
@@ -471,7 +471,7 @@ const Request = () => {
         </button>
       </div>
       {loading ? (
-        <p>Loading...</p>
+        <p>Đang tải...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : currentRequests.length === 0 ? (

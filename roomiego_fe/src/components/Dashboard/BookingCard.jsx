@@ -20,11 +20,11 @@ const BookingCard = ({ initialHotel, onEditClick, onDeleteClick }) => {
       <div className="booking-info">
         <div className="hotel-name">{hotelInfo.title}</div>
         <div className="hotel-location">{hotelInfo.location}</div>
-        <div>Available from: {hotelInfo.availableFrom}</div>
-        <div>Room Size: {hotelInfo.roomSize}m²</div>
-        <div>Bedrooms: {hotelInfo.numBedrooms} | Bathrooms: {hotelInfo.numBathrooms}</div>
+        <div>Có sẵn từ: {hotelInfo.availableFrom}</div>
+        <div>Diện tích: {hotelInfo.roomSize}m²</div>
+        <div>Phòng ngủ: {hotelInfo.numBedrooms} | Phòng tắm: {hotelInfo.numBathrooms}</div>
         <div>{hotelInfo.addressDetails}</div>
-        <div>Description: {hotelInfo.description}</div>
+        <div>Mô tả: {hotelInfo.description}</div>
         <div className="card-actions">
           <button className="edit-btn" onClick={() => onEditClick(hotelInfo)}>✏️</button>
           <button className="delete-btn" onClick={onDeleteClick}>🗑️</button>

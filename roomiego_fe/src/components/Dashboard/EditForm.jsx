@@ -53,22 +53,22 @@ const EditForm = ({ hotel, onClose, onUpdate }) => {
   return createPortal(
     <div className="edit-form-overlay">
       <div className="edit-form">
-        <h2>Edit Room Information</h2>
+        <h2>Chỉnh sửa thông tin phòng trọ</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-section">
             {[ 
-              { label: "Title", name: "title" },
-              { label: "Location", name: "location" },
-              { label: "Address Details", name: "addressDetails" },
-              { label: "Price", name: "price" },
-              { label: "Room Size", name: "roomSize" },
-              { label: "Number Of Bedrooms", name: "numBedrooms" },
-              { label: "Number Of Bathrooms", name: "numBathrooms" },
-              { label: "Available From", name: "availableFrom", type: "date" },
-              { label: "City", name: "city" },
-              { label: "District", name: "district" },
-              { label: "Ward", name: "ward" },
-              { label: "Street", name: "street" },
+              { label: "Tiêu đề", name: "title" },
+              { label: "Vị trí", name: "location" },
+              { label: "Địa chỉ chi tiết", name: "addressDetails" },
+              { label: "Giá", name: "price" },
+              { label: "Diện tích phòng", name: "roomSize" },
+              { label: "Số phòng ngủ", name: "numBedrooms" },
+              { label: "Số phòng tắm", name: "numBathrooms" },
+              { label: "Có sẵn từ", name: "availableFrom", type: "date" },
+              { label: "Thành phố", name: "city" },
+              { label: "Quận/Huyện", name: "district" },
+              { label: "Phường/Xã", name: "ward" },
+              { label: "Đường phố", name: "street" },
             ].map(({ label, name, type = "text" }) => (
               <div className="form-field" key={name}>
                 <label>{label}</label>
@@ -83,10 +83,10 @@ const EditForm = ({ hotel, onClose, onUpdate }) => {
             ))}
             
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
-              <label>Description</label>
+              <label>Mô tả</label>
               <textarea
                 name="description"
-                placeholder="Description"
+                placeholder="Mô tả chi tiết"
                 value={formData.description || ""}
                 onChange={handleChange}
               />
@@ -112,10 +112,10 @@ const EditForm = ({ hotel, onClose, onUpdate }) => {
 
           <div style={{ marginTop: "20px", display: "flex", gap: "12px" }}>
             <button type="submit" className="update-btn" disabled={loading}>
-              {loading ? "Updating..." : "Update"}
+              {loading ? "Updating..." : "Cập Nhật"}
             </button>
             <button type="button" onClick={onClose} disabled={loading}>
-              Close
+              Đóng
             </button>
           </div>
         </form>

@@ -209,11 +209,11 @@ const handleDeleteNotification = (indexToDelete) => {
       <div className="rightside">
         <Link to="/Room">
           <img src={living} alt="" className="img-living" />
-          <a href="">Room</a>
+          <a href="">Phòng trọ</a>
         </Link>
         <Link to="/Roommates">
           <img src={friends} alt="" className="img-living" />
-          <a href="">Roommates</a>
+          <a href="">Bạn cùng phòng</a>
         </Link>
 
         {isLoggedIn ? (
@@ -265,15 +265,15 @@ const handleDeleteNotification = (indexToDelete) => {
                 <div className="dropdown-menu" ref={dropdownRef}>
                   <a href="#">{fullName}</a>
                   <button onClick={() => window.location.href = "/profile"}>
-                    <img src={user2} alt="" /> Profile
+                    <img src={user2} alt="" /> Hồ sơ
                   </button>
                 {(role === "OWNER" || role === "ADMIN")  && (
                     <button onClick={() => window.location.href = "/dashboard"}>
-                      <img src={dashboard} alt="" className="dashboard-user" /> Dashboard
+                      <img src={dashboard} alt="" className="dashboard-user" /> Bảng điều khiển
                     </button>
                   )}
                   <button onClick={handleLogout}>
-                    <img src={logout} alt="" /> Logout
+                    <img src={logout} alt="" /> Đăng xuất
                   </button>
                 </div>
               )}
@@ -281,9 +281,9 @@ const handleDeleteNotification = (indexToDelete) => {
           </>
         ) : (
           <>
-            <Link to="/Register">Sign Up</Link>
+            <Link to="/Register">Đăng ký</Link>
             <Link to="/Login">
-              <button className="get-started-btn">Login</button>
+              <button className="get-started-btn">Đăng Nhập</button>
             </Link>
           </>
         )}
