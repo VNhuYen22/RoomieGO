@@ -170,7 +170,7 @@ function Result_Room() {
   return (
     <div className="result-room">
       <div className="breadcrumb">
-        <Link to="/Room">Room</Link> / <span>Room Details</span>
+        <Link to="/Room">Room</Link> / <span>Chi tiết phòng</span>
       </div>
 
       <h1 className="hotel-title">{room.title}</h1>
@@ -189,20 +189,20 @@ function Result_Room() {
 
       <div className="detail-room">
         <div className="detail_about-place">
-          <h2>About this place</h2>
+          <h2>Chi tiết phòng trọ</h2>
           <p>{room.description}</p>
           <div className="room-details">
-            <span><strong>Room Size:</strong> {room.roomSize} m²</span>
-            <span><img src={bedroom} alt="" /><strong>Bedrooms:</strong> {room.numBedrooms}</span>
-            <span><img src={sink} alt="" /><strong>Bathrooms:</strong> {room.numBathrooms}</span>
+            <span><strong>Diện tích:</strong> {room.roomSize} m²</span>
+            <span><img src={bedroom} alt="" /><strong>Số người:</strong> {room.numBedrooms}</span>
+            <span><img src={sink} alt="" /><strong>Nhà vệ sinh:</strong> {room.numBathrooms}</span>
           </div>
-          <p><strong>Available From:</strong> {new Date(room.availableFrom).toLocaleDateString()}</p>
-          <p><strong>Is Available:</strong> {room.isRoomAvailable ? "Yes" : "No"}</p>
+          <p><strong> Có sẵn từ ngày:</strong> {new Date(room.availableFrom).toLocaleDateString()}</p>
+          <p><strong> Phòng trọ trống:</strong> {room.isRoomAvailable ? "CÓ" : "KHÔNG"}</p>
         </div>
 
         <div className="detail_price-booking">
           <h4>Gửi yêu cầu</h4>
-          <span>${room.price.toLocaleString()} per Month</span>
+          <span>${room.price.toLocaleString()} Tháng </span>
           <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
           <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button>
         </div>
