@@ -16,13 +16,13 @@
   overflow: hidden;
 }
 .success-toast {
-  background: linear-gradient(
-   to right,
-    #27bc10 10%,
-    #6ff56a 30%,
-    #86f284 60%,
-        rgba(0, 198, 255, 0.0) 100%
-  ); /* Green for success */
+   background: linear-gradient(
+    to right,
+    #d1f7ce 5%,
+    #b6f8ac 35%,
+    #c3f7c2 60%,
+    rgba(255, 255, 255, 0.0) 100%
+  );
   color: #ffffff; /* White text */
 }
 

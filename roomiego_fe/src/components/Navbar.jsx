@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
-import Stomp from "stompjs";
-import SockJS from "sockjs-client";
+import SockJS from 'sockjs-client';
+import * as Stomp from 'stompjs';
 import "../styles/Navbar.css";
+import trash from "../assets/trash.png";
 // import chatbox from "../assets/chatbox.png";
 // import user from "../assets/user.png";
 import logout from "../assets/logout.png";
@@ -15,6 +16,7 @@ import living from "../assets/living.png";
 import bell from "../assets/bell.png";
 
 function Navbar() {
+  
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,6 +47,14 @@ function Navbar() {
     };
     return translations[type] || type;
   };
+
+
+  // delete notification function
+const handleDeleteNotification = (indexToDelete) => {
+  setNotifications((prev) =>
+    prev.filter((_, index) => index !== indexToDelete)
+  );
+};
 
   // Fetch historical notifications
   const fetchNotifications = async (userId) => {
@@ -211,11 +221,13 @@ function Navbar() {
             {/* Bell notification */}
             <div className="notification-wrapper" ref={notificationRef}>
               <div className="notification-bell" onClick={() => setNotificationOpen(!notificationOpen)}>
-                <img src={bell} alt="Notifications" />
+                 <img src={bell} alt="Notifications" />
+                  <span>{notifications.length}</span> 
               </div>
               {notificationOpen && (
                 <div className="notification-bell_dropdown">
-                  <div className="title-notification">
+                  
+                  <div className="notification-header">
                     <h3>Thông báo</h3>
                   </div>
                   {notifications.length > 0 ? (
@@ -231,7 +243,10 @@ function Navbar() {
                             <span className="notification-time">{note.timestamp}</span>
                           </div>
                         </div>
-                        <div className="notification-status-dot"></div>
+                         <button
+                       className="notification-delete-button"
+                        onClick={() => handleDeleteNotification(index)}>
+                          <span className="notification-delete-icon"><img src={trash} alt="" /></span> </button>
                       </div>
                     ))
                   ) : (

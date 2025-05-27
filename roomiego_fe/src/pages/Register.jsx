@@ -4,6 +4,8 @@ import vidBeach from "../assets/beach.mp4";
 import '../styles/Register.css';
 import { useNavigate } from "react-router-dom"; 
 import bulding from "../assets/4k_building.mp4"; // Import icon nếu cần
+import { Navigate } from "react-router-dom";
+import { showErrorToast, showSuccessToast } from "../components/toast"; // Import toast thông báo
 export default function Register() {
   const genderOptions = [
     { value: "MALE", label: "Nam" },
@@ -83,7 +85,13 @@ export default function Register() {
       setDob(""); 
       setBio(""); 
       setRole("");
-      navigate ("/login");
+      
+            showSuccessToast("Đăng nhập thành công!");
+         
+                 setTimeout(() => {
+        Navigate("/login");
+        window.location.reload();
+      }, 2000);
     } catch (err) {
       console.error("Lỗi khi đăng ký:", err);
       setError(err.message || "Không thể kết nối đến máy chủ. Vui lòng thử lại.");
