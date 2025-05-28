@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
@@ -60,4 +63,12 @@ public class ContractServiceImpl implements ContractService {
         return contractMapper.toDto(contract);
     }
 
+    @Override
+    public List<ContractResponse> getAllContracts() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Contract> contracts = contractRepository.findByOwnerOrTenant(currentUser, currentUser);
+        return contracts.stream()
+                .map(contractMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

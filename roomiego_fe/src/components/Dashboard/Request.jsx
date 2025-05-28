@@ -3,6 +3,7 @@ import { showErrorToast, showInfoToast } from "../toast";
 import { useNavigate } from "react-router-dom";
 // import { useNotifications } from "../NotificationComponent/NotificationContext";
 import "./css/Request.css";
+import InvoiceForm from "../Invoices/InvoiceForm";
 
 const Request = () => {
   const [requests, setRequests] = useState([]);
@@ -14,6 +15,9 @@ const Request = () => {
   const [requestType, setRequestType] = useState("VIEW");
   const [userRole, setUserRole] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [selectedTenantId, setSelectedTenantId] = useState(null);
   const navigate = useNavigate();
   // const { sendNotification } = useNotifications();
 
@@ -409,8 +413,14 @@ const Request = () => {
       showInfoToast(accept ? "Đã chấp nhận yêu cầu thuê phòng" : "Đã từ chối yêu cầu thuê phòng");
       
       if (accept) {
-        // Chuyển hướng đến trang invoices trong dashboard
-        navigate(`/dashboard/invoices?requestId=${requestId}`);
+        // Find the request to get roomId and tenantId
+        const request = requests.find(req => req.id === requestId);
+        if (request) {
+          // Show contract form directly instead of navigating
+          setIsCreatingNew(true);
+          setSelectedRoomId(request.roomId);
+          setSelectedTenantId(request.renterId);
+        }
       }
       
       await fetchRequests();
@@ -440,6 +450,75 @@ const Request = () => {
     } catch (error) {
       console.error("Error canceling rental:", error);
       showErrorToast(error.message || "Có lỗi xảy ra khi hủy cho thuê phòng");
+    }
+  };
+
+  // Handle saving new contract
+  const handleSaveContract = async (contractData) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("Authentication token not found");
+      }
+
+      // Ensure we have the required data
+      if (!selectedRoomId || !selectedTenantId) {
+        throw new Error("Missing required data for contract creation");
+      }
+
+      // Find the room details from the requests list
+      const roomDetails = requests.find(req => req.roomId === selectedRoomId)?.room;
+      if (!roomDetails) {
+        throw new Error("Không tìm thấy thông tin phòng");
+      }
+
+      // Validate dates
+      const startDate = new Date(contractData.startDate);
+      const endDate = new Date(contractData.endDate);
+      const today = new Date();
+
+      if (startDate < today) {
+        throw new Error("Ngày bắt đầu không được trước ngày hiện tại");
+      }
+
+      if (endDate <= startDate) {
+        throw new Error("Ngày kết thúc phải sau ngày bắt đầu");
+      }
+
+      const response = await fetch(`http://localhost:8080/api/contracts/room/${selectedRoomId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          tenantId: selectedTenantId,
+          startDate: contractData.startDate,
+          endDate: contractData.endDate,
+          depositAmount: roomDetails.price, // Use room's price as deposit
+          monthlyRent: roomDetails.price, // Use room's price as monthly rent
+          status: "ACTIVE"
+        }),
+      });
+
+      if (response.status === 403) {
+        throw new Error("Bạn không có quyền tạo hợp đồng. Vui lòng kiểm tra lại quyền truy cập.");
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to create contract');
+      }
+
+      const responseData = await response.json();
+      showInfoToast(responseData.message || "Tạo hợp đồng thành công");
+      setIsCreatingNew(false);
+      setSelectedRoomId(null);
+      setSelectedTenantId(null);
+      await fetchRequests(); // Refresh the requests list
+    } catch (error) {
+      console.error('Error creating contract:', error);
+      showErrorToast(error.message || 'Có lỗi xảy ra khi tạo hợp đồng');
     }
   };
 
@@ -654,6 +733,17 @@ const Request = () => {
               &times;
             </button>
           </div>
+        </div>
+      )}
+
+      {isCreatingNew && (
+        <div className="form-overlay">
+          <InvoiceForm 
+            onSave={handleSaveContract} 
+            onCancel={() => setIsCreatingNew(false)}
+            roomId={selectedRoomId}
+            tenantId={selectedTenantId}
+          />
         </div>
       )}
     </div>

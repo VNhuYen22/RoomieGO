@@ -220,24 +220,34 @@ public class AuthenticationService {
     }
 
 
-    public UserDto getMyInfo(String email){
+    public UserDto getMyInfo(String email) {
         UserDto reqRes = new UserDto();
         try {
             Optional<User> userOptional = userRepository.findByEmail(email);
             if (userOptional.isPresent()) {
-                reqRes.setUser(userOptional.get());
+                User user = userOptional.get();
+                // Set basic user info
+                reqRes.setFullName(user.getFullName());
+                reqRes.setEmail(user.getEmail());
+                reqRes.setRole(user.getRole().name());
+                reqRes.setPhone(user.getPhone());
+                reqRes.setGender(user.getGender().name());
+                reqRes.setDob(user.getDob());
+                reqRes.setBio(user.getBio());
+                reqRes.setCreatedAt(user.getCreatedAt());
+                
+                // Set status and message
                 reqRes.setStatusCode(200);
                 reqRes.setMessage("successful");
             } else {
                 reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for update");
+                reqRes.setMessage("User not found");
             }
-
-        }catch (Exception e){
+        } catch (Exception e) {
+            log.error("Error getting user info: ", e);
             reqRes.setStatusCode(500);
             reqRes.setMessage("Error occurred while getting user info: " + e.getMessage());
         }
         return reqRes;
-
     }
 }
