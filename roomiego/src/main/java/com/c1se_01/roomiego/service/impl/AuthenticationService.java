@@ -103,6 +103,7 @@ public class AuthenticationService {
             response.setMessage("Successfully Logged In");
             
             // Set user information
+            response.setId(user.getId());
             response.setEmail(user.getEmail());
             response.setFullName(user.getFullName());
             response.setRole(user.getRole().name());
@@ -264,6 +265,7 @@ public class AuthenticationService {
                 User user = userOptional.get();
                 
                 // Set user information
+                reqRes.setId(user.getId());
                 reqRes.setEmail(user.getEmail());
                 reqRes.setFullName(user.getFullName());
                 reqRes.setRole(user.getRole().name());

@@ -13,6 +13,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
 
+    private Long id;
     private int statusCode;
     private String error;
     private String message;
