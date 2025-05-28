@@ -6,6 +6,7 @@ import building from "../assets/4k_building.mp4"; // Import icon nếu cần
 import { showErrorToast, showSuccessToast } from "../components/toast"; // Import toast thông báo
 
 export default function Login() {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +18,7 @@ export default function Login() {
     e.preventDefault();
 
     if (email.trim() === "" || password.length < 6) {
-      setError("Email không được để trống và mật khẩu phải có ít nhất 6 ký tự.");
+      setError("Username không được để trống và mật khẩu phải có ít nhất 6 ký tự.");
       return;
     }
 
@@ -27,7 +28,6 @@ export default function Login() {
         password: password,
       };
       console.log("Dữ liệu gửi đến API:", data);
-      
       const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: {
@@ -47,6 +47,10 @@ export default function Login() {
       if (!responseData.token) {
         throw new Error("Token không tồn tại trong response");
       }
+
+      // Lưu token
+      localStorage.setItem("authToken", responseData.token);
+      localStorage.setItem("Email", email);
 
       // Lấy thông tin user từ API profile
       const profileResponse = await fetch("http://localhost:8080/renterowner/get-profile", {
@@ -80,20 +84,14 @@ export default function Login() {
         localStorage.setItem("userRole", userData.role);
         localStorage.setItem("userData", JSON.stringify(userData));
 
-        // Lưu token và email
-        localStorage.setItem("authToken", responseData.token);
-        localStorage.setItem("Email", email);
-
         showSuccessToast("Đăng nhập thành công!");
         
         // Chuyển hướng dựa vào role
         if (userData.role === "ADMIN") {
-          navigate("/admin");
+          window.location.href = "/room";
         } else {
-          navigate("/");
+          window.location.href = "/room";
         }
-        // Reload trang để cập nhật Navbar
-        window.location.reload();
       } else {
         throw new Error(profileData.message || "Không tìm thấy thông tin user");
       }

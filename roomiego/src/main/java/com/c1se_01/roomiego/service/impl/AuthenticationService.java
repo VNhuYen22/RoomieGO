@@ -5,7 +5,6 @@ import com.c1se_01.roomiego.enums.Gender;
 import com.c1se_01.roomiego.enums.Role;
 import com.c1se_01.roomiego.model.User;
 import com.c1se_01.roomiego.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -36,7 +38,7 @@ public class AuthenticationService {
     public UserDto register(UserDto registrationRequest) {
         UserDto resp = new UserDto();
         try {
-            log.info("Received registration request: {}", registrationRequest); // ✅ Dùng log thay vì logger
+            log.info("Received registration request: {}", registrationRequest);
 
             User ourUser = new User();
             ourUser.setEmail(registrationRequest.getEmail());
@@ -46,7 +48,18 @@ public class AuthenticationService {
             ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
             ourUser.setPhone(registrationRequest.getPhone());
             ourUser.setBio(registrationRequest.getBio());
-            ourUser.setDob(registrationRequest.getDob());
+            
+            // Convert String dob to Date
+            if (registrationRequest.getDob() != null) {
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date dob = dateFormat.parse(registrationRequest.getDob());
+                    ourUser.setDob(dob);
+                } catch (ParseException e) {
+                    log.error("Error parsing date: ", e);
+                    throw new RuntimeException("Invalid date format. Expected yyyy-MM-dd");
+                }
+            }
 
             User ourUsersResult = userRepository.save(ourUser);
             log.info("User saved successfully: {}", ourUsersResult);
@@ -57,7 +70,7 @@ public class AuthenticationService {
                 resp.setStatusCode(200);
             }
         } catch (Exception e) {
-            log.error("Error during registration: ", e); // ✅ Dùng log.error
+            log.error("Error during registration: ", e);
             resp.setStatusCode(500);
             resp.setError("Lỗi hệ thống: " + e.getMessage());
         }
@@ -85,12 +98,22 @@ public class AuthenticationService {
             // Gán thông tin vào response
             response.setStatusCode(200);
             response.setToken(jwt);
-            response.setRole(user.getRole().name()); // Đổi thành chuỗi
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully Logged In");
+            
+            // Set user information
+            response.setEmail(user.getEmail());
+            response.setFullName(user.getFullName());
+            response.setRole(user.getRole().name());
+            response.setPhone(user.getPhone());
+            response.setGender(user.getGender().name());
+            response.setDob(user.getDob() != null ? user.getDob().toString() : null);
+            response.setBio(user.getBio());
+            response.setCreatedAt(user.getCreatedAt());
 
         } catch (Exception e) {
+            log.error("Login error: ", e);
             response.setStatusCode(500);
             response.setMessage(e.getMessage());
         }
@@ -146,18 +169,31 @@ public class AuthenticationService {
         }
     }
 
-    public UserDto getUsersById(Long id) { // Chuyển Integer thành Long
+    public UserDto getUsersById(Long id) {
         UserDto reqRes = new UserDto();
         try {
-            User usersById = userRepository.findById(id)
+            User user = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("User Not found"));
 
-            // Gán danh sách user đúng cách
-            reqRes.setUsersList(Collections.singletonList(usersById));
+            // Create a new User object with only necessary fields
+            User userResponse = new User();
+            userResponse.setId(user.getId());
+            userResponse.setFullName(user.getFullName());
+            userResponse.setEmail(user.getEmail());
+            userResponse.setPhone(user.getPhone());
+            userResponse.setRole(user.getRole());
+            userResponse.setGender(user.getGender());
+            userResponse.setDob(user.getDob());
+            userResponse.setBio(user.getBio());
+            userResponse.setCreatedAt(user.getCreatedAt());
+
+            // Set the simplified user object
+            reqRes.setUsersList(Collections.singletonList(userResponse));
             reqRes.setStatusCode(200);
             reqRes.setMessage("Users with id '" + id + "' found successfully");
 
         } catch (Exception e) {
+            log.error("Error getting user by id: ", e);
             reqRes.setStatusCode(500);
             reqRes.setMessage("Error occurred: " + e.getMessage());
         }
@@ -226,17 +262,17 @@ public class AuthenticationService {
             Optional<User> userOptional = userRepository.findByEmail(email);
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                // Set basic user info
-                reqRes.setFullName(user.getFullName());
+                
+                // Set user information
                 reqRes.setEmail(user.getEmail());
+                reqRes.setFullName(user.getFullName());
                 reqRes.setRole(user.getRole().name());
                 reqRes.setPhone(user.getPhone());
                 reqRes.setGender(user.getGender().name());
-                reqRes.setDob(user.getDob());
+                reqRes.setDob(user.getDob() != null ? user.getDob().toString() : null);
                 reqRes.setBio(user.getBio());
                 reqRes.setCreatedAt(user.getCreatedAt());
                 
-                // Set status and message
                 reqRes.setStatusCode(200);
                 reqRes.setMessage("successful");
             } else {

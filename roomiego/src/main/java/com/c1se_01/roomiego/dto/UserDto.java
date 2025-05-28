@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -25,9 +25,9 @@ public class UserDto {
     private String password;
     private String phone;
     private String gender;
-    private Date dob;
+    private String dob;
     private String bio;
-    private Date createdAt;
+    private LocalDateTime createdAt;
     private User user;
 
     private List<User> usersList;

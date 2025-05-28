@@ -254,12 +254,34 @@ const RoommateForm = () => {
       const response = await userResponse.json();
       console.log("User profile response:", response);
 
-      if (!response || !response.user || !response.user.id) {
+      // Check if response has the correct structure
+      if (!response || !response.email) {
         console.error("User data structure:", JSON.stringify(response, null, 2));
-        throw new Error("User ID not found in response");
+        throw new Error("User information not found in response");
       }
 
-      const userId = response.user.id;
+      // Get user ID from the owner/get-users endpoint with email as query parameter
+      const usersResponse = await fetch(`http://localhost:8080/owner/get-users?email=${encodeURIComponent(response.email)}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!usersResponse.ok) {
+        throw new Error("Failed to get user information");
+      }
+
+      const usersData = await usersResponse.json();
+      console.log("Users data:", usersData);
+
+      // Get the user ID from the response
+      const userId = usersData.id;
+      if (!userId) {
+        console.error("User ID not found in response:", usersData);
+        throw new Error("User ID not found in response");
+      }
 
       // Convert Vietnamese gender to English for backend
       const genderMap = {
@@ -278,7 +300,7 @@ const RoommateForm = () => {
         hobbies: formData.hobbies.join(", "),
         rateImage: formData.rateImage,
         more: formData.more,
-        userId: userId,
+        userId: userId,  // This should be a number (Long)
         gender: genderMap[formData.sex] || "MALE"  // Convert to English and provide default
       };
 

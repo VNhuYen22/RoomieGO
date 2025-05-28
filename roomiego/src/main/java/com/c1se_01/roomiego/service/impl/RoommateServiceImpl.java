@@ -21,34 +21,64 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RoommateServiceImpl implements RoommateService {
     private final RoommateRepository roommateRepository;
-
     private final UserRepository userRepository;
-
     private final RoommateMapper roommateMapper;
 
     @Override
     public RoommateResponseDTO createRoommate(RoommateDTO dto) {
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User ID không tồn tại: " + dto.getUserId()));
+        // Get current user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
 
-        Roommate roommate = roommateMapper.toEntity(dto, user);
-        roommateRepository.save(roommate);
-        RoommateResponseDTO responseDTO = roommateMapper.toResponseDTO(roommate);
-        return responseDTO;
+        // Create roommate entity
+        Roommate roommate = new Roommate();
+        roommate.setGender(String.valueOf(currentUser.getGender()));
+        roommate.setHometown(dto.getHometown());
+        roommate.setCity(dto.getCity());
+        roommate.setDistrict(dto.getDistrict());
+        roommate.setRateImage(dto.getRateImage());
+        roommate.setYob(dto.getYob());
+        roommate.setJob(dto.getJob());
+        roommate.setHobbies(dto.getHobbies());
+        roommate.setMore(dto.getMore());
+        roommate.setPhone(dto.getPhone());
+        roommate.setUser(currentUser);
+
+        // Save and map to response
+        Roommate savedRoommate = roommateRepository.save(roommate);
+        return mapToResponseDTO(savedRoommate);
     }
 
     @Override
     public List<RoommateResponseDTO> getAllRoommates() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElse(null);
+        User currentUser = userRepository.findByEmail(email).orElse(null);
+        
         List<RoommateResponseDTO> roommateList = new ArrayList<>();
-        if (Objects.nonNull(user)) {
-            roommateList = roommateMapper.toResponseDTOs(roommateRepository.findAllByGender(String.valueOf(user.getGender())));
-            roommateList.removeIf(roommate ->
-                    user.getId().equals(roommate.getUserId())
-            );
+        if (Objects.nonNull(currentUser)) {
+            List<Roommate> roommates = roommateRepository.findAllByGender(String.valueOf(currentUser.getGender()));
+            roommateList = roommates.stream()
+                .filter(roommate -> !currentUser.getId().equals(roommate.getUser().getId()))
+                .map(this::mapToResponseDTO)
+                .toList();
         }
         return roommateList;
+    }
+
+    private RoommateResponseDTO mapToResponseDTO(Roommate roommate) {
+        RoommateResponseDTO dto = new RoommateResponseDTO();
+        dto.setGender(roommate.getGender());
+        dto.setHometown(roommate.getHometown());
+        dto.setCity(roommate.getCity());
+        dto.setDistrict(roommate.getDistrict());
+        dto.setRateImage(roommate.getRateImage());
+        dto.setYob(roommate.getYob());
+        dto.setJob(roommate.getJob());
+        dto.setHobbies(roommate.getHobbies());
+        dto.setMore(roommate.getMore());
+        dto.setPhone(roommate.getPhone());
+        dto.setUserId(roommate.getUser().getId());
+        return dto;
     }
 }
