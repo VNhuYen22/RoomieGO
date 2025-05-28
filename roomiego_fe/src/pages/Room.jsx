@@ -48,20 +48,44 @@ function Room() {
     setSortOrder(order);
   };
 
-  const fetchRooms = () => {
-    fetch("http://localhost:8080/api/rooms")
-      .then((res) => {
-        if (!res.ok) throw new Error("Network error");
-        return res.json();
-      })
-      .then((data) => {
-        setRooms(data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+  const fetchRooms = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/rooms");
+      if (!response.ok) throw new Error("Network error");
+      const data = await response.json();
+      
+      // Fetch owner information for each room
+      const roomsWithOwnerInfo = await Promise.all(data.data.map(async (room) => {
+        try {
+          const ownerResponse = await fetch(`http://localhost:8080/owner/get-users/${room.ownerId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          });
+          
+          if (ownerResponse.ok) {
+            const ownerData = await ownerResponse.json();
+            const ownerInfo = ownerData.usersList?.[0];
+            if (ownerInfo) {
+              return {
+                ...room,
+                ownerName: ownerInfo.fullName,
+                ownerPhone: ownerInfo.phone
+              };
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching owner info:", error);
+        }
+        return room;
+      }));
+
+      setRooms(roomsWithOwnerInfo);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -213,8 +237,8 @@ if (sortOrder === "asc") {
           }}
         />
         <div className="contact-info">
-          <span>Jennifer Bloom</span>
-          <small>+44 235 123 321</small>
+          <div className="owner-name">{room.ownerName || "Chủ phòng"}</div>
+          <div className="owner-phone">{room.ownerPhone || "Chưa có số điện thoại"}</div>
         </div>
       </div>
     </div>
