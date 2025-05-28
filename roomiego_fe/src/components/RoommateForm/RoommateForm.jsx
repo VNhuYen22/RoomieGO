@@ -42,7 +42,6 @@ const StepOne = ({ formData, errors, handleChange }) => (
 
     <label>Quê quán:</label>
     <Select
-      placeholder="Chọn quê quán của bạn"
       options={provincesOptions}
       value={provincesOptions.find((opt) => opt.value === formData.hometown)}
       onChange={(selected) =>
@@ -254,12 +253,14 @@ const RoommateForm = () => {
       const response = await userResponse.json();
       console.log("User profile response:", response);
 
-      if (!response || !response.user || !response.user.id) {
+      // Check if response has the correct structure
+      if (!response || typeof response.id !== 'number') {
         console.error("User data structure:", JSON.stringify(response, null, 2));
         throw new Error("User ID not found in response");
       }
 
-      const userId = response.user.id;
+      const userId = response.id;
+      console.log("Found user ID:", userId);
 
       // Convert Vietnamese gender to English for backend
       const genderMap = {
@@ -307,8 +308,8 @@ const RoommateForm = () => {
         "FEMALE": "Nữ"
       };
 
-      // 2. Get AI model recommendations
-      const recommendResponse = await fetch(`http://localhost:8000/recommend?user_id=${responseData.userId}`, {
+      // 2. Get AI model recommendations using the original user ID
+      const recommendResponse = await fetch(`http://localhost:8000/recommend?user_id=${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -366,7 +367,7 @@ const RoommateForm = () => {
       {/* Step Indictor nằm ngoài hộp form để hiển thị phía trên */}
       <StepIndicator step={step} />
       <div className="roommate-form glass-background">
-        <h2>Thông tin bạn cùng phòng - Bước {step}/3</h2>
+        <h2>Thông tin Roommate - Bước {step}/3</h2>
         <form onSubmit={handleSubmit}>
           {step === 1 && (
             <StepOne
