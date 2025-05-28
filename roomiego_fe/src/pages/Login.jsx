@@ -6,7 +6,6 @@ import building from "../assets/4k_building.mp4"; // Import icon nếu cần
 import { showErrorToast, showSuccessToast } from "../components/toast"; // Import toast thông báo
 
 export default function Login() {
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +17,7 @@ export default function Login() {
     e.preventDefault();
 
     if (email.trim() === "" || password.length < 6) {
-      setError("Username không được để trống và mật khẩu phải có ít nhất 6 ký tự.");
+      setError("Email không được để trống và mật khẩu phải có ít nhất 6 ký tự.");
       return;
     }
 
@@ -28,6 +27,7 @@ export default function Login() {
         password: password,
       };
       console.log("Dữ liệu gửi đến API:", data);
+      
       const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: {
@@ -48,10 +48,6 @@ export default function Login() {
         throw new Error("Token không tồn tại trong response");
       }
 
-      // Lưu token
-      localStorage.setItem("authToken", responseData.token);
-      localStorage.setItem("Email", email);
-
       // Lấy thông tin user từ API profile
       const profileResponse = await fetch("http://localhost:8080/renterowner/get-profile", {
         headers: {
@@ -66,23 +62,41 @@ export default function Login() {
       const profileData = await profileResponse.json();
       console.log("Profile data:", profileData);
 
-      if (profileData && profileData.user) {
-        const userData = profileData.user;
+      if (profileData && profileData.statusCode === 200) {
+        // Tạo user data từ response
+        const userData = {
+          fullName: profileData.fullName,
+          email: profileData.email,
+          phone: profileData.phone,
+          role: profileData.role,
+          gender: profileData.gender,
+          dob: profileData.dob,
+          bio: profileData.bio,
+          createdAt: profileData.createdAt
+        };
         console.log("User data:", userData);
         
         // Lưu role và thông tin user
         localStorage.setItem("userRole", userData.role);
         localStorage.setItem("userData", JSON.stringify(userData));
-      } else {
-        throw new Error("Không tìm thấy thông tin user");
-      }
 
-      showSuccessToast("Đăng nhập thành công!");
-      
-      setTimeout(() => {
-        navigate("/");
+        // Lưu token và email
+        localStorage.setItem("authToken", responseData.token);
+        localStorage.setItem("Email", email);
+
+        showSuccessToast("Đăng nhập thành công!");
+        
+        // Chuyển hướng dựa vào role
+        if (userData.role === "ADMIN") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+        // Reload trang để cập nhật Navbar
         window.location.reload();
-      }, 2000);
+      } else {
+        throw new Error(profileData.message || "Không tìm thấy thông tin user");
+      }
 
     } catch (err) {
       console.error('Login failed:', err);
