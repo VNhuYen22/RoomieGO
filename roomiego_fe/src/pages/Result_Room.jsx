@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+  import { useParams, Link, useNavigate } from "react-router-dom";
 import "../styles/Result_Room.css";
 import { axiosInstance } from "../lib/axios";
 // import { useNotifications } from "../components/NotificationComponent/NotificationContext";
@@ -8,6 +8,7 @@ import bedroom from "../assets/bedroom.png";
 import { showErrorToast ,showSuccessToast,showInfoToast} from "../components/toast";
 function Result_Room() {
   const { id } = useParams();
+  const navigate = useNavigate();
   // const { sendNotification, isConnected } = useNotifications(); 
 
   const [room, setRoom] = useState(null);
@@ -48,6 +49,7 @@ function Result_Room() {
     const token = localStorage.getItem("authToken");
     if (!token) {
       showInfoToast("Bạn cần đăng nhập để gửi báo cáo.");
+      navigate("/login");
       return;
     }
 
@@ -81,6 +83,7 @@ function Result_Room() {
     const token = localStorage.getItem("authToken");
     if (!token) {
       showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+      navigate("/login");
       return;
     }
 
@@ -120,6 +123,7 @@ function Result_Room() {
     const token = localStorage.getItem("authToken");
     if (!token) {
       showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+      navigate("/login");
       return;
     }
 
@@ -203,11 +207,35 @@ function Result_Room() {
         <div className="detail_price-booking">
           <h4>Gửi yêu cầu</h4>
           <span>${room.price.toLocaleString()} Tháng </span>
-          <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
-          <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button>
+          <button onClick={() => {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+              showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+              navigate("/login");
+              return;
+            }
+            setShowViewRequestForm(true);
+          }}>Gửi yêu cầu xem phòng</button>
+          <button onClick={() => {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+              showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+              navigate("/login");
+              return;
+            }
+            setShowRentalRequestForm(true);
+          }}>Gửi yêu cầu thuê phòng</button>
         </div>
 
-        <button className="report-button" onClick={() => setShowReportForm(true)}> Báo cáo bài viết </button>
+        <button className="report-button" onClick={() => {
+          const token = localStorage.getItem("authToken");
+          if (!token) {
+            showInfoToast("Bạn cần đăng nhập để gửi báo cáo.");
+            navigate("/login");
+            return;
+          }
+          setShowReportForm(true);
+        }}> Báo cáo bài viết </button>
 
         {showReportForm && (
           <div className="report-overlay">

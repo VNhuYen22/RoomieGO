@@ -54,8 +54,11 @@ function Room() {
       if (!response.ok) throw new Error("Network error");
       const data = await response.json();
       
+      // Filter out rooms that are not available
+      const availableRooms = data.data.filter(room => room.isRoomAvailable);
+      
       // Fetch owner information for each room
-      const roomsWithOwnerInfo = await Promise.all(data.data.map(async (room) => {
+      const roomsWithOwnerInfo = await Promise.all(availableRooms.map(async (room) => {
         try {
           const ownerResponse = await fetch(`http://localhost:8080/owner/get-users/${room.ownerId}`, {
             headers: {
