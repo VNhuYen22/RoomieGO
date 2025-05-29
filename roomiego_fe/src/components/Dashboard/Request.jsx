@@ -518,6 +518,13 @@ const Request = () => {
   // Handle cancel rental request
   const handleCancelRental = async (requestId) => {
     try {
+      // Find the request to get roomId
+      const request = requests.find(req => req.id === requestId);
+      if (!request) {
+        throw new Error("Không tìm thấy yêu cầu thuê phòng");
+      }
+
+      // Cancel rental request
       const response = await fetch(`http://localhost:8080/api/rent-requests/${requestId}/cancel`, {
         method: "POST",
         headers: {
@@ -528,6 +535,24 @@ const Request = () => {
 
       if (!response.ok) {
         throw new Error("Failed to cancel rental request");
+      }
+
+      // Update room status back to available
+      const updateRoomResponse = await fetch(`http://localhost:8080/api/rooms/${request.roomId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        body: JSON.stringify({
+          ...request.room,
+          isRoomAvailable: true
+        })
+      });
+
+      if (!updateRoomResponse.ok) {
+        console.error("Failed to update room status");
+        showErrorToast("Không thể cập nhật trạng thái phòng");
       }
 
       showInfoToast("Đã hủy cho thuê phòng thành công");
@@ -543,7 +568,16 @@ const Request = () => {
     try {
       const token = localStorage.getItem("authToken");
       if (!token) {
-        throw new Error("Authentication token not found");
+        showInfoToast("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/login");
+        return;
+      }
+
+      // Check if user is owner or admin
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      if (!userData || (userData.role !== "OWNER" && userData.role !== "ADMIN")) {
+        showErrorToast("Bạn không có quyền thực hiện thao tác này");
+        return;
       }
 
       // Ensure we have the required data
@@ -570,7 +604,8 @@ const Request = () => {
         throw new Error("Ngày kết thúc phải sau ngày bắt đầu");
       }
 
-      const response = await fetch(`http://localhost:8080/api/contracts/room/${selectedRoomId}`, {
+      // Create contract
+      const contractResponse = await fetch(`http://localhost:8080/api/contracts/room/${selectedRoomId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -580,22 +615,51 @@ const Request = () => {
           tenantId: selectedTenantId,
           startDate: contractData.startDate,
           endDate: contractData.endDate,
-          depositAmount: roomDetails.price, // Use room's price as deposit
-          monthlyRent: roomDetails.price, // Use room's price as monthly rent
+          depositAmount: roomDetails.price,
+          monthlyRent: roomDetails.price,
           status: "ACTIVE"
         }),
       });
 
-      if (response.status === 403) {
-        throw new Error("Bạn không có quyền tạo hợp đồng. Vui lòng kiểm tra lại quyền truy cập.");
+      if (contractResponse.status === 401 || contractResponse.status === 403) {
+        showInfoToast("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/login");
+        return;
       }
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+      if (!contractResponse.ok) {
+        const errorData = await contractResponse.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to create contract');
       }
 
-      const responseData = await response.json();
+      // Update room status to not available
+      console.log("Attempting to hide room:", selectedRoomId);
+      const updateRoomResponse = await fetch(`http://localhost:8080/api/rooms/${selectedRoomId}/hide`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      console.log("Hide room response status:", updateRoomResponse.status);
+      const hideResponseText = await updateRoomResponse.text();
+      console.log("Hide room response:", hideResponseText);
+
+      if (updateRoomResponse.status === 401 || updateRoomResponse.status === 403) {
+        showInfoToast("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/login");
+        return;
+      }
+
+      if (!updateRoomResponse.ok) {
+        console.error("Failed to update room status:", hideResponseText);
+        showErrorToast("Không thể cập nhật trạng thái phòng");
+      } else {
+        console.log("Room hidden successfully");
+      }
+
+      const responseData = await contractResponse.json();
       showInfoToast(responseData.message || "Tạo hợp đồng thành công");
       setIsCreatingNew(false);
       setSelectedRoomId(null);

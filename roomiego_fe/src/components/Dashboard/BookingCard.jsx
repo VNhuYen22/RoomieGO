@@ -4,17 +4,24 @@ import "./css/BookingCard.css";
 const BookingCard = ({ initialHotel, onEditClick, onDeleteClick }) => {
   const [hotelInfo] = useState(initialHotel);
 
+  // Get the first image URL or use default
+  const getImageUrl = () => {
+    if (hotelInfo.imageUrls?.length > 0) {
+      return `http://localhost:8080/images/${hotelInfo.imageUrls[0]}`;
+    }
+    return "/default-room.jpg";
+  };
+
   return (
     <div className="booking-card">
       <div className="booking-image">
         <img
-            src={
-              hotelInfo.imageUrls?.length
-                ? `http://localhost:8080/images/${hotelInfo.imageUrls[0]}`
-                : "/default-room.jpg"
-            }
-            alt={hotelInfo.title}
-          />
+          src={getImageUrl()}
+          alt={hotelInfo.title}
+          onError={(e) => {
+            e.target.src = "/default-room.jpg";
+          }}
+        />
         <div className="price-tag">{hotelInfo.price} VND/Tháng</div>
       </div>
       <div className="booking-info">

@@ -54,7 +54,7 @@ public class RoomController {
             @RequestParam(value = "ward", required = false) String ward,
             @RequestParam(value = "street", required = false) String street,
             @RequestParam(value = "addressDetails", required = false) String addressDetails,
-            @RequestParam(value = "image", required = false) MultipartFile image) {
+            @RequestParam(value = "images", required = false) MultipartFile[] images) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -84,11 +84,15 @@ public class RoomController {
         roomDTO.setStreet(street);
         roomDTO.setAddressDetails(addressDetails);
 
-        // Handle image upload if present
+        // Handle multiple image uploads
         List<String> imageUrls = new ArrayList<>();
-        if (image != null && !image.isEmpty()) {
-            String imageUrl = fileStorageService.storeFile(image);
-            imageUrls.add(imageUrl);
+        if (images != null && images.length > 0) {
+            for (MultipartFile image : images) {
+                if (image != null && !image.isEmpty()) {
+                    String imageUrl = fileStorageService.storeFile(image);
+                    imageUrls.add(imageUrl);
+                }
+            }
         }
         roomDTO.setImageUrls(imageUrls);
 
