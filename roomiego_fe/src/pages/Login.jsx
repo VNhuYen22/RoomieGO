@@ -51,6 +51,7 @@ export default function Login() {
       // Lưu token
       localStorage.setItem("authToken", responseData.token);
       localStorage.setItem("Email", email);
+      localStorage.setItem("chat-username", email);
 
       // Lấy thông tin user từ API profile
       const profileResponse = await fetch("http://localhost:8080/renterowner/get-profile", {

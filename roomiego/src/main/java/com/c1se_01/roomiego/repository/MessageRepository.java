@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByConversationOrderBySentAt(Conversation conversation);
+//    List<Message> findByConversationOrderBySentAt(Conversation conversation);
+
+    List<Message> findByReceiverNameOrSenderName(String receiverName, String senderName);
 }
