@@ -95,13 +95,13 @@ function Room() {
     fetchRooms();
   }, []);
 
-  const getValidImageUrl = (url) => {
-    if (!url || typeof url !== "string" || url.trim() === "") {
+  const getValidImageUrl = (imageUrls) => {
+    if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
       const defaultImages = [room1, room2, room3];
       const randomIndex = Math.floor(Math.random() * defaultImages.length);
       return defaultImages[randomIndex];
     }
-    return baseURL + url;
+    return baseURL + imageUrls[0];
   };
   // loc theo thanh pho 
     const tabs = ['Tất Cả' ,'Đà Nẵng', 'Thành phố Hồ Chí Minh', 'Hà Nội'];
@@ -197,11 +197,11 @@ if (sortOrder === "asc") {
             <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
   <div className="card">
     <img
-      src={getValidImageUrl(room.imageUrls[0])}
+      src={getValidImageUrl(room.imageUrls)}
       alt="Room"
       className="card-image_big"
       onError={(e) => {
-        e.target.src = getValidImageUrl("");
+        e.target.src = getValidImageUrl([]);
       }}
     />
 
@@ -233,10 +233,10 @@ if (sortOrder === "asc") {
 
       <div className="card-footer">
         <img
-          src={getValidImageUrl(room.imageUrls[1])}
+          src={room.imageUrls?.length > 1 ? baseURL + room.imageUrls[1] : getValidImageUrl([])}
           alt="user"
           onError={(e) => {
-            e.target.src = getValidImageUrl("");
+            e.target.src = getValidImageUrl([]);
           }}
         />
         <div className="contact-info">

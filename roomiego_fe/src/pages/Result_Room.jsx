@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-  import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import "../styles/Result_Room.css";
 import { axiosInstance } from "../lib/axios";
 // import { useNotifications } from "../components/NotificationComponent/NotificationContext";
@@ -23,6 +23,8 @@ function Result_Room() {
 
   const [showRentalRequestForm, setShowRentalRequestForm] = useState(false);
   const [rentalRequestMessage, setRentalRequestMessage] = useState("");
+
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchRoomDetails = async () => {
@@ -168,8 +170,11 @@ function Result_Room() {
   if (!room) return <p>Không tìm thấy phòng.</p>;
 
   const baseURL = "http://localhost:8080/images/";
-  const mainImageUrl = room.imageUrls?.length > 0 ? baseURL + room.imageUrls[0] : "/default-room.jpg";
-  const sideImageUrls = room.imageUrls?.slice(1).map((url) => baseURL + url);
+  const imageUrls = room.imageUrls?.length > 0 
+    ? room.imageUrls.map(url => baseURL + url)
+    : ["/default-room.jpg"];
+
+  const mainImageUrl = imageUrls[selectedImageIndex];
 
   return (
     <div className="result-room">
@@ -181,12 +186,44 @@ function Result_Room() {
       <p className="hotel-location">{room.addressDetails}</p>
 
       <div className="image-gallery">
-        <div className="main-image">
-          <img src={mainImageUrl} alt="Main Room" />
+      <div className="main-image">
+          <button
+            className="gallery-nav-btn prev"
+            onClick={() => setSelectedImageIndex((prev) => (prev === 0 ? imageUrls.length - 1 : prev - 1))}
+            aria-label="Previous image"
+          >
+            &#8592;
+          </button>
+          <img 
+            src={mainImageUrl} 
+            alt="Main Room" 
+            onError={(e) => {
+              e.target.src = "/default-room.jpg";
+            }}
+          />
+          <button
+            className="gallery-nav-btn next"
+            onClick={() => setSelectedImageIndex((prev) => (prev === imageUrls.length - 1 ? 0 : prev + 1))}
+            aria-label="Next image"
+          >
+            &#8594;
+          </button>
         </div>
-        <div className="side-images">
-          {sideImageUrls?.map((url, index) => (
-            <img key={index} src={url} alt={`Room ${index + 1}`} />
+        <div className="thumbnail-container">
+          {imageUrls.map((url, index) => (
+            <div 
+              key={index} 
+              className={`thumbnail ${selectedImageIndex === index ? 'active' : ''}`}
+              onClick={() => setSelectedImageIndex(index)}
+            >
+              <img 
+                src={url} 
+                alt={`Room ${index + 1}`}
+                onError={(e) => {
+                  e.target.src = "/default-room.jpg";
+                }}
+              />
+            </div>
           ))}
         </div>
       </div>
