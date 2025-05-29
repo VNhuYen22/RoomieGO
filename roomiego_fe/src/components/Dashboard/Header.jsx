@@ -53,8 +53,8 @@ const Header = () => {
           {/* Dropdown menu */}
           {isProfileOpen && (
             <div className="profile-dropdown">
-              <div className="dropdown-item">Edit Profile</div>
-              <div className="dropdown-item">Log out</div>
+              <div className="dropdown-item">Chỉnh sửa trang cá nhân</div>
+              <div className="dropdown-item">Đăng xuất</div>
             </div>
           )}
         </div>
@@ -68,9 +68,9 @@ const Header = () => {
           <div className="bell-icon">🔔</div>
           {isDropdownOpen && (
             <div className="notification-dropdown">
-              <div className="notification-item">New message from Admin</div>
-              <div className="notification-item">Booking confirmed</div>
-              <div className="notification-item">System update available</div>
+              <div className="notification-item">Tin nhắn mới từ admin</div>
+              <div className="notification-item">Xác nhận đặt phòng</div>
+              <div className="notification-item">Cập nhật hệ thống</div>
             </div>
           )}
         </div>

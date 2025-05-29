@@ -1,5 +1,6 @@
 package com.c1se_01.roomiego.controller;
 
+import com.c1se_01.roomiego.dto.ApiResponse;
 import com.c1se_01.roomiego.dto.RoommateDTO;
 import com.c1se_01.roomiego.dto.RoommateResponseDTO;
 import com.c1se_01.roomiego.service.RoommateService;
@@ -25,18 +26,19 @@ public class RoomateController {
     private final RoommateService roommateService;
 
     @PostMapping
-    public ResponseEntity<RoommateResponseDTO> createRoommate(@Valid @RequestBody RoommateDTO dto) {
+    public ResponseEntity<ApiResponse<RoommateResponseDTO>> createRoommate(@Valid @RequestBody RoommateDTO dto) {
         RoommateResponseDTO responseDTO = roommateService.createRoommate(dto);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Tạo thông tin roommate thành công", responseDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<RoommateResponseDTO>> getAllRoommates() {
-        return ResponseEntity.ok(roommateService.getAllRoommates());
+    public ResponseEntity<ApiResponse<List<RoommateResponseDTO>>> getAllRoommates() {
+        List<RoommateResponseDTO> roommates = roommateService.getAllRoommates();
+        return ResponseEntity.ok(new ApiResponse<>(200, "Danh sách roommate", roommates));
     }
 
     @GetMapping("/export-to-file")
-    public ResponseEntity<Map<String, Object>> exportRoommatesToFile() throws IOException {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> exportRoommatesToFile() throws IOException {
         List<RoommateResponseDTO> roommates = roommateService.getAllRoommates();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -51,13 +53,9 @@ public class RoomateController {
 
         Files.write(file.toPath(), jsonContent.getBytes(StandardCharsets.UTF_8));
 
-        // ✅ Trả về JSON
         Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Exported roommates to file");
         response.put("filePath", filePath);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Xuất dữ liệu thành công", response));
     }
-
 }

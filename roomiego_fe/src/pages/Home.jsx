@@ -26,7 +26,7 @@ export default function App() {
         Trình duyệt của bạn không hỗ trợ video.
       </video>
       <div className="video-content">
-        <h1>Chào mừng bạn đến với Roommate Finder</h1>
+        <h1>Chào mừng bạn đến với RoommieGo</h1>
         <p>Nơi tìm kiếm bạn cùng phòng lý tưởng dành cho bạn</p>
         
       </div>
@@ -57,8 +57,8 @@ export default function App() {
           Chia sẻ  <span className="highlight"><img src={home_icon} alt="" /></span> và cả sự {" "}
           <span className="highlight">ngạc nhiên </span>, mỗi lần gặp được người bạn mới
         </h1>
-        <p>Bạn đã sẵn sàng cho điều đó chưa 😉!!!</p>
-       <Link to="/Room"><button className="home-arrow">Find your room</button></Link> 
+        <p>Hãy để chúng tôi hỗ trợ bạn 😉!!!</p>
+       <Link to="/Room"><button className="home-arrow">Tìm phòng trọ</button></Link> 
       </div>
     </div>
     </div>

@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDateTime;
+import jakarta.persistence.PrePersist;
 
 @Entity
 @Table(name = "users")
@@ -45,6 +47,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(length = 20)
@@ -62,15 +65,15 @@ public class User implements UserDetails {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", updatable = false)
-    private Date createdAt = new Date();
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Room> rooms;
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Contract> contracts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -88,6 +91,11 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "renter", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ViewRequest> viewRequests;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

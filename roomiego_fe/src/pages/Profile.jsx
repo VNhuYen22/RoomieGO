@@ -46,21 +46,21 @@ useEffect(() => {
         {/* Sidebar */}
         <div className="account-sidebar">
           <img src="https://via.placeholder.com/100" alt="Avatar" />
-          <h3>{profile ? profile.fullName : "Loading..."}</h3>
+          <h3>{profile ? profile.fullName : "Đang tải..."}</h3>
           <ul>
             
-            <li className="active">Account</li>
+            <li className="active">Tài Khoản</li>
           </ul>
         </div>
 
         {/* Content */}
         <div className="account-content">
           <img src={user2} alt="" />
-          <h2>Profile</h2>
+          <h2>Hồ Sơ</h2>
           {profile ? (
             <form className="form_profile">
   <div className="form-group half">
-    <label>Full Name </label>
+    <label>Tên đầy đủ </label>
     <input type="text" value={profile.fullName} />
   </div>
 
@@ -70,13 +70,13 @@ useEffect(() => {
   </div>
 
   <div className="form-group half">
-    <label>Phone number</label>
+    <label>Số điện thoại</label>
     <input type="text" value={profile.phone} />
   </div>
 
   <div className="form-group half">
-    <label>Gender</label>
-    <input type="text" value={profile.gender}  />
+    <label>Giới tính</label>
+    <input type="text" value={profile.gender == "FEMALE" ? "Nữ": "Nam"}  />
   </div>
 
   <div className="form-group half">
@@ -85,13 +85,13 @@ useEffect(() => {
   </div>
 
   <div className="buttons">
-    <button type="submit">Update</button>
-    <button className="button-cancel" type="button">Cancel</button>
+    <button type="submit">Cập Nhật</button>
+    <button className="button-cancel" type="button">Hủy</button>
   </div>
 </form>
 
           ) : (
-            <p>Loading profile...</p>
+            <p>Đang tải hồ sơ ...</p>
           )}
         </div>
       </div>

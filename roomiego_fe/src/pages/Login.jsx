@@ -66,23 +66,35 @@ export default function Login() {
       const profileData = await profileResponse.json();
       console.log("Profile data:", profileData);
 
-      if (profileData && profileData.user) {
-        const userData = profileData.user;
+      if (profileData && profileData.statusCode === 200) {
+        // Tạo user data từ response
+        const userData = {
+          fullName: profileData.fullName,
+          email: profileData.email,
+          phone: profileData.phone,
+          role: profileData.role,
+          gender: profileData.gender,
+          dob: profileData.dob,
+          bio: profileData.bio,
+          createdAt: profileData.createdAt
+        };
         console.log("User data:", userData);
         
         // Lưu role và thông tin user
         localStorage.setItem("userRole", userData.role);
         localStorage.setItem("userData", JSON.stringify(userData));
-      } else {
-        throw new Error("Không tìm thấy thông tin user");
-      }
 
-      showSuccessToast("Đăng nhập thành công!");
-      
-      setTimeout(() => {
-        navigate("/");
-        window.location.reload();
-      }, 2000);
+        showSuccessToast("Đăng nhập thành công!");
+        
+        // Chuyển hướng dựa vào role
+        if (userData.role === "ADMIN") {
+          window.location.href = "/room";
+        } else {
+          window.location.href = "/room";
+        }
+      } else {
+        throw new Error(profileData.message || "Không tìm thấy thông tin user");
+      }
 
     } catch (err) {
       console.error('Login failed:', err);

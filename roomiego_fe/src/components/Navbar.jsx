@@ -75,7 +75,7 @@ const handleDeleteNotification = (indexToDelete) => {
         userId: notification.userId || "Unknown",
         timestamp: new Date().toLocaleTimeString(), // You can adjust this based on the BE response
       }));
-      setNotifications(fetchedNotifications);
+      setNotifications(fetchedNotifications.reverse().slice(0, 5)); // Giới hạn số lượng thông báo hiển thị
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
@@ -132,14 +132,16 @@ const handleDeleteNotification = (indexToDelete) => {
               const notification = JSON.parse(message.body || "{}");
               console.log("Parsed notification:", notification);
               setNotifications((prev) => [
-                ...prev,
+               
                 {
                   message: notification.message || "No message",
                   type: notification.type || "Unknown",
                   userId: notification.userId || "Unknown",
                   timestamp: new Date().toLocaleTimeString(),
                 },
-              ]);
+                 ...prev,
+              ].slice(0, 5)); // Giới hạn số lượng thông báo hiển thị
+            
             } catch (parseError) {
               console.error("Error parsing WebSocket message:", parseError, "Body:", message.body);
             }
