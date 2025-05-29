@@ -81,13 +81,13 @@ public class User implements UserDetails {
     private List<Roommate> roommates;
 
     // Quan hệ với Conversation (một user có thể có nhiều cuộc trò chuyện)
-    @JsonIgnore
-    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL)
-    private List<Conversation> conversationsAsUser1 = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
-    private List<Conversation> conversationsAsUser2 = new ArrayList<>();
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL)
+//    private List<Conversation> conversationsAsUser1 = new ArrayList<>();
+//
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
+//    private List<Conversation> conversationsAsUser2 = new ArrayList<>();
     @OneToMany(mappedBy = "renter", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ViewRequest> viewRequests;

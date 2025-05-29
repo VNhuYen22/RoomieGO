@@ -12,13 +12,13 @@ import java.util.Optional;
 
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
-    @Query("""
-        SELECT c FROM Conversation c
-        WHERE (c.user1.id = :user1Id AND c.user2.id = :user2Id) 
-        OR (c.user1.id = :user2Id AND c.user2.id = :user1Id)
-    """)
-    Optional<Conversation> findExistingConversation(@Param("user1Id") Long user1Id, @Param("user2Id") Long user2Id);
-
-    @Query("SELECT c FROM Conversation c WHERE c.user1 = :user OR c.user2 = :user")
-    List<Conversation> findAllByUser(@Param("user") User user);
+//    @Query("""
+//        SELECT c FROM Conversation c
+//        WHERE (c.user1.id = :user1Id AND c.user2.id = :user2Id)
+//        OR (c.user1.id = :user2Id AND c.user2.id = :user1Id)
+//    """)
+//    Optional<Conversation> findExistingConversation(@Param("user1Id") Long user1Id, @Param("user2Id") Long user2Id);
+//
+//    @Query("SELECT c FROM Conversation c WHERE c.user1 = :user OR c.user2 = :user")
+//    List<Conversation> findAllByUser(@Param("user") User user);
 }
