@@ -219,11 +219,11 @@ const ChatPage2 = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen w-[100%]">
-      <div className="flex w-full h-full">
+    <div className="w-full h-full pt-[20px] pb-[100px] gap-4">
+      <div className=" grid grid-cols-12 flex w-full h-full pt-[20px] pb-[100px]">
         {/* Member List */}
-        <div className="flex flex-col p-3 w-[250px] h-[551px] bg-white border-r">
-          <div className="mb-4">
+        <div className=" col-span-3 bg-base-100 border-r border-base-300 pl-4 pt-3" >
+          <div className="mb-4 border-r border-base-300 ">
             <h3 className="text-lg font-semibold mb-2">Danh sách chat</h3>
             <span className="font-medium hidden lg:block"> <i className="fa-regular fa-user"></i> Liên Hệ</span>
           </div>
@@ -268,20 +268,20 @@ const ChatPage2 = () => {
             })}
           </ul>
         </div>
-
-        <div className="flex flex-col w-[50%] mt-3">
+        <div className="col-span-6 border-r border-base-300 flex flex-col mt-3">
           {/* Chat header */}
           {tab && selectedUser && (
-            <div className="p-3 bg-white border-b flex items-center">
-              <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+            <div className="px-4 py-3 border-b border-base-300 bg-base-100">
+              <div className="flex items-center gap-3">
                 <img
                   src={selectedUser.avatarUrl || 'https://randomuser.me/api/portraits/lego/1.jpg'}
                   alt={selectedUser.fullName}
-                  className="w-full h-full object-cover"
+                  className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-medium"
                 />
               </div>
               <div>
-                <div className="font-medium">{selectedUser.fullName}</div>
+                {/* <div className="font-medium">{selectedUser.fullName}</div> */}
+                <h3 className="font-medium text-sm">{selectedUser.fullName}</h3>
                 <div className="text-sm text-gray-600">
                   {selectedUser.job || 'Chưa cập nhật nghề nghiệp'}
                 </div>
@@ -292,8 +292,7 @@ const ChatPage2 = () => {
           {/* Chat Box */}
           <div
             ref={chatContainerRef}
-            className="p-3 flex-grow overflow-auto bg-gray-300 border border-green-500 flex flex-col space-y-2 rounded-md"
-            style={{ height: '500px' }}
+           className="col-span-6 p-4 space-y-4 min-h-[650px] max-h-[650px] overflow-y-auto bg-base-100"
           >
             {tab && privateChats.get(tab)?.length > 0 ? (
               privateChats.get(tab).map((msg, index) => (
@@ -325,9 +324,9 @@ const ChatPage2 = () => {
 
           {/* Message Box */}
           {tab && (
-            <div className="flex items-center p-2">
+            <div style={{ width: '100%' }}  className="p-4 border-t border-base-300 bg-base-100 flex justify-center">
               <input
-                className="flex-grow p-2 border outline-blue-600 rounded-l-lg"
+               className="input input-bordered flex-1 text-sm h-10 gap-2" style={{ width: '65%' }}
                 type="text"
                 placeholder="Message"
                 value={message}
@@ -340,14 +339,15 @@ const ChatPage2 = () => {
               />
               <input
                 type="button"
-                className="ml-2 p-2 bg-blue-700 text-white rounded cursor-pointer"
+                className="btn btn-primary h-10 min-h-0" style={{marginLeft: '2%'}}
                 value="Send"
                 onClick={sendPrivate}
               />
             </div>
           )}
+          
         </div>
-        <div className="pl-4 pt-3">
+        <div className="col-span-3 pl-4 pt-3">
           <SearchBar onUserSelect={handlePrivateMessage} />
         </div>
       </div>
