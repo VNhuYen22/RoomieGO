@@ -604,8 +604,8 @@ const Request = () => {
         throw new Error("Ngày kết thúc phải sau ngày bắt đầu");
       }
 
-      // Create contract
-      const contractResponse = await fetch(`http://localhost:8080/api/contracts/room/${selectedRoomId}`, {
+      // Create contract using the same endpoint as InvoiceForm
+      const contractResponse = await fetch("http://localhost:8080/api/contracts", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -613,10 +613,10 @@ const Request = () => {
         },
         body: JSON.stringify({
           tenantId: selectedTenantId,
+          roomId: selectedRoomId,
           startDate: contractData.startDate,
           endDate: contractData.endDate,
-          depositAmount: roomDetails.price,
-          monthlyRent: roomDetails.price,
+          pricePerMonth: roomDetails.price,
           status: "ACTIVE"
         }),
       });

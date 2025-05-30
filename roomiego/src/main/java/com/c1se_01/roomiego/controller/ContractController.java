@@ -43,4 +43,10 @@ public class ContractController {
         ContractResponse response = contractService.createContract(request);
         return ResponseEntity.ok(new ApiResponse<>(200, "Tạo hợp đồng thành công", response));
     }
+
+    @DeleteMapping("/{contractId}")
+    public ResponseEntity<ApiResponse<Void>> deleteContract(@PathVariable Long contractId) {
+        contractService.deleteContract(contractId);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Xóa hợp đồng thành công", null));
+    }
 }

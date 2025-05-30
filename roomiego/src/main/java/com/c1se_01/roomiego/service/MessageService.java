@@ -3,6 +3,7 @@ package com.c1se_01.roomiego.service;
 import com.c1se_01.roomiego.dto.MessageDto;
 import com.c1se_01.roomiego.dto.SendMessageRequest;
 import com.c1se_01.roomiego.model.Message;
+import com.c1se_01.roomiego.enums.MessageType;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface MessageService {
     void saveMessage(MessageDto messageDto);
 
     List<Message> findByReceiverNameOrSenderName(String user1, String user2);
+
+    List<Message> findByType(MessageType type);
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Storage.css"; // Import CSS styles for the invoice
 import { useSearchParams } from "react-router-dom";
 
@@ -22,37 +22,16 @@ const InvoiceForm = ({ onSave, onCancel, roomId, tenantId }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [tenantInfo, setTenantInfo] = useState(null); // Thông tin người thuê
+  const [tenantInfo, setTenantInfo] = useState(null);
   const [roomInfo, setRoomInfo] = useState(null);
-
-  // Get roomId and tenantId from URL parameters or props
-  useEffect(() => {
-    const urlRoomId = searchParams.get('roomId');
-    const urlTenantId = searchParams.get('tenantId');
-    
-    // Update form data with provided IDs
-    setFormData(prev => ({
-      ...prev,
-      roomId: roomId || urlRoomId || prev.roomId,
-      tenantId: tenantId || urlTenantId || prev.tenantId
-    }));
-
-    // Fetch tenant information if we have an ID
-    const currentTenantId = tenantId || urlTenantId;
-    if (currentTenantId) {
-      fetchTenantInfo(currentTenantId);
-    }
-
-    // Fetch room information if we have an ID
-    const currentRoomId = roomId || urlRoomId;
-    if (currentRoomId) {
-      fetchRoomInfo(currentRoomId);
-    }
-  }, [searchParams, roomId, tenantId]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Fetch tenant information
-  const fetchTenantInfo = async (id) => {
+  const fetchTenantInfo = useCallback(async (id) => {
+    if (!id || tenantInfo) return; // Skip if no ID or already have tenant info
+    
     try {
+      console.log("Fetching tenant info for ID:", id);
       const response = await fetch(`http://localhost:8080/owner/get-users/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -64,17 +43,22 @@ const InvoiceForm = ({ onSave, onCancel, roomId, tenantId }) => {
       }
 
       const data = await response.json();
+      console.log("Raw tenant response:", JSON.stringify(data));
+      
       if (data.usersList && data.usersList.length > 0) {
         setTenantInfo(data.usersList[0]);
       }
     } catch (err) {
       console.error('Error fetching tenant info:', err);
     }
-  };
+  }, [tenantInfo]);
 
   // Fetch room information
-  const fetchRoomInfo = async (id) => {
+  const fetchRoomInfo = useCallback(async (id) => {
+    if (!id || roomInfo) return; // Skip if no ID or already have room info
+    
     try {
+      console.log("Fetching room info for ID:", id);
       const response = await fetch(`http://localhost:8080/api/rooms/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -86,6 +70,8 @@ const InvoiceForm = ({ onSave, onCancel, roomId, tenantId }) => {
       }
 
       const data = await response.json();
+      console.log("Raw room response:", JSON.stringify(data));
+      
       if (data.data) {
         setRoomInfo(data.data);
         // Pre-fill monthly rent with room price
@@ -97,7 +83,35 @@ const InvoiceForm = ({ onSave, onCancel, roomId, tenantId }) => {
     } catch (err) {
       console.error('Error fetching room info:', err);
     }
-  };
+  }, [roomInfo]);
+
+  // Initialize form data and fetch information only once
+  useEffect(() => {
+    if (isInitialized) return;
+
+    const urlRoomId = searchParams.get('roomId');
+    const urlTenantId = searchParams.get('tenantId');
+    
+    const currentRoomId = roomId || urlRoomId;
+    const currentTenantId = tenantId || urlTenantId;
+    
+    // Update form data with provided IDs
+    setFormData(prev => ({
+      ...prev,
+      roomId: currentRoomId || prev.roomId,
+      tenantId: currentTenantId || prev.tenantId
+    }));
+
+    // Fetch information
+    if (currentTenantId) {
+      fetchTenantInfo(currentTenantId);
+    }
+    if (currentRoomId) {
+      fetchRoomInfo(currentRoomId);
+    }
+
+    setIsInitialized(true);
+  }, [roomId, tenantId, searchParams, fetchTenantInfo, fetchRoomInfo, isInitialized]);
 
   /**
    * Hàm xử lý khi submit form.

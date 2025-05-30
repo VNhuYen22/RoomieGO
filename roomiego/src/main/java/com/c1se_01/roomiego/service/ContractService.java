@@ -11,4 +11,6 @@ public interface ContractService {
     ContractResponse getContractById(Long contractId);
     
     List<ContractResponse> getAllContracts();
+
+    void deleteContract(Long contractId);
 }

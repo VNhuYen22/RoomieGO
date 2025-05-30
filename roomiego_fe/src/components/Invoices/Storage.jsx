@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
  */
 const Storage = ({ roomId }) => {
   const navigate = useNavigate();
-  const [searchSender, setSearchSender] = useState(""); // Tìm kiếm theo người gửi
+  const [searchRoomName, setSearchRoomName] = useState(""); // Tìm kiếm theo tên phòng
   const [startDate, setStartDate] = useState(""); // Ngày bắt đầu tìm kiếm
   const [endDate, setEndDate] = useState(""); // Ngày kết thúc tìm kiếm
   const [selectedInvoiceId, setSelectedInvoiceId] = useState(null); // ID hóa đơn đang xem
@@ -223,7 +223,7 @@ const Storage = ({ roomId }) => {
    * Lọc danh sách hợp đồng dựa trên tìm kiếm.
    */
   const filteredContracts = contracts.filter((contract) => {
-    const isSenderMatch = contract.tenantId.toString().includes(searchSender);
+    const isSenderMatch = contract.tenantId.toString().includes(searchRoomName);
     const isDateMatch =
       (!startDate || new Date(contract.startDate) >= new Date(startDate)) &&
       (!endDate || new Date(contract.endDate) <= new Date(endDate));
@@ -334,9 +334,9 @@ const Storage = ({ roomId }) => {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Tìm theo ID người thuê"
-          value={searchSender}
-          onChange={(e) => setSearchSender(e.target.value)}
+          placeholder="Tìm theo tên phòng"
+          value={searchRoomName}
+          onChange={(e) => setSearchRoomName(e.target.value)}
         />
         <input
           type="date"
@@ -354,7 +354,7 @@ const Storage = ({ roomId }) => {
         <button
           className="refresh-btn"
           onClick={() => {
-            setSearchSender("");
+            setSearchRoomName("");
             setStartDate("");
             setEndDate("");
             fetchContracts();
@@ -397,9 +397,9 @@ const Storage = ({ roomId }) => {
             <thead>
               <tr>
                 <th>STT</th>
-                <th>ID Người thuê</th>
+                {/* <th>ID Người thuê</th> */}
                 <th>Tên người thuê</th>
-                <th>ID Phòng</th>
+                {/* <th>ID Phòng</th> */}
                 <th>Tên phòng</th>
                 <th>Ngày bắt đầu</th>
                 <th>Ngày kết thúc</th>
@@ -412,9 +412,9 @@ const Storage = ({ roomId }) => {
               {currentContracts.map((contract, index) => (
                 <tr key={contract.id}>
                   <td>{startIndex + index + 1}</td>
-                  <td>{contract.tenantId}</td>
+                  {/* <td>{contract.tenantId}</td> */}
                   <td>{tenantNames[contract.tenantId] || "Đang tải..."}</td>
-                  <td>{contract.roomId}</td>
+                  {/* <td>{contract.roomId}</td> */}
                   <td>{roomNames[contract.roomId] || "Đang tải..."}</td>
                   <td>{new Date(contract.startDate).toLocaleDateString()}</td>
                   <td>{new Date(contract.endDate).toLocaleDateString()}</td>
@@ -437,7 +437,11 @@ const Storage = ({ roomId }) => {
                       </button>
                       <button
                         className="delete-btn"
-                        onClick={() => handleDelete(contract.id)}
+                        onClick={() => {
+                          if (window.confirm("Bạn có chắc chắn muốn xóa hợp đồng này?")) {
+                            handleDelete(contract.id);
+                          }
+                        }}
                       >
                         Xóa
                       </button>
