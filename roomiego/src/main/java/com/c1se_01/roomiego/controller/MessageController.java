@@ -38,12 +38,12 @@ public class MessageController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<User> findByUsername(@RequestParam String username) {
-        User user = userService.findByFullName(username);
-        if (user == null) {
+    public ResponseEntity<List<User>> findByUsername(@RequestParam String username) {
+        List<User> users = userService.findByFullName(username);
+        if (users == null || users.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/api/messages/history/public")
@@ -56,7 +56,7 @@ public class MessageController {
             @PathVariable String user1,
             @PathVariable String user2
     ) {
-        List<Message> messages = messageService.findByReceiverNameOrSenderName(user1, user2);
+        List<Message> messages = messageService.findChatHistoryBetweenUsers(user1, user2);
         return ResponseEntity.ok(messages);
     }
 

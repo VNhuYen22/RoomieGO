@@ -8,36 +8,41 @@ const SearchBar = ({ onUserSelect }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) {
+      setError('Vui lòng nhập tên người dùng');
+      return;
+    }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem('authToken');
       if (!token) {
-        setError("No authentication token found");
+        setError('Không tìm thấy mã xác thực');
         return;
       }
 
       const response = await axios.get(
-        `http://localhost:8080/messages/search?username=${searchTerm}`,
+        `http://localhost:8080/messages/search?username=${encodeURIComponent(searchTerm)}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
         }
       );
 
-      if (response.data) {
-        setSearchResults([response.data]);
-      } else {
-        setSearchResults([]);
-      }
+      // BE trả về danh sách người dùng
+      setSearchResults(response.data || []);
       setError(null);
     } catch (error) {
-      console.error("Error searching for user:", error);
-      setError("Failed to search for user");
-      setSearchResults([]);
+      console.error('Lỗi khi tìm kiếm người dùng:', error);
+      if (error.response?.status === 404) {
+        setSearchResults([]);
+        setError('Không tìm thấy người dùng');
+      } else {
+        setError('Đã xảy ra lỗi khi tìm kiếm');
+        setSearchResults([]);
+      }
     }
   };
 
@@ -49,7 +54,7 @@ const SearchBar = ({ onUserSelect }) => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search users..."
+            placeholder="Tìm kiếm người dùng..."
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
@@ -76,6 +81,10 @@ const SearchBar = ({ onUserSelect }) => {
 
       {error && (
         <div className="text-red-500 text-sm mb-2">{error}</div>
+      )}
+
+      {searchResults.length === 0 && !error && searchTerm && (
+        <div className="text-gray-500 text-sm mb-2">Không tìm thấy người dùng</div>
       )}
 
       {searchResults.length > 0 && (
@@ -105,4 +114,4 @@ const SearchBar = ({ onUserSelect }) => {
   );
 };
 
-export default SearchBar; 
+export default SearchBar;
