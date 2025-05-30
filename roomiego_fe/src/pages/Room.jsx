@@ -52,32 +52,32 @@ function Room() {
     { image: split_2, alt: "Split Image 2" },
     { image: split_3, alt: "Split Image 3" },
   ];
-  const [activeTab, setActiveTab] = useState("Tất Cả"); 
+  const [activeTab, setActiveTab] = useState("Tất Cả");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
 
   const handleSortChange = (order) => {
     setSortOrder(order);
   };
   const [showDistricts, setShowDistricts] = useState(false);
-const [districts, setDistricts] = useState([]);
-const handleShowDistricts = () => {
-  const danang = getProvinces().find((p) => p.name.includes("Đà Nẵng"));
-  if (danang) {
-    const danangDistricts = getDistrictsByProvinceCode(danang.code);
-    setDistricts(danangDistricts);
-    setShowDistricts(!showDistricts); 
-  }
-};
-
+  const [districts, setDistricts] = useState([]);
+  const handleShowDistricts = () => {
+    const danang = getProvinces().find((p) => p.name.includes("Đà Nẵng"));
+    if (danang) {
+      const danangDistricts = getDistrictsByProvinceCode(danang.code);
+      setDistricts(danangDistricts);
+      setShowDistricts(!showDistricts);
+    }
+  };
 
   const fetchRooms = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/rooms");
       if (!response.ok) throw new Error("Network error");
       const data = await response.json();
-      
+
       // Filter out rooms that are not available
-      const availableRooms = data.data.filter(room => room.isRoomAvailable);
-      
+      const availableRooms = data.data.filter((room) => room.isRoomAvailable);
+
       // Fetch owner information for each room
       const roomsWithOwnerInfo = await Promise.all(
         data.data.map(async (room) => {
@@ -131,12 +131,15 @@ const handleShowDistricts = () => {
   };
   // loc theo thanh pho
   const tabs = ["Tất Cả", "Đà Nẵng", "Thành phố Hồ Chí Minh", "Hà Nội"];
-  const filteredRooms =
-    activeTab === "Tất Cả"
-      ? rooms
-      : rooms.filter((room) =>
-          room.city?.toLowerCase().includes(activeTab.toLowerCase())
-        );
+  const filteredRooms = rooms.filter((room) => {
+    const matchCity =
+      activeTab === "Tất Cả" ||
+      room.city?.toLowerCase().includes(activeTab.toLowerCase());
+    const matchDistrict =
+      selectedDistrict === "" ||
+      room.district?.toLowerCase().includes(selectedDistrict.toLowerCase());
+    return matchCity && matchDistrict;
+  });
   const sortedRooms = [...filteredRooms];
   if (sortOrder === "asc") {
     sortedRooms.sort((a, b) => a.price - b.price);
@@ -155,15 +158,14 @@ const handleShowDistricts = () => {
         <Swiper
           spaceBetween={30}
           centeredSlides={true}
-          // autoplay={{
-          //   delay: 2500,
-          //   disableOnInteraction: false,
-          // }}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
           pagination={{
             clickable: true,
           }}
-          loop={true}
-          navigation={true}
+          navigation={false}
           modules={[Autoplay, Pagination, Navigation]}
         >
           {slides.map((slide, index) => (
@@ -207,25 +209,60 @@ const handleShowDistricts = () => {
           <div
             key={tab}
             className={`button-tab_city ${activeTab === tab ? "active" : ""}`}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => {
+              setActiveTab(tab);
+              if (tab === "Tất Cả") {
+                setSelectedDistrict(""); //Xoá bộ lọc quận khi chọn Tất Cả
+              }
+            }}
             style={{ cursor: "pointer" }}
           >
             {tab}
           </div>
-          
         ))}
         <div className="district_find " onClick={handleShowDistricts}>
           <img src={dot} alt="" />
         </div>
         {showDistricts && (
-  <div className="district-list">
-    <ul>
-      {districts.map((district) => (
-        <li key={district.code}>{district.name}</li>
-      ))}
-    </ul>
-  </div>
-)}
+          <div
+            style={{
+              marginTop: "10px",
+              padding: "10px",
+              background: "#f9f9f9",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              maxWidth: "300px",
+            }}
+          >
+            <label
+              style={{
+                fontWeight: "bold",
+                marginBottom: "5px",
+                display: "block",
+              }}
+            >
+              Chọn quận tại Đà Nẵng:
+            </label>
+            <select
+              value={selectedDistrict}
+              onChange={(e) => setSelectedDistrict(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                fontSize: "14px",
+              }}
+            >
+              <option value="">-- Chọn quận --</option>
+              {districts.map((district) => (
+                <option key={district.code} value={district.name}>
+                  {district.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
       <div className="text_title">
         <h3>Phòng đặc trưng </h3>{" "}
@@ -235,16 +272,20 @@ const handleShowDistricts = () => {
           <p>Không tìm thấy phòng trọ.</p>
         ) : (
           sortedRooms.map((room) => (
-            <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
-  <div className="card">
-    <img
-      src={getValidImageUrl(room.imageUrls)}
-      alt="Room"
-      className="card-image_big"
-      onError={(e) => {
-        e.target.src = getValidImageUrl([]);
-      }}
-    />
+            <Link
+              to={`/ResultRoom/${room.id}`}
+              className="card-link"
+              key={room.id}
+            >
+              <div className="card">
+                <img
+                  src={getValidImageUrl(room.imageUrls)}
+                  alt="Room"
+                  className="card-image_big"
+                  onError={(e) => {
+                    e.target.src = getValidImageUrl([]);
+                  }}
+                />
 
                 <div className="card-body">
                   <div className="card-top">
@@ -254,8 +295,7 @@ const handleShowDistricts = () => {
 
                   <div className="card-address">
                     <i className="fas fa-map-marker-alt"></i>
-                    <span>{room.city}</span>{" "}
-                    <span>{room.district}</span>
+                    <span>{room.city}</span> <span>{room.district}</span>
                     <span>{room.addressDetails ?? "Địa chỉ không có sẵn"}</span>
                   </div>
 
@@ -278,23 +318,30 @@ const handleShowDistricts = () => {
                     </div>
                   </div>
 
-      <div className="card-footer">
-        <img
-          src={room.imageUrls?.length > 1 ? baseURL + room.imageUrls[1] : getValidImageUrl([])}
-          alt="user"
-          onError={(e) => {
-            e.target.src = getValidImageUrl([]);
-          }}
-        />
-        <div className="contact-info">
-          <div className="owner-name">{room.ownerName || "Chủ phòng"}</div>
-          <div className="owner-phone">{room.ownerPhone || "Chưa có số điện thoại"}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</Link>
-
+                  <div className="card-footer">
+                    <img
+                      src={
+                        room.imageUrls?.length > 1
+                          ? baseURL + room.imageUrls[1]
+                          : getValidImageUrl([])
+                      }
+                      alt="user"
+                      onError={(e) => {
+                        e.target.src = getValidImageUrl([]);
+                      }}
+                    />
+                    <div className="contact-info">
+                      <div className="owner-name">
+                        {room.ownerName || "Chủ phòng"}
+                      </div>
+                      <div className="owner-phone">
+                        {room.ownerPhone || "Chưa có số điện thoại"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
           ))
         )}
       </div>
