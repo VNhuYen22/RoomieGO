@@ -44,7 +44,12 @@ export default function Register() {
       setError("Vui lòng nhập đầy đủ thông tin và mật khẩu phải có ít nhất 6 ký tự.");
       return;
     }
-
+    
+    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).+$/;
+    if (!strongPasswordRegex.test(password)) {
+    setError("Mật khẩu phải chứa ít nhất một chữ hoa và một ký tự đặc biệt.");
+    return;
+  }
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -109,7 +114,7 @@ export default function Register() {
       <div className="video-overlay"></div>
 
       <div className="register-container">
-        <div className="login-box">
+        <div className="register-box">
           <div className="login-image">
             <img 
               src="https://storage.googleapis.com/a1aa/image/pIX598hLKNAAlo-PMfaRY2XfJQXo-I6fQbAqm6H-2T4.jpg" 
@@ -157,6 +162,9 @@ export default function Register() {
                     onChange={(e) => setPassword(e.target.value)} 
                     required 
                   />
+                  <small style={{ color: "white", fontSize: "12px" }}>
+                  Mật khẩu cần ít nhất 6 ký tự, bao gồm 1 chữ hoa và 1 ký tự đặc biệt.
+                  </small>
                 </div>
               </div>
 

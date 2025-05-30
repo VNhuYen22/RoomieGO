@@ -235,7 +235,7 @@ function Result_Room() {
           <div className="room-details">
             <span><strong>Diện tích:</strong> {room.roomSize} m²</span>
             <span><img src={bedroom} alt="" /><strong>Số người:</strong> {room.numBedrooms}</span>
-            <span><img src={sink} alt="" /><strong>Nhà vệ sinh:</strong> {room.numBathrooms}</span>
+            <span><img src={sink} alt="" /><strong>Phòng tắm:</strong> {room.numBathrooms}</span>
           </div>
           <p><strong> Có sẵn từ ngày:</strong> {new Date(room.availableFrom).toLocaleDateString()}</p>
           <p><strong> Phòng trọ trống:</strong> {room.isRoomAvailable ? "CÓ" : "KHÔNG"}</p>
@@ -243,6 +243,11 @@ function Result_Room() {
 
         <div className="detail_price-booking">
           <h4>Gửi yêu cầu</h4>
+
+          <span>{room.price.toLocaleString()}vnđ/Tháng </span>
+          {/* <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
+          <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button> */}
+
           <span>${room.price.toLocaleString()} Tháng </span>
           <button onClick={() => {
             const token = localStorage.getItem("authToken");
@@ -262,6 +267,7 @@ function Result_Room() {
             }
             setShowRentalRequestForm(true);
           }}>Gửi yêu cầu thuê phòng</button>
+
         </div>
 
         <button className="report-button" onClick={() => {

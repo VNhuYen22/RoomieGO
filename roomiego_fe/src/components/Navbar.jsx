@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
-import SockJS from 'sockjs-client';
-import * as Stomp from 'stompjs';
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
 import "../styles/Navbar.css";
 import trash from "../assets/trash.png";
 // import chatbox from "../assets/chatbox.png";
@@ -23,10 +23,19 @@ function Navbar() {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("");
   const [notifications, setNotifications] = useState([]); // Danh sách thông báo động
+  const [userId, setUserId] = useState(null); // Store userId
   const location = useLocation();
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const stompClientRef = useRef(null);
+
+
+  // delete notification function
+const handleDeleteNotification = (indexToDelete) => {
+  setNotifications((prev) =>
+    prev.filter((_, index) => index !== indexToDelete)
+  );
+};
 
   // Function to translate notification type to Vietnamese
   const translateNotificationType = (type) => {
@@ -48,20 +57,10 @@ function Navbar() {
   };
 
 
-  // delete notification function
-const handleDeleteNotification = (indexToDelete) => {
-  setNotifications((prev) =>
-    prev.filter((_, index) => index !== indexToDelete)
-  );
-};
-
   // Fetch historical notifications
-  const fetchNotifications = async (userEmail) => {
+  const fetchNotifications = async (userId) => {
     const token = localStorage.getItem("authToken");
-    if (!token || !userEmail) {
-      console.log("Missing token or user email for notifications");
-      return;
-    }
+    if (!token || !userId) return;
 
     try {
       const response = await axios.get("http://localhost:8080/api/notifications", {
@@ -74,9 +73,9 @@ const handleDeleteNotification = (indexToDelete) => {
         message: notification.message || "No message",
         type: notification.type || "Unknown",
         userId: notification.userId || "Unknown",
-        timestamp: new Date().toLocaleTimeString(),
+        timestamp: new Date().toLocaleTimeString(), // You can adjust this based on the BE response
       }));
-      setNotifications(fetchedNotifications);
+      setNotifications(fetchedNotifications.reverse().slice(0, 5)); // Giới hạn số lượng thông báo hiển thị
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
@@ -85,11 +84,7 @@ const handleDeleteNotification = (indexToDelete) => {
   // Lấy thông tin người dùng và userId để đăng ký WebSocket
   const fetchUserProfile = async () => {
     const token = localStorage.getItem("authToken");
-    if (!token) {
-      console.log("No auth token found");
-      setIsLoggedIn(false);
-      return;
-    }
+    if (!token) return;
 
     try {
       const response = await axios.get("http://localhost:8080/renterowner/get-profile", {
@@ -99,41 +94,27 @@ const handleDeleteNotification = (indexToDelete) => {
         },
       });
 
-      if (response.data && response.data.statusCode === 200) {
-        const { fullName, role, email } = response.data;
-        console.log("User profile data:", response.data);
-        
-        if (!email) {
-          console.error("User email is missing from profile data");
-          setIsLoggedIn(false);
-          return;
-        }
+      const { user } = response.data;
+      const { fullName, role, id } = user;
+      console.log("Current user ID:", id);
+      setFullName(fullName);
+      setRole(role);
+      setUserId(id); // Save userId
+      setIsLoggedIn(true);
 
-        setFullName(fullName);
-        setRole(role);
-        setIsLoggedIn(true);
+      // Fetch historical notifications
+      fetchNotifications(id);
 
-        // Fetch historical notifications using email as identifier
-        await fetchNotifications(email);
-
-        // Kết nối WebSocket sau khi lấy profile
-        connectWebSocket(email);
-      } else {
-        console.error("Invalid response format:", response.data);
-        setIsLoggedIn(false);
-      }
+      // Kết nối WebSocket sau khi lấy userId
+      connectWebSocket(id);
     } catch (error) {
       console.error("Error fetching user profile:", error);
-      setIsLoggedIn(false);
     }
   };
 
   // Kết nối WebSocket và đăng ký topic thông báo
-  const connectWebSocket = (userEmail) => {
-    if (typeof window === "undefined" || !userEmail) {
-      console.log("Cannot connect to WebSocket: missing user email or window");
-      return;
-    }
+  const connectWebSocket = (userId) => {
+    if (typeof window === "undefined" || !userId) return;
 
     try {
       const socket = new SockJS("http://localhost:8080/api/socket");
@@ -145,20 +126,22 @@ const handleDeleteNotification = (indexToDelete) => {
           console.log("Connected to WebSocket with frame:", frame);
           stompClientRef.current = stompClient;
 
-          stompClient.subscribe(`/topic/notifications/${userEmail}`, (message) => {
+          stompClient.subscribe(`/topic/notifications/${userId}`, (message) => {
             console.log("Received raw message:", message);
             try {
               const notification = JSON.parse(message.body || "{}");
               console.log("Parsed notification:", notification);
               setNotifications((prev) => [
-                ...prev,
+               
                 {
                   message: notification.message || "No message",
                   type: notification.type || "Unknown",
                   userId: notification.userId || "Unknown",
                   timestamp: new Date().toLocaleTimeString(),
                 },
-              ]);
+                 ...prev,
+              ].slice(0, 5)); // Giới hạn số lượng thông báo hiển thị
+            
             } catch (parseError) {
               console.error("Error parsing WebSocket message:", parseError, "Body:", message.body);
             }
@@ -167,7 +150,7 @@ const handleDeleteNotification = (indexToDelete) => {
         (error) => {
           console.error("WebSocket connection error:", error);
           // Reconnection logic
-          setTimeout(() => connectWebSocket(userEmail), 5000);
+          setTimeout(() => connectWebSocket(userId), 5000); // Retry after 5 seconds
         }
       );
     } catch (error) {
@@ -186,6 +169,7 @@ const handleDeleteNotification = (indexToDelete) => {
     setIsLoggedIn(false);
     setFullName("");
     setNotifications([]);
+    setUserId(null);
     window.location.href = "http://localhost:5173/";
   };
 
@@ -226,13 +210,13 @@ const handleDeleteNotification = (indexToDelete) => {
         </Link>
       </div>
       <div className="rightside">
-        <Link to="/Room" className="nav-link">
+        <Link to="/Room">
           <img src={living} alt="" className="img-living" />
-          <span>Phòng trọ</span>
+          <a href="">Room</a>
         </Link>
-        <Link to="/Roommates" className="nav-link">
+        <Link to="/Roommates">
           <img src={friends} alt="" className="img-living" />
-          <span>Bạn cùng phòng</span>
+          <a href="">Roommates</a>
         </Link>
 
         {isLoggedIn ? (
@@ -245,6 +229,7 @@ const handleDeleteNotification = (indexToDelete) => {
               </div>
               {notificationOpen && (
                 <div className="notification-bell_dropdown">
+                  
                   <div className="notification-header">
                     <h3>Thông báo</h3>
                   </div>
@@ -262,10 +247,9 @@ const handleDeleteNotification = (indexToDelete) => {
                           </div>
                         </div>
                          <button
-                           className="notification-delete-button"
-                           onClick={() => handleDeleteNotification(index)}>
-                          <span className="notification-delete-icon"><img src={trash} alt="" /></span>
-                         </button>
+                       className="notification-delete-button"
+                        onClick={() => handleDeleteNotification(index)}>
+                          <span className="notification-delete-icon"><img src={trash} alt="" /></span> </button>
                       </div>
                     ))
                   ) : (
@@ -282,17 +266,17 @@ const handleDeleteNotification = (indexToDelete) => {
               </div>
               {dropdownOpen && (
                 <div className="dropdown-menu" ref={dropdownRef}>
-                  <span className="user-name">{fullName}</span>
+                  <a href="#">{fullName}</a>
                   <button onClick={() => window.location.href = "/profile"}>
-                    <img src={user2} alt="" /> Hồ sơ
+                    <img src={user2} alt="" /> Profile
                   </button>
-                  {(role === "OWNER" || role === "ADMIN") && (
+                {(role === "OWNER" || role === "ADMIN")  && (
                     <button onClick={() => window.location.href = "/dashboard"}>
-                      <img src={dashboard} alt="" className="dashboard-user" /> Bảng điều khiển
+                      <img src={dashboard} alt="" className="dashboard-user" /> Dashboard
                     </button>
                   )}
                   <button onClick={handleLogout}>
-                    <img src={logout} alt="" /> Đăng xuất
+                    <img src={logout} alt="" /> Logout
                   </button>
                 </div>
               )}
@@ -300,9 +284,9 @@ const handleDeleteNotification = (indexToDelete) => {
           </>
         ) : (
           <>
-            <Link to="/Register" className="nav-link">Đăng ký</Link>
-            <Link to="/Login" className="nav-link">
-              <button className="get-started-btn">Đăng Nhập</button>
+            <Link to="/Register">Sign Up</Link>
+            <Link to="/Login">
+              <button className="get-started-btn">Login</button>
             </Link>
           </>
         )}
