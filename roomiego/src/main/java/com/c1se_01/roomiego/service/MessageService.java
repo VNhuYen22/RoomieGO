@@ -14,7 +14,7 @@ public interface MessageService {
 
     void saveMessage(MessageDto messageDto);
 
-    List<Message> findByReceiverNameOrSenderName(String user1, String user2);
+    List<Message> findChatHistoryBetweenUsers(String user1, String user2);
 
     List<Message> findByType(MessageType type);
 }

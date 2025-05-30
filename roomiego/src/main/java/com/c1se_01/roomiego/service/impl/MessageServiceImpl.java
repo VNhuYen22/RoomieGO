@@ -116,8 +116,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findByReceiverNameOrSenderName(String user1, String user2) {
-        return messageRepository.findByReceiverNameOrSenderName(user1, user2);
+    public List<Message> findChatHistoryBetweenUsers(String user1, String user2) {
+        return messageRepository.findChatHistoryBetweenUsers(user1, user2);
     }
 
     @Override
