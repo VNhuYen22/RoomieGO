@@ -247,8 +247,6 @@ function Result_Room() {
           <span>{room.price.toLocaleString()}vnđ/Tháng </span>
           {/* <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
           <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button> */}
-
-          <span>${room.price.toLocaleString()} Tháng </span>
           <button onClick={() => {
             const token = localStorage.getItem("authToken");
             if (!token) {

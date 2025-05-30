@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center; /* căn giữa toàn bộ các thẻ */
-  gap: 49px; /* khoảng cách giữa các thẻ */
+  gap: 30px; /* khoảng cách giữa các thẻ */
   padding: 20px;
   max-width: 1283px;       /* giới hạn chiều rộng tối đa */
   margin: 0 auto;          /* căn giữa container */
@@ -47,7 +47,7 @@
 /* Card tổng thể */
 .card {
   height: 390px;
-  width: 13vw;              /* 260px ≈ 18vw trên màn hình desktop ~1440px */
+  width: 14vw;              /* 260px ≈ 18vw trên màn hình desktop ~1440px */
   border-radius: 2.5vh;      /* 20px ≈ 2.5vh nếu chiều cao màn hình khoảng 800px */
   background: #fff;
   box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.08); /* chuyển shadow theo vh cho đồng nhất */

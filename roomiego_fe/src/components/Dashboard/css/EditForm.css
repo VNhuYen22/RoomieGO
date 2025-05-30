@@ -92,6 +92,39 @@ button[disabled] {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+ 
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.form-select {
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  transition: border 0.3s, box-shadow 0.3s;
+   background-color: white;
+}
+
+.form-select:focus {
+  border-color: #409eff;
+  box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
+}
+
+.form-select option {
+  padding: 6px;
+}
 
 @keyframes fadeIn {
   from {
