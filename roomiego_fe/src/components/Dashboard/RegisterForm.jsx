@@ -72,7 +72,7 @@ const RegisterForm = ({ onClose, onRegister }) => {
       form.append("description", formData.description);
       form.append("isRoomAvailable", formData.isRoomAvailable);
       
-      formData.imageFiles.forEach(file => {
+        formData.imageFiles.forEach(file => {
         form.append("images", file);
       });
   

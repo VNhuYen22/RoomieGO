@@ -348,3 +348,32 @@
 .dropdown-menu button:hover img {
   filter: brightness(0.8); /* Làm tối hình ảnh khi hover */
 }
+
+.message-icon-navbar {
+  margin: 0 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.message-icon-navbar:hover {
+  background: #f0f0f0;
+}
+
+.message-icon-navbar img,
+.message-icon-navbar svg {
+  width: 40px;
+  height: 40px;
+  filter: grayscale(100%);
+  transition: filter 0.2s;
+}
+
+.message-icon-navbar:hover img,
+.message-icon-navbar:hover svg {
+  filter: grayscale(0%) brightness(0.2);
+}

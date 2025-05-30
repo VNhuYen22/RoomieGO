@@ -1,5 +1,6 @@
 package com.c1se_01.roomiego.dto;
 
+import com.c1se_01.roomiego.enums.MessageType;
 import com.c1se_01.roomiego.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +23,6 @@ public class MessageDto {
     private Status status;
 
     private String mediaType;
+
+    private MessageType type;
 }

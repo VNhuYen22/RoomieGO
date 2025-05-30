@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import SearchBar from "../components/other/SearchBar";
@@ -8,25 +8,25 @@ import axios from "axios";
 var stompClient = null;
 
 const ChatPage2 = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [receiver, setReceiver] = useState("");
+  const location = useLocation();
+  const [selectedUser, setSelectedUser] = useState(location.state?.selectedUser || null);
+  const [receiver, setReceiver] = useState(location.state?.selectedUser?.email || "");
   const [message, setMessage] = useState("");
   const [media, setMedia] = useState("");
-  const [tab, setTab] = useState("CHATROOM");
+  const [tab, setTab] = useState(location.state?.selectedUser?.email || "CHATROOM");
   const [publicChats, setPublicChats] = useState([]);
   const [privateChats, setPrivateChats] = useState(new Map());
+  const [chatUsers, setChatUsers] = useState(new Map());
   const [username] = useState(localStorage.getItem("chat-username"));
   const navigate = useNavigate();
   const connected = useRef(false);
-
-  // if (!username.trim()) {
-  //   navigate("/login");
-  // }
 
   useEffect(() => {
     if (!connected.current) {
       connect();
     }
+    // Tải lịch sử chat public khi component mount
+    fetchPublicChatHistory();
     return () => {
       if (stompClient) {
         stompClient.disconnect();
@@ -35,31 +35,65 @@ const ChatPage2 = () => {
     };
   }, []);
 
-  const handlePrivateMessage = (user) => {
-    setSelectedUser(user);
-    setReceiver(user.username);
+  useEffect(() => {
+    if (location.state?.selectedUser) {
+      const user = location.state.selectedUser;
+      if (!user.email) {
+        console.error("Selected user has no email");
+        return;
+      }
+      
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No authentication token found");
+        navigate("/login");
+        return;
+      }
 
-    if (!privateChats.has(user.username)) {
-      privateChats.set(user.username, []);
+      handlePrivateMessage(user);
+      if (username) {
+        fetchChatHistory(username, user.email);
+      }
+    }
+  }, [location.state?.selectedUser]);
+
+  const handlePrivateMessage = (user) => {
+    if (!user || !user.email) {
+      console.error("Invalid user data:", user);
+      return;
+    }
+
+    setSelectedUser(user);
+    setReceiver(user.email);
+    setTab(user.email);
+
+    setChatUsers(prev => {
+      const newMap = new Map(prev);
+      newMap.set(user.email, user);
+      return newMap;
+    });
+
+    if (!privateChats.has(user.email)) {
+      privateChats.set(user.email, []);
       setPrivateChats(new Map(privateChats));
+      if (username) {
+        fetchChatHistory(username, user.email);
+      }
     }
   };
 
   const onMessageReceived = (payload) => {
     const payloadData = JSON.parse(payload.body);
-    console.log("Public message received:", payloadData);
     switch (payloadData.status) {
       case "JOIN":
-        if (payloadData.senderName !== username) {
-          if (!privateChats.get(payloadData.senderName)) {
-            privateChats.set(payloadData.senderName, []);
-            setPrivateChats(new Map(privateChats));
-          }
+        if (!privateChats.has(payloadData.senderName)) {
+          privateChats.set(payloadData.senderName, []);
+          setPrivateChats(new Map(privateChats));
         }
         break;
       case "LEAVE":
         if (payloadData.senderName !== username) {
-          if (privateChats.get(payloadData.senderName)) {
+          if (privateChats.has(payloadData.senderName)) {
             privateChats.delete(payloadData.senderName);
             setPrivateChats(new Map(privateChats));
           }
@@ -69,28 +103,33 @@ const ChatPage2 = () => {
         setPublicChats((prev) => [...prev, payloadData]);
         break;
       default:
-        console.warn("Unknown status received:", payloadData.status);
+        break;
     }
   };
 
   const onPrivateMessage = (payload) => {
+    console.log("Received private message:", payload);
     const payloadData = JSON.parse(payload.body);
-    console.log("Private message received:", payloadData);
-    if (privateChats.has(payloadData.senderName)) {
-      privateChats.get(payloadData.senderName).push(payloadData);
-    } else {
-      privateChats.set(payloadData.senderName, [payloadData]);
+    
+    if (payloadData.status === "JOIN") {
+      if (!privateChats.has(payloadData.senderName)) {
+        privateChats.set(payloadData.senderName, []);
+      }
+    } else if (payloadData.status === "MESSAGE") {
+      if (!privateChats.has(payloadData.senderName)) {
+        privateChats.set(payloadData.senderName, []);
+      }
+      const messages = privateChats.get(payloadData.senderName);
+      messages.push(payloadData);
+      privateChats.set(payloadData.senderName, messages);
+      setPrivateChats(new Map(privateChats));
     }
-    setPrivateChats(new Map(privateChats));
   };
 
   const onConnect = () => {
-    console.log("Connected to WebSocket");
     connected.current = true;
-
     stompClient.subscribe("/chatroom/public", onMessageReceived);
     stompClient.subscribe(`/user/${username}/private`, onPrivateMessage);
-
     userJoin();
   };
 
@@ -109,7 +148,6 @@ const ChatPage2 = () => {
       senderName: username,
       status: "JOIN",
     };
-
     stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
   };
 
@@ -118,7 +156,6 @@ const ChatPage2 = () => {
       senderName: username,
       status: "LEAVE",
     };
-
     stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
   };
 
@@ -128,7 +165,6 @@ const ChatPage2 = () => {
     navigate("/login");
   };
 
-  // Handle file conversion to base64
   const base64ConversionForImages = (e) => {
     if (e.target.files[0]) {
       getBase64(e.target.files[0]);
@@ -142,65 +178,109 @@ const ChatPage2 = () => {
     reader.onerror = (error) => console.error("Error converting file:", error);
   };
 
-  const sendMessage = () => {
-    if (message.trim().length > 0 || media) {
-      stompClient.send(
-        "/app/message",
-        {},
-        JSON.stringify({
-          senderName: username,
-          status: "MESSAGE",
-          media: media,
-          message: message,
-        })
-      );
-      setMessage("");
-      setMedia("");
-    }
+  const generateConversationId = (user1Id, user2Id) => {
+    const sortedIds = [user1Id, user2Id].sort();
+    return `conv_${sortedIds.join('_')}`;
   };
 
-  const sendPrivate = () => {
-    if (message.trim().length > 0 && receiver) {
-      let chatMessage = {
+  const sendMessage = async () => {
+    if (message.trim().length > 0 || media) {
+      const senderId = localStorage.getItem("userId");
+      const chatMessage = {
+        senderId: senderId,
         senderName: username,
-        receiverName: receiver,
+        receiverName: null,
         message: message,
         media: media,
         status: "MESSAGE",
+        type: "PUBLIC",
+        conversationId: "public_chat"
       };
-
-      privateChats.get(receiver).push(chatMessage);
-      setPrivateChats(new Map(privateChats));
-
-      stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
-
+      stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
       setMessage("");
       setMedia("");
     }
   };
 
-  const tabReceiverSet = (name) => {
-    setReceiver(name);
-    setTab(name);
+  const sendPrivate = async () => {
+    if (message.trim().length > 0 && receiver && selectedUser) {
+      const senderId = localStorage.getItem("userId");
+      const chatMessage = {
+        senderName: username,
+        senderId: senderId,
+        receiverName: selectedUser.email,
+        message: message,
+        media: media,
+        status: "MESSAGE",
+        type: "PRIVATE",
+        receiverId: selectedUser.id,
+        conversationId: generateConversationId(senderId, selectedUser.id)
+      };
+
+      if (!privateChats.has(receiver)) {
+        privateChats.set(receiver, []);
+      }
+      privateChats.get(receiver).push(chatMessage);
+      setPrivateChats(new Map(privateChats));
+      stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
+      setMessage("");
+      setMedia("");
+    }
   };
 
   const fetchChatHistory = async (user1, user2) => {
+    if (!user1 || !user2) return;
+
     try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No authentication token found");
+        return;
+      }
+
       const response = await axios.get(
-        `http://localhost:8080/api/messages/history/${user1}/${user2}`
+        `http://localhost:8080/api/messages/history/${user1}/${user2}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }
       );
 
       if (response.status === 200) {
-        // Assuming response.data is an array of messages
         setPrivateChats((prevChats) => {
           prevChats.set(user2, response.data);
           return new Map(prevChats);
         });
-      } else {
-        console.error("Failed to fetch chat history:", response.status);
       }
     } catch (error) {
       console.error("Error fetching chat history:", error);
+    }
+  };
+
+  const fetchPublicChatHistory = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        console.error("No authentication token found");
+        return;
+      }
+
+      const response = await axios.get(
+        "http://localhost:8080/api/messages/history/public",
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      setPublicChats(response.data);
+    } catch (error) {
+      console.error("Error fetching public chat history:", error);
     }
   };
 
@@ -208,35 +288,97 @@ const ChatPage2 = () => {
     <div className="flex items-center justify-center h-screen w-[100%]">
       <div className="flex w-full h-full">
         {/* Member List */}
-        <div className="flex flex-col p-3 w-[200px] h-[551px] bg-transparent">
+        <div className="flex flex-col p-3 w-[250px] h-[551px] bg-white border-r">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold mb-2">Danh sách chat</h3>
+            <div className="text-sm text-gray-600">Đang đăng nhập: {username}</div>
+          </div>
+          
           <ul className="list-none space-y-2">
             <li
-              key={"o"}
-              className={`p-2 cursor-pointer rounded ${
-                tab === "CHATROOM" ? "bg-blue-500 text-white" : "bg-gray-200"
+              key={"chatroom"}
+              className={`p-3 cursor-pointer rounded-lg transition-colors ${
+                tab === "CHATROOM" 
+                  ? "bg-blue-500 text-white" 
+                  : "bg-gray-100 hover:bg-gray-200"
               }`}
-              onClick={() => setTab("CHATROOM")}
+              onClick={() => {
+                setTab("CHATROOM");
+                setReceiver("");
+                setSelectedUser(null);
+              }}
             >
-              <span>Chat Room</span>
+              <div className="flex items-center">
+                <div className="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center text-white mr-3">
+                  <span className="text-lg">#</span>
+                </div>
+                <div>
+                  <div className="font-medium">Chat Room</div>
+                  <div className="text-xs opacity-75">Phòng chat chung</div>
+                </div>
+              </div>
             </li>
-            {[...privateChats.keys()].map((name, index) => (
-              <li
-                key={index}
-                onClick={() => {
-                  tabReceiverSet(name);
-                  fetchChatHistory(username, name); // Fetch chat history when clicking on user tab
-                }}
-                className={`p-2 cursor-pointer rounded ${
-                  tab === name ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-              >
-                <span className="text-lg">{name}</span>
-              </li>
-            ))}
+
+            {[...privateChats.keys()].map((email) => {
+              const user = chatUsers.get(email);
+              const lastMessage = privateChats.get(email)?.slice(-1)[0];
+
+              return (
+                <li
+                  key={email}
+                  onClick={() => {
+                    const currentUser = chatUsers.get(email) || { email: email };
+                    handlePrivateMessage(currentUser);
+                  }}
+                  className={`p-3 cursor-pointer rounded-lg transition-colors ${
+                    tab === email 
+                      ? "bg-blue-500 text-white" 
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+                      <img
+                        src={user?.avatarUrl || 'https://randomuser.me/api/portraits/lego/1.jpg'}
+                        alt={user?.fullName || email}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">
+                        {user?.fullName || email}
+                      </div>
+                      <div className="text-xs opacity-75 truncate">
+                        {lastMessage?.message || 'Chưa có tin nhắn'}
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
         <div className="flex flex-col w-[50%] mt-3">
+          {/* Chat header */}
+          {tab !== "CHATROOM" && selectedUser && (
+            <div className="p-3 bg-white border-b flex items-center">
+              <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+                <img
+                  src={selectedUser.avatarUrl || 'https://randomuser.me/api/portraits/lego/1.jpg'}
+                  alt={selectedUser.fullName}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <div className="font-medium">{selectedUser.fullName}</div>
+                <div className="text-sm text-gray-600">
+                  {selectedUser.job || 'Chưa cập nhật nghề nghiệp'}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Chat Box */}
           <div
             className="p-3 flex-grow overflow-hidden bg-gray-300 border border-green-500 flex flex-col space-y-2 rounded-md"
@@ -290,7 +432,7 @@ const ChatPage2 = () => {
                     </div>
                   </div>
                 ))
-              : privateChats.get(tab).map((message, index) => (
+              : privateChats.get(tab)?.map((message, index) => (
                   <div
                     className={`flex ${
                       message.senderName !== username

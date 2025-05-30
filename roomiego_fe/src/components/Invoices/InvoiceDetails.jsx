@@ -1,120 +1,164 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import moment from "moment"; // Import moment.js
 import "./Storage.css"; // Import CSS styles for the component
 
 /**
- * Component hiển thị chi tiết hóa đơn.
+ * Component hiển thị chi tiết hợp đồng.
  * 
- * @param {string} invoiceId - ID của hóa đơn cần hiển thị.
+ * @param {string} invoiceId - ID của hợp đồng cần hiển thị.
  * @param {function} onClose - Hàm đóng modal.
- * @param {array} invoices - Danh sách hóa đơn.
  */
-const InvoiceDetails = ({ invoiceId, onClose, invoices }) => {
-  const [invoice, setInvoice] = useState(null); // Trạng thái hóa đơn hiện tại
-  const [loading, setLoading] = useState(true); // Trạng thái đang tải
+const InvoiceDetails = ({ invoiceId, onClose }) => {
+  const [invoice, setInvoice] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [tenantInfo, setTenantInfo] = useState(null);
+  const [roomInfo, setRoomInfo] = useState(null);
 
   useEffect(() => {
-    console.log("Fetching details for Invoice ID:", invoiceId);
-
-    /**
-     * Hàm lấy chi tiết hóa đơn dựa trên ID.
-     * 
-     * @param {string} id - ID của hóa đơn.
-     */
     const fetchInvoiceDetails = async (id) => {
       setLoading(true);
+      try {
+        // Fetch contract details
+        const response = await fetch(`http://localhost:8080/api/contracts/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
 
-      // Tìm hóa đơn trong danh sách invoices dựa trên invoiceId
-      // **Ghi chú:** Ở đây bạn nên gọi API để lấy dữ liệu hóa đơn nếu không có sẵn trong danh sách invoices.
-      // Ví dụ:
-      // const response = await fetch(`https://example.com/api/invoices/${id}`);
-      // const foundInvoice = await response.json();
-      const foundInvoice = invoices.find((invoice) => invoice.id === id);
+        if (!response.ok) {
+          throw new Error('Failed to fetch contract details');
+        }
 
-      if (foundInvoice) {
-        setInvoice(foundInvoice);
-      } else {
-        // Nếu không tìm thấy hóa đơn, hiển thị thông báo lỗi
-        console.log("Invoice not found");
-        setInvoice(null);
+        const data = await response.json();
+        console.log("Contract details:", data);
+        // Try to get the contract object from data.data, data.contract, or data
+        const contract = data.data || data.contract || data;
+        setInvoice(contract);
+
+        // Fetch tenant information
+        if (contract.tenantId) {
+          const tenantResponse = await fetch(`http://localhost:8080/owner/get-users/${contract.tenantId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          });
+          if (tenantResponse.ok) {
+            const tenantData = await tenantResponse.json();
+            if (tenantData.usersList && tenantData.usersList.length > 0) {
+              setTenantInfo(tenantData.usersList[0]);
+            }
+          }
+        }
+
+        // Fetch room information
+        if (contract.roomId) {
+          const roomResponse = await fetch(`http://localhost:8080/api/rooms/${contract.roomId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          });
+          if (roomResponse.ok) {
+            const roomData = await roomResponse.json();
+            if (roomData.data) {
+              setRoomInfo(roomData.data);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching invoice details:', error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
-    fetchInvoiceDetails(invoiceId);
-  }, [invoiceId, invoices]);
+    if (invoiceId) {
+      fetchInvoiceDetails(invoiceId);
+    }
+  }, [invoiceId]);
 
   if (loading) {
-    return <p>Đang tải thông tin chi tiết hóa đơn...</p>;
+    return (
+      <div className="modal1">
+        <div className="modal-content1">
+          <p>Đang tải thông tin chi tiết hợp đồng...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!invoice) {
-    return <p>Không thể tải thông tin chi tiết hóa đơn.</p>;
+    return (
+      <div className="modal1">
+        <div className="modal-content1">
+          <p>Không thể tải thông tin chi tiết hợp đồng.</p>
+          <button type="button" onClick={onClose}>Đóng</button>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="modal1">
       <div className="modal-content1">
-        <span className="close" onClick={onClose}>
-          &times;
-        </span>
-        <h2>Chi Tiết Hóa Đơn</h2>
+        <span className="close" onClick={onClose}>&times;</span>
+        <h2>Chi Tiết Hợp Đồng</h2>
 
-        <div className="invoice-header">
-          <p>Địa chỉ: {invoice.address || "Chưa nhập địa chỉ"}</p>
-          <p>Ngày lập: {moment(invoice.date).format("DD/MM/YYYY") || "Chưa chọn ngày"}</p>
-        </div>
+        <div className="invoice-container">
+          <div className="invoice-header">
+            <p>CHI TIẾT HỢP ĐỒNG</p>
+            {roomInfo && <p>Phòng: {roomInfo.title}</p>}
+          </div>
 
-        <div className="invoice-details">
-          <p>
-            <strong>Người Thuê:</strong> {invoice.render}
-          </p>
-          <p>
-            <strong>Người cho thuê:</strong> {invoice.owner}
-          </p>
-          <p>
-            <strong>Địa chỉ:</strong> {invoice.address}
-          </p>
-          <p>
-            <strong>Mã số thuế:</strong> {invoice.taxCode || "Không có"}
-          </p>
-          <p>
-            <strong>Nội dung:</strong> {invoice.subject}
-          </p>
-          <p>
-            <strong>Số tiền:</strong> {invoice.amount}
-          </p>
-          <div className="signature-section">
-            <div className="signature">
-              <p>Người thuê</p>
-              {invoice.signatureRender ? (
-                <img
-                  src={invoice.signatureRender}
-                  alt="Chữ ký người thuê"
-                  style={{ width: "150px" }}
-                />
-              ) : (
-                <p>(Ký và ghi rõ họ tên)</p>
-              )}
-            </div>
-            <div className="signature">
-              <p>Người cho thuê</p>
-              {invoice.signatureOwner ? (
-                <img
-                  src={invoice.signatureOwner}
-                  alt="Chữ ký người cho thuê"
-                  style={{ width: "150px" }}
-                />
-              ) : (
-                <p>(Ký và ghi rõ họ tên)</p>
-              )}
+          <div className="invoice-section">
+            <h3>Thông tin phòng</h3>
+            {roomInfo ? (
+              <div className="room-info">
+                <p><strong>ID Phòng:</strong> {roomInfo.id}</p>
+                <p><strong>Địa chỉ:</strong> {roomInfo.addressDetails}</p>
+                <p><strong>Giá phòng:</strong> {roomInfo.price?.toLocaleString()} VNĐ/tháng</p>
+              </div>
+            ) : (
+              <p>Đang tải thông tin phòng...</p>
+            )}
+          </div>
+
+          <div className="invoice-section">
+            <h3>Thông tin người thuê</h3>
+            {tenantInfo ? (
+              <div className="tenant-info">
+                {/* <p><strong>ID Người thuê:</strong> {tenantInfo.id}</p> */}
+                <p><strong>Tên người thuê:</strong> {tenantInfo.fullName}</p>
+                <p><strong>Email:</strong> {tenantInfo.email}</p>
+                <p><strong>Số điện thoại:</strong> {tenantInfo.phone}</p>
+              </div>
+            ) : (
+              <p>Đang tải thông tin người thuê...</p>
+            )}
+          </div>
+
+          <div className="invoice-section">
+            <h3>Thông tin hợp đồng</h3>
+            <div className="contract-info">
+              <p><strong>Ngày bắt đầu:</strong> {invoice.startDate ? moment(invoice.startDate).format("DD/MM/YYYY") : ""}</p>
+              <p><strong>Ngày kết thúc:</strong> {invoice.endDate ? moment(invoice.endDate).format("DD/MM/YYYY") : ""}</p>
+              <p><strong>Giá thuê mỗi tháng:</strong> {invoice.pricePerMonth ? invoice.pricePerMonth.toLocaleString() : ""} VNĐ</p>
+              <p><strong>Trạng thái:</strong> {
+                invoice.status === "ACTIVE" ? "Đang hoạt động" :
+                invoice.status === "EXPIRED" ? "Đã hết hạn" :
+                invoice.status === "CANCELLED" ? "Đã hủy" :
+                invoice.status === "REJECTED" ? "Đã từ chối" :
+                invoice.status === "PENDING" ? "Đang chờ" :
+                invoice.status
+              }</p>
             </div>
           </div>
+
+          <div className="button-group">
+            <button type="button" className="close-button" onClick={onClose}>
+              Đóng
+            </button>
+          </div>
         </div>
-        <button type="button" onClick={onClose}>
-          Đóng
-        </button>
       </div>
     </div>
   );

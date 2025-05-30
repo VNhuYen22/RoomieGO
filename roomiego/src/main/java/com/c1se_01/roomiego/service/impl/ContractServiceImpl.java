@@ -12,6 +12,7 @@ import com.c1se_01.roomiego.repository.RoomRepository;
 import com.c1se_01.roomiego.repository.UserRepository;
 import com.c1se_01.roomiego.service.ContractService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +71,22 @@ public class ContractServiceImpl implements ContractService {
         return contracts.stream()
                 .map(contractMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteContract(Long contractId) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hợp đồng với id: " + contractId));
+        
+        // Kiểm tra quyền xóa hợp đồng (chỉ chủ phòng hoặc người thuê mới được xóa)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        
+        if (!currentUser.getId().equals(contract.getRoom().getOwner().getId()) && 
+            !currentUser.getId().equals(contract.getTenant().getId())) {
+            throw new RuntimeException("Bạn không có quyền xóa hợp đồng này");
+        }
+        
+        contractRepository.delete(contract);
     }
 }

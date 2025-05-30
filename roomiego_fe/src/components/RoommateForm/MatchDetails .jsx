@@ -1,10 +1,12 @@
 // MatchDetails.jsx
 // import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './RoommateForm.css'; // Import CSS
+import { FaComments } from 'react-icons/fa'; // Import message icon
 
 const MatchDetails = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const match = location.state?.match;
     
     console.log("Match data received:", match); // Debug log
@@ -22,13 +24,113 @@ const MatchDetails = () => {
     // Get up to 5 recommendations
     const recommendations = Array.isArray(match) ? match.slice(0, 5) : [match];
 
+    const handleCardClick = async (recommendation) => {
+        // Log dữ liệu recommendation để debug
+        console.log("Recommendation data:", recommendation);
+
+        let userInfo = {
+            id: recommendation.user_id || recommendation.id,
+            fullName: recommendation.fullName || recommendation.username,
+            avatarUrl: recommendation.avatarUrl || 'https://randomuser.me/api/portraits/lego/1.jpg',
+            phone: recommendation.phone,
+            job: recommendation.job,
+            email: recommendation.email || recommendation.username || '', // fallback
+            username: recommendation.username || recommendation.email || '', // Thêm username
+        };
+
+        // Nếu không có email hoặc username, fetch thêm từ API
+        if ((!userInfo.email || !userInfo.username) && userInfo.id) {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    throw new Error('No authentication token found');
+                }
+
+                const res = await fetch(`http://localhost:8080/owner/get-users/${userInfo.id}`, {
+                    method: 'GET',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                console.log('Fetch status:', res.status);
+                
+                if (res.status === 403) {
+                    throw new Error('Unauthorized access. Please login again.');
+                }
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                const data = await res.json();
+                console.log('API user detail:', data);
+                
+                // Kiểm tra và lấy thông tin user từ usersList
+                if (data.usersList && data.usersList.length > 0) {
+                    const userDetail = data.usersList[0];
+                    // Cập nhật userInfo với dữ liệu từ API
+                    userInfo = { 
+                        ...userInfo,
+                        id: userDetail.id || userInfo.id,
+                        fullName: userDetail.fullName || userDetail.username || userInfo.fullName,
+                        email: userDetail.email || userDetail.username || '',
+                        username: userDetail.username || userDetail.email || '', // Thêm username
+                        avatarUrl: userDetail.avatarUrl || userInfo.avatarUrl,
+                        phone: userDetail.phone || userInfo.phone,
+                        job: userDetail.job || userInfo.job
+                    };
+                } else {
+                    throw new Error('No user data found');
+                }
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+                if (error.message.includes('Unauthorized')) {
+                    localStorage.removeItem('authToken');
+                    window.location.href = '/Login';
+                } else {
+                    alert('Không thể lấy thông tin người dùng! Vui lòng thử lại sau.');
+                }
+                return;
+            }
+        }
+
+        // Kiểm tra các trường bắt buộc trước khi navigate
+        if (!userInfo.id || !userInfo.username) {
+            alert('Không thể chat vì thiếu thông tin người dùng!');
+            return;
+        }
+
+        // Log để debug
+        console.log('Navigating to chat with user:', userInfo);
+
+        navigate('/chat', {
+            state: {
+                selectedUser: {
+                    id: userInfo.id,
+                    fullName: userInfo.fullName,
+                    email: userInfo.email,
+                    username: userInfo.username, // Thêm username
+                    avatarUrl: userInfo.avatarUrl,
+                    phone: userInfo.phone,
+                    job: userInfo.job
+                }
+            }
+        });
+    };
+
     return (
         <div className="roommate-form-container">
             <div className="match-details-container card-listing-container">
                 <h2>Danh sách người phù hợp</h2>
                 <div className="card-listing-grid">
                     {recommendations.map((recommendation, index) => (
-                        <div key={index} className="match-card">
+                        <div 
+                            key={recommendation.id || index} 
+                            className="match-card"
+                        >
                             <div className="match-card-avatar-wrapper">
                                 <img
                                     className="match-card-avatar"
@@ -36,8 +138,18 @@ const MatchDetails = () => {
                                     alt={recommendation.fullName || 'Avatar'}
                                 />
                             </div>
-                            <div className="match-card-header">
-                                <span className="match-card-name">{recommendation.fullName || recommendation.username || `Người phù hợp #${index + 1}`}</span>
+                            <div className="match-card-header" style={{ width: '100%' }}>
+                                <span className="match-card-name" style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {recommendation.fullName || recommendation.username || `Người phù hợp #${index + 1}`}
+                                </span>
+                                <button 
+                                    className="message-button"
+                                    onClick={() => handleCardClick(recommendation)}
+                                    title="Nhắn tin"
+                                    style={{ marginLeft: 8 }}
+                                >
+                                    <FaComments size={24} className="message-icon" />
+                                </button>
                             </div>
                             <div className="match-card-job">{recommendation.job || 'Chưa cập nhật nghề nghiệp'}</div>
                             <div className="match-card-field"><b>Số điện thoại:</b> {recommendation.phone || '--'}</div>

@@ -103,7 +103,7 @@ const App = () => {
          
         {/* Add other routes here */}
       </Routes>
-       <ToastContainer position="top-right" autoClose={5000} />
+       <ToastContainer position="top-right" autoClose={3000} />
       {/* Conditionally render Footer */}
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
       <Toaster />

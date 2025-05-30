@@ -14,6 +14,7 @@ import friends from "../assets/high-five.png";
 import living from "../assets/living.png";
 // import home_icon from "../assets/house.png";
 import bell from "../assets/bell.png";
+import messageIcon from "../assets/message-icon.png";
 
 function Navbar() {
   
@@ -226,6 +227,7 @@ const handleDeleteNotification = (indexToDelete) => {
         </Link>
       </div>
       <div className="rightside">
+        
         <Link to="/Room" className="nav-link">
           <img src={living} alt="" className="img-living" />
           <span>Phòng trọ</span>
@@ -234,7 +236,9 @@ const handleDeleteNotification = (indexToDelete) => {
           <img src={friends} alt="" className="img-living" />
           <span>Bạn cùng phòng</span>
         </Link>
-
+          <div className="message-icon-navbar" onClick={() => window.location.href = '/chat'}>
+                <img src={messageIcon} alt="Chat" />
+          </div>
         {isLoggedIn ? (
           <>
             {/* Bell notification */}
@@ -274,6 +278,9 @@ const handleDeleteNotification = (indexToDelete) => {
                 </div>
               )}
             </div>
+
+            {/* Message icon */}
+          
 
             {/* User menu */}
             <div className="user-menu">

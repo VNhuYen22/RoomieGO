@@ -6,6 +6,7 @@ import com.c1se_01.roomiego.model.Message;
 import com.c1se_01.roomiego.model.User;
 import com.c1se_01.roomiego.service.MessageService;
 import com.c1se_01.roomiego.service.UserService;
+import com.c1se_01.roomiego.enums.MessageType;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,11 +31,6 @@ public class MessageController {
         return ResponseEntity.ok(messageService.sendMessage(request));
     }
 
-//    @GetMapping("/conversation/{conversationId}")
-//    public ResponseEntity<List<Message>> getMessages(@PathVariable Long conversationId) {
-//        return ResponseEntity.ok(messageService.getMessages(conversationId));
-//    }
-
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
@@ -45,30 +41,14 @@ public class MessageController {
     public ResponseEntity<User> findByUsername(@RequestParam String username) {
         User user = userService.findByFullName(username);
         if (user == null) {
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(user);
     }
 
-    @MessageMapping("/message")
-    @SendTo("/chatroom/public")
-    public MessageDto receiveMessage(MessageDto messageDto) throws InterruptedException {
-        messageService.saveMessage(messageDto);
-
-        // Simulate delay for demonstration (optional)
-        Thread.sleep(1000);
-
-        return messageDto;
-    }
-
-    @MessageMapping("/private-message")
-    public void privateMessage(MessageDto messageDto) {
-        String receiver = messageDto.getReceiverName();
-        simpMessagingTemplate.convertAndSendToUser(receiver, "/private", messageDto);
-
-        // Save private message to the database
-        messageService.saveMessage(messageDto);
+    @GetMapping("/api/messages/history/public")
+    public ResponseEntity<List<Message>> getPublicMessages() {
+        return ResponseEntity.ok(messageService.findByType(com.c1se_01.roomiego.enums.MessageType.PUBLIC));
     }
 
     @GetMapping("/api/messages/history/{user1}/{user2}")
@@ -78,5 +58,20 @@ public class MessageController {
     ) {
         List<Message> messages = messageService.findByReceiverNameOrSenderName(user1, user2);
         return ResponseEntity.ok(messages);
+    }
+
+    @MessageMapping("/message")
+    @SendTo("/chatroom/public")
+    public MessageDto receiveMessage(MessageDto messageDto) throws InterruptedException {
+        messageService.saveMessage(messageDto);
+        Thread.sleep(1000);
+        return messageDto;
+    }
+
+    @MessageMapping("/private-message")
+    public void privateMessage(MessageDto messageDto) {
+        String receiver = messageDto.getReceiverName();
+        simpMessagingTemplate.convertAndSendToUser(receiver, "/private", messageDto);
+        messageService.saveMessage(messageDto);
     }
 }
