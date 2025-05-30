@@ -17,14 +17,43 @@
   margin-bottom: 10px;
  
 }
+ /* tim kiem theo quan  */
+.district_find img{
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
+}
+.district-list {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.district-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.district-list li {
+  padding: 5px 0;
+  cursor: pointer;
+}
+.district-list li:hover {
+  background-color: #e5e7eb;
+}
+
 /* Thẻ chính */
+/* Card tổng thể */
 .card {
-  width: 260px;
-  border-radius: 20px;
+  height: 390px;
+  width: 13vw;              /* 260px ≈ 18vw trên màn hình desktop ~1440px */
+  border-radius: 2.5vh;      /* 20px ≈ 2.5vh nếu chiều cao màn hình khoảng 800px */
   background: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.08); /* chuyển shadow theo vh cho đồng nhất */
   overflow: hidden;
   transition: all 0.3s ease;
+  margin-bottom: 30px;
 }
 
 .card:hover {
@@ -38,7 +67,7 @@
   object-fit: cover;
 }
 
-/* Nội dung bên trong */
+/* Nội dung bên trong thẻ */
 .card-body {
   padding: 14px;
   display: flex;
@@ -46,7 +75,7 @@
   gap: 10px;
 }
 
-/* Tiêu đề + trạng thái */
+/* Phần trên cùng: tiêu đề + trạng thái */
 .card-top {
   display: flex;
   justify-content: space-between;
@@ -84,14 +113,14 @@
   gap: 6px;
 }
 
-/* Các chỉ số: diện tích, giường, tắm */
+/* Các chỉ số: diện tích, giường, phòng tắm */
 .card-features {
   display: flex;
   justify-content: space-between;
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
   padding: 8px 0;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .card-feature-item {
@@ -100,7 +129,7 @@
   gap: 6px;
 }
 
-/* Người liên hệ */
+/* Người liên hệ (footer) */
 .card-footer {
   display: flex;
   align-items: center;
@@ -123,8 +152,10 @@
   font-size: 12px;
   color: #6b7280;
 }
+
+/* Điều chỉnh vị trí slider nếu cần */
 .swiper-container {
-  margin-top: -10rem; /* kéo lên gần hơn */
+  margin-top: -10rem; /* Kéo toàn bộ swiper lên gần hơn với phần trên */
 }
 
 
@@ -133,6 +164,12 @@
   margin-top: 2rem;
   width: 100%;
   height: 70vh; /* Điều chỉnh độ cao của banner */
+}
+.swiper-container1 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo hình ảnh phủ đầy không gian */
+  border-radius: 10px; /* Bo góc cho hình ảnh */
 }
 /* Tùy chỉnh nút điều hướng */
 .swiper-button-prev, 
@@ -209,9 +246,9 @@
 }
 
 .button-tab_city.active {
-  background-color: #2e2e2e;
+  background-color: #007bff;
   color: white;
-  border-color: #2e2e2e;
+  border-color: white;
 }
 .card-feature-item img{
   display: inline-block;
