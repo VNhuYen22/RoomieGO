@@ -15,25 +15,37 @@ const RegisterForm = ({ onClose, onRegister }) => {
     district: "",
     ward: "",
     street: "",
-    imageFile: null,
+    imageFiles: [],
     description: "",
     isRoomAvailable: true,
   });
 
+  const [imagePreviews, setImagePreviews] = useState([]);
+
   const handleChange = (e) => {
     const { name, value, files, type, checked } = e.target;
     
-    if (name === "image" && files.length > 0) {
+    if (name === "images" && files.length > 0) {
+      const newImageFiles = Array.from(files);
       setFormData((prev) => ({
         ...prev,
-        imageFile: files[0],
+        imageFiles: newImageFiles,
       }));
+
+      const newPreviews = newImageFiles.map(file => URL.createObjectURL(file));
+      setImagePreviews(newPreviews);
     } else if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+
+  React.useEffect(() => {
+    return () => {
+      imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
+    };
+  }, [imagePreviews]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +56,6 @@ const RegisterForm = ({ onClose, onRegister }) => {
     };
   
     try {
-      // Always use FormData for consistency
       const form = new FormData();
       form.append("title", formData.title);
       form.append("location", formData.location);
@@ -61,14 +72,13 @@ const RegisterForm = ({ onClose, onRegister }) => {
       form.append("description", formData.description);
       form.append("isRoomAvailable", formData.isRoomAvailable);
       
-      // Only append image if it exists
-      if (formData.imageFile) {
-        form.append("image", formData.imageFile);
-      }
+      formData.imageFiles.forEach(file => {
+        form.append("images", file);
+      });
   
       const response = await fetch("http://localhost:8080/api/rooms", {
         method: "POST",
-        headers: headers, // Don't set Content-Type with FormData
+        headers: headers,
         body: form,
       });
   
@@ -78,12 +88,20 @@ const RegisterForm = ({ onClose, onRegister }) => {
       }
   
       const data = await response.json();
-      onRegister(data.data); // Assuming the response structure is { data: roomData }
-      onClose(); // Close the form after successful submission
+      onRegister(data.data);
+      onClose();
     } catch (error) {
       console.error("Error creating room:", error);
       alert("Tạo phòng thất bại: " + error.message);
     }
+  };
+
+  const removeImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      imageFiles: prev.imageFiles.filter((_, i) => i !== index)
+    }));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -118,26 +136,34 @@ const RegisterForm = ({ onClose, onRegister }) => {
               </div>
             ))}
 
-            <div className="form-field">
-              <label>Hình ảnh</label>
+            <div className="form-field" style={{ gridColumn: "1 / -1" }}>
+              <label>Hình ảnh (có thể chọn nhiều ảnh)</label>
               <input
                 type="file"
-                name="image"
+                name="images"
                 accept="image/*"
+                multiple
                 onChange={handleChange}
               />
-              {/* Preview image */}
-              {formData.imageFile && (
-                <img
-                  src={URL.createObjectURL(formData.imageFile)}
-                  alt="Preview"
-                  style={{
-                    marginTop: "10px",
-                    maxWidth: "100%",
-                    height: "auto",
-                    borderRadius: "8px",
-                  }}
-                />
+              {imagePreviews.length > 0 && (
+                <div className="image-preview-grid">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="image-preview-container">
+                      <img
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="image-preview"
+                      />
+                      <button
+                        type="button"
+                        className="remove-image-btn"
+                        onClick={() => removeImage(index)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 

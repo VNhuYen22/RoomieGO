@@ -1,5 +1,6 @@
 package com.c1se_01.roomiego.service.impl;
 
+import com.c1se_01.roomiego.dto.MessageDto;
 import com.c1se_01.roomiego.dto.NotificationDto;
 import com.c1se_01.roomiego.dto.SendMessageRequest;
 import com.c1se_01.roomiego.enums.NotificationType;
@@ -29,48 +30,68 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message sendMessage(SendMessageRequest request) {
-        Conversation conversation = conversationRepository.findById(request.getConversationId())
-                .orElseThrow(() -> new NotFoundException("Conversation not found"));
+//        Conversation conversation = conversationRepository.findById(request.getConversationId())
+//                .orElseThrow(() -> new NotFoundException("Conversation not found"));
+//
+//        Long senderId = request.getSenderId();
+//        // Kiểm tra sender có thuộc cuộc trò chuyện không
+//        if (!conversation.getUser1().getId().equals(senderId) &&
+//                !conversation.getUser2().getId().equals(senderId)) {
+//            throw new RuntimeException("User is not part of this conversation");
+//        }
+//
+//        User sender = userRepository.findById(senderId).orElseThrow();
+//
+//        // Xác định người nhận
+//        User receiver = conversation.getUser1().getId().equals(senderId)
+//                ? conversation.getUser2()
+//                : conversation.getUser1();
+//
+//        Message message = new Message();
+////        message.setSender(sender);
+////        message.setReceiver(receiver);
+////        message.setConversation(conversation);
+//        message.setMessage(request.getContent());
+//        Message savedMessage = messageRepository.save(message);
+//
+//        // Send notification to tenant
+//        NotificationDto notificationDto = new NotificationDto();
+//        notificationDto.setUserId(receiver.getId());
+//        notificationDto.setMessage(request.getContent());
+//        notificationDto.setType(NotificationType.RENT_REQUEST_CREATED);
+//
+//        // Save the notification to the database
+//        notificationService.saveNotification(notificationDto);
+//
+//        // Gửi tin nhắn real-time đến người nhận
+//        messagingTemplate.convertAndSend("/topic/chat/" + conversation.getId(), notificationDto);
+//
+//        return savedMessage;
+        return null;
+    }
 
-        Long senderId = request.getSenderId();
-        // Kiểm tra sender có thuộc cuộc trò chuyện không
-        if (!conversation.getUser1().getId().equals(senderId) &&
-                !conversation.getUser2().getId().equals(senderId)) {
-            throw new RuntimeException("User is not part of this conversation");
-        }
+//    @Override
+//    public List<Message> getMessages(Long conversationId) {
+//        Conversation conversation = conversationRepository.findById(conversationId).orElseThrow();
+//        return messageRepository.findByConversationOrderBySentAt(conversation);
+//    }
 
-        User sender = userRepository.findById(senderId).orElseThrow();
-
-        // Xác định người nhận
-        User receiver = conversation.getUser1().getId().equals(senderId)
-                ? conversation.getUser2()
-                : conversation.getUser1();
-
-        Message message = new Message();
-        message.setSender(sender);
-        message.setReceiver(receiver);
-        message.setConversation(conversation);
-        message.setMessage(request.getContent());
-        Message savedMessage = messageRepository.save(message);
-
-        // Send notification to tenant
-        NotificationDto notificationDto = new NotificationDto();
-        notificationDto.setUserId(receiver.getId());
-        notificationDto.setMessage(request.getContent());
-        notificationDto.setType(NotificationType.RENT_REQUEST_CREATED);
-
-        // Save the notification to the database
-        notificationService.saveNotification(notificationDto);
-
-        // Gửi tin nhắn real-time đến người nhận
-        messagingTemplate.convertAndSend("/topic/chat/" + conversation.getId(), notificationDto);
-
-        return savedMessage;
+    @Override
+    public void saveMessage(MessageDto messageDto) {
+        // Save to the database
+        messageRepository.save(new Message(
+                messageDto.getSenderName(),
+                messageDto.getReceiverName(),
+                messageDto.getMessage(),
+                messageDto.getMedia(),
+                messageDto.getMediaType(),
+                messageDto.getStatus(),
+                System.currentTimeMillis()  // Current timestamp
+        ));
     }
 
     @Override
-    public List<Message> getMessages(Long conversationId) {
-        Conversation conversation = conversationRepository.findById(conversationId).orElseThrow();
-        return messageRepository.findByConversationOrderBySentAt(conversation);
+    public List<Message> findByReceiverNameOrSenderName(String user1, String user2) {
+        return messageRepository.findByReceiverNameOrSenderName(user1, user2);
     }
 }

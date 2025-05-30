@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import "../styles/Result_Room.css";
 import { axiosInstance } from "../lib/axios";
 // import { useNotifications } from "../components/NotificationComponent/NotificationContext";
@@ -8,6 +8,7 @@ import bedroom from "../assets/bedroom.png";
 import { showErrorToast ,showSuccessToast,showInfoToast} from "../components/toast";
 function Result_Room() {
   const { id } = useParams();
+  const navigate = useNavigate();
   // const { sendNotification, isConnected } = useNotifications(); 
 
   const [room, setRoom] = useState(null);
@@ -22,6 +23,8 @@ function Result_Room() {
 
   const [showRentalRequestForm, setShowRentalRequestForm] = useState(false);
   const [rentalRequestMessage, setRentalRequestMessage] = useState("");
+
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchRoomDetails = async () => {
@@ -48,6 +51,7 @@ function Result_Room() {
     const token = localStorage.getItem("authToken");
     if (!token) {
       showInfoToast("Bạn cần đăng nhập để gửi báo cáo.");
+      navigate("/login");
       return;
     }
 
@@ -81,6 +85,7 @@ function Result_Room() {
     const token = localStorage.getItem("authToken");
     if (!token) {
       showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+      navigate("/login");
       return;
     }
 
@@ -120,6 +125,7 @@ function Result_Room() {
     const token = localStorage.getItem("authToken");
     if (!token) {
       showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+      navigate("/login");
       return;
     }
 
@@ -164,8 +170,11 @@ function Result_Room() {
   if (!room) return <p>Không tìm thấy phòng.</p>;
 
   const baseURL = "http://localhost:8080/images/";
-  const mainImageUrl = room.imageUrls?.length > 0 ? baseURL + room.imageUrls[0] : "/default-room.jpg";
-  const sideImageUrls = room.imageUrls?.slice(1).map((url) => baseURL + url);
+  const imageUrls = room.imageUrls?.length > 0 
+    ? room.imageUrls.map(url => baseURL + url)
+    : ["/default-room.jpg"];
+
+  const mainImageUrl = imageUrls[selectedImageIndex];
 
   return (
     <div className="result-room">
@@ -177,12 +186,44 @@ function Result_Room() {
       <p className="hotel-location">{room.addressDetails}</p>
 
       <div className="image-gallery">
-        <div className="main-image">
-          <img src={mainImageUrl} alt="Main Room" />
+      <div className="main-image">
+          <button
+            className="gallery-nav-btn prev"
+            onClick={() => setSelectedImageIndex((prev) => (prev === 0 ? imageUrls.length - 1 : prev - 1))}
+            aria-label="Previous image"
+          >
+            &#8592;
+          </button>
+          <img 
+            src={mainImageUrl} 
+            alt="Main Room" 
+            onError={(e) => {
+              e.target.src = "/default-room.jpg";
+            }}
+          />
+          <button
+            className="gallery-nav-btn next"
+            onClick={() => setSelectedImageIndex((prev) => (prev === imageUrls.length - 1 ? 0 : prev + 1))}
+            aria-label="Next image"
+          >
+            &#8594;
+          </button>
         </div>
-        <div className="side-images">
-          {sideImageUrls?.map((url, index) => (
-            <img key={index} src={url} alt={`Room ${index + 1}`} />
+        <div className="thumbnail-container">
+          {imageUrls.map((url, index) => (
+            <div 
+              key={index} 
+              className={`thumbnail ${selectedImageIndex === index ? 'active' : ''}`}
+              onClick={() => setSelectedImageIndex(index)}
+            >
+              <img 
+                src={url} 
+                alt={`Room ${index + 1}`}
+                onError={(e) => {
+                  e.target.src = "/default-room.jpg";
+                }}
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -202,12 +243,42 @@ function Result_Room() {
 
         <div className="detail_price-booking">
           <h4>Gửi yêu cầu</h4>
+
           <span>{room.price.toLocaleString()}vnđ/Tháng </span>
-          <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
-          <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button>
+          {/* <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
+          <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button> */}
+
+          <span>${room.price.toLocaleString()} Tháng </span>
+          <button onClick={() => {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+              showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+              navigate("/login");
+              return;
+            }
+            setShowViewRequestForm(true);
+          }}>Gửi yêu cầu xem phòng</button>
+          <button onClick={() => {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+              showInfoToast("Vui lòng đăng nhập để gửi yêu cầu.");
+              navigate("/login");
+              return;
+            }
+            setShowRentalRequestForm(true);
+          }}>Gửi yêu cầu thuê phòng</button>
+
         </div>
 
-        <button className="report-button" onClick={() => setShowReportForm(true)}> Báo cáo bài viết </button>
+        <button className="report-button" onClick={() => {
+          const token = localStorage.getItem("authToken");
+          if (!token) {
+            showInfoToast("Bạn cần đăng nhập để gửi báo cáo.");
+            navigate("/login");
+            return;
+          }
+          setShowReportForm(true);
+        }}> Báo cáo bài viết </button>
 
         {showReportForm && (
           <div className="report-overlay">

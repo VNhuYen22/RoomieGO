@@ -74,7 +74,10 @@ const handleShowDistricts = () => {
       const response = await fetch("http://localhost:8080/api/rooms");
       if (!response.ok) throw new Error("Network error");
       const data = await response.json();
-
+      
+      // Filter out rooms that are not available
+      const availableRooms = data.data.filter(room => room.isRoomAvailable);
+      
       // Fetch owner information for each room
       const roomsWithOwnerInfo = await Promise.all(
         data.data.map(async (room) => {
@@ -118,13 +121,13 @@ const handleShowDistricts = () => {
     fetchRooms();
   }, []);
 
-  const getValidImageUrl = (url) => {
-    if (!url || typeof url !== "string" || url.trim() === "") {
+  const getValidImageUrl = (imageUrls) => {
+    if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
       const defaultImages = [room1, room2, room3];
       const randomIndex = Math.floor(Math.random() * defaultImages.length);
       return defaultImages[randomIndex];
     }
-    return baseURL + url;
+    return baseURL + imageUrls[0];
   };
   // loc theo thanh pho
   const tabs = ["Tất Cả", "Đà Nẵng", "Thành phố Hồ Chí Minh", "Hà Nội"];
@@ -232,20 +235,16 @@ const handleShowDistricts = () => {
           <p>Không tìm thấy phòng trọ.</p>
         ) : (
           sortedRooms.map((room) => (
-            <Link
-              to={`/ResultRoom/${room.id}`}
-              className="card-link"
-              key={room.id}
-            >
-              <div className="card">
-                <img
-                  src={getValidImageUrl(room.imageUrls[0])}
-                  alt="Room"
-                  className="card-image_big"
-                  onError={(e) => {
-                    e.target.src = getValidImageUrl("");
-                  }}
-                />
+            <Link to={`/ResultRoom/${room.id}`} className="card-link" key={room.id}>
+  <div className="card">
+    <img
+      src={getValidImageUrl(room.imageUrls)}
+      alt="Room"
+      className="card-image_big"
+      onError={(e) => {
+        e.target.src = getValidImageUrl([]);
+      }}
+    />
 
                 <div className="card-body">
                   <div className="card-top">
@@ -279,26 +278,23 @@ const handleShowDistricts = () => {
                     </div>
                   </div>
 
-                  <div className="card-footer">
-                    <img
-                      src={getValidImageUrl(room.imageUrls[1])}
-                      alt="user"
-                      onError={(e) => {
-                        e.target.src = getValidImageUrl("");
-                      }}
-                    />
-                    <div className="contact-info">
-                      <div className="owner-name">
-                        {room.ownerName || "Chủ phòng"}
-                      </div>
-                      <div className="owner-phone">
-                        {room.ownerPhone || "Chưa có số điện thoại"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
+      <div className="card-footer">
+        <img
+          src={room.imageUrls?.length > 1 ? baseURL + room.imageUrls[1] : getValidImageUrl([])}
+          alt="user"
+          onError={(e) => {
+            e.target.src = getValidImageUrl([]);
+          }}
+        />
+        <div className="contact-info">
+          <div className="owner-name">{room.ownerName || "Chủ phòng"}</div>
+          <div className="owner-phone">{room.ownerPhone || "Chưa có số điện thoại"}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Link>
+
           ))
         )}
       </div>
