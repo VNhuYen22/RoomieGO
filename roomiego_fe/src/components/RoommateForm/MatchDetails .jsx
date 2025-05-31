@@ -3,6 +3,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import './RoommateForm.css'; // Import CSS
 import { FaComments } from 'react-icons/fa'; // Import message icon
+import { useEffect, useState } from 'react';
 
 const MatchDetails = () => {
     const location = useLocation();
@@ -10,6 +11,28 @@ const MatchDetails = () => {
     const match = location.state?.match;
     
     console.log("Match data received:", match); // Debug log
+
+    const [detailedRecommendations, setDetailedRecommendations] = useState([]);
+
+    useEffect(() => {
+        const fetchDetails = async () => {
+            const token = localStorage.getItem('authToken');
+            const promises = recommendations.map(async (rec) => {
+                if (!rec.user_id) return rec;
+                const res = await fetch(`http://localhost:8080/owner/get-users/${rec.user_id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.usersList && data.usersList.length > 0) {
+                    return { ...rec, ...data.usersList[0] };
+                }
+                return rec;
+            });
+            const results = await Promise.all(promises);
+            setDetailedRecommendations(results);
+        };
+        fetchDetails();
+    }, [match]);
 
     if (!match) {
         return (
@@ -126,7 +149,7 @@ const MatchDetails = () => {
             <div className="match-details-container card-listing-container">
                 <h2>Danh sách người phù hợp</h2>
                 <div className="card-listing-grid">
-                    {recommendations.map((recommendation, index) => (
+                    {detailedRecommendations.map((recommendation, index) => (
                         <div 
                             key={recommendation.id || index} 
                             className="match-card"
@@ -140,7 +163,7 @@ const MatchDetails = () => {
                             </div>
                             <div className="match-card-header" style={{ width: '100%' }}>
                                 <span className="match-card-name" style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {recommendation.fullName || recommendation.username || `Người phù hợp #${index + 1}`}
+                                    { `Người phù hợp #${index + 1}`}
                                 </span>
                                 <button 
                                     className="message-button"
