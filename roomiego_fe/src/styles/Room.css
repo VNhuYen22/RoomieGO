@@ -163,7 +163,7 @@
 .swiper-container1 {
   margin-top: 2rem;
   width: 100%;
-  height: 70vh; /* Điều chỉnh độ cao của banner */
+  height: 90vh; /* Điều chỉnh độ cao của banner */
 }
 .swiper-container1 img {
   width: 100%;
@@ -265,7 +265,6 @@
   align-items: center;
   gap: 4px;
 }
-
 .district_find {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
