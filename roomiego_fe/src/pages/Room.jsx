@@ -18,7 +18,7 @@ import bedrooms from "../assets/bedroom.png";
 import split_1 from "../assets/split_0_0.png";
 import split_2 from "../assets/split_0_1.png";
 import split_3 from "../assets/split_0_2.png";
-import dot from "../assets/more.png";
+import dot from "../assets/360_F_320788475_nEiLVViOBewea7taZWqNUR0lJAMTAaSo.jpg";
 import { getProvinces, getDistrictsByProvinceCode } from "sub-vn";
 
 <link
