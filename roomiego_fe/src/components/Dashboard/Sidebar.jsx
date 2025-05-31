@@ -23,7 +23,7 @@ const Sidebar = () => {
     { label: "Yêu Cầu", key: "requests" },
     ...(userRole === "ADMIN" ? [{ label: "Báo Cáo", key: "report" }] : []),
     { label: "Hóa đơn", key: "invoices" },
-    { label: "Cài đặt", key: "invoices" },
+    { label: "Cài đặt", key: "/" },
   ];
 
   return (

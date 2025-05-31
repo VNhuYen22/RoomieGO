@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import bulding from "../assets/4k_building.mp4"; // Import icon nếu cần
 import { Navigate } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "../components/toast"; // Import toast thông báo
+
 export default function Register() {
   const genderOptions = [
     { value: "MALE", label: "Nam" },
@@ -26,6 +27,8 @@ export default function Register() {
   const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -91,11 +94,10 @@ export default function Register() {
       setBio(""); 
       setRole("");
       
-            showSuccessToast("Đăng nhập thành công!");
+            showSuccessToast("Đăng ký thành công!");
          
                  setTimeout(() => {
-        Navigate("/login");
-        window.location.reload();
+        navigate("/login");
       }, 2000);
     } catch (err) {
       console.error("Lỗi khi đăng ký:", err);

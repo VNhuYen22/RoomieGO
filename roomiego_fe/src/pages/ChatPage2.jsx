@@ -220,9 +220,10 @@ const ChatPage2 = () => {
 
   return (
     <div className="w-full h-full pt-[20px] pb-[100px] gap-4">
-      <div className=" grid grid-cols-12 flex w-full h-full pt-[20px] pb-[100px]">
+      <div className=" grid grid-cols-12 flex w-full h-full pt-[15px] pb-[100px]">
         {/* Member List */}
-        <div className=" col-span-3 bg-base-100 border-r border-base-300 pl-4 pt-3" >
+        <div className=" col-span-3 bg-base-100 border border-base-300 pl-4 mt-3 mr-5  " >
+          
           <div className="mb-4 border-r border-base-300 ">
             <h3 className="text-lg font-semibold mb-2">Danh sách chat</h3>
             <span className="font-medium hidden lg:block"> <i className="fa-regular fa-user"></i> Liên Hệ</span>
@@ -268,7 +269,10 @@ const ChatPage2 = () => {
             })}
           </ul>
         </div>
-        <div className="col-span-6 border-r border-base-300 flex flex-col mt-3">
+        <div
+          className="col-span-6 border border-base-300 flex flex-col mt-3"
+          // style={{ border: '1px solid black', paddingLeft: '15px' }}
+        >
           {/* Chat header */}
           {tab && selectedUser && (
             <div className="px-4 py-3 border-b border-base-300 bg-base-100">
@@ -292,7 +296,7 @@ const ChatPage2 = () => {
           {/* Chat Box */}
           <div
             ref={chatContainerRef}
-           className="col-span-6 p-4 space-y-4 min-h-[650px] max-h-[650px] overflow-y-auto bg-base-100"
+           className="col-span-6 p-4 space-y-4 min-h-[490px] max-h-[600px] overflow-y-auto bg-base-100"
           >
             {tab && privateChats.get(tab)?.length > 0 ? (
               privateChats.get(tab).map((msg, index) => (
