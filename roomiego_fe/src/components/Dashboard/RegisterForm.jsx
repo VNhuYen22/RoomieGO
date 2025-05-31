@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./css/RegisterForm.css";
+import { getProvinces, getDistrictsByProvinceCode, getWardsByDistrictCode } from "sub-vn";
 
 const RegisterForm = ({ onClose, onRegister }) => {
   const [formData, setFormData] = useState({
@@ -21,6 +22,9 @@ const RegisterForm = ({ onClose, onRegister }) => {
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
 
   const handleChange = (e) => {
     const { name, value, files, type, checked } = e.target;
@@ -104,6 +108,52 @@ const RegisterForm = ({ onClose, onRegister }) => {
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
+  useEffect(() => {
+    setProvinces(getProvinces());
+  }, []);
+
+  const handleProvinceChange = (e) => {
+    const provinceCode = e.target.value;
+    const province = provinces.find((p) => p.code === provinceCode);
+    setFormData((prev) => ({
+      ...prev,
+      city: province ? province.name : "",
+      district: "",
+      ward: "",
+    }));
+    if (provinceCode) {
+      setDistricts(getDistrictsByProvinceCode(provinceCode));
+      setWards([]);
+    } else {
+      setDistricts([]);
+      setWards([]);
+    }
+  };
+
+  const handleDistrictChange = (e) => {
+    const districtCode = e.target.value;
+    const district = districts.find((d) => d.code === districtCode);
+    setFormData((prev) => ({
+      ...prev,
+      district: district ? district.name : "",
+      ward: "",
+    }));
+    if (districtCode) {
+      setWards(getWardsByDistrictCode(districtCode));
+    } else {
+      setWards([]);
+    }
+  };
+
+  const handleWardChange = (e) => {
+    const wardCode = e.target.value;
+    const ward = wards.find((w) => w.code === wardCode);
+    setFormData((prev) => ({
+      ...prev,
+      ward: ward ? ward.name : "",
+    }));
+  };
+
   return (
     <div className="register-form-overlay">
       <div className="register-form">
@@ -119,9 +169,6 @@ const RegisterForm = ({ onClose, onRegister }) => {
               { label: "Số phòng ngủ", name: "numBedrooms" },
               { label: "Số phòng tắm", name: "numBathrooms" },
               { label: "Có sẵn từ", name: "availableFrom", type: "date" },
-              { label: "Thành phố", name: "city" },
-              { label: "Quận/Huyện", name: "district" },
-              { label: "Phường/Xã", name: "ward" },
               { label: "Đường phố", name: "street" },
             ].map(({ label, name, type = "text" }) => (
               <div className="form-field" key={name}>
@@ -135,6 +182,86 @@ const RegisterForm = ({ onClose, onRegister }) => {
                 />
               </div>
             ))}
+
+            {/* Thành phố */}
+            <div className="form-field">
+              <label>Thành phố</label>
+              <select
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  transition: "border 0.3s, box-shadow 0.3s",
+                }}
+                value={provinces.find((p) => p.name === formData.city)?.code || ""}
+                onChange={handleProvinceChange}
+              >
+                <option value="">-- Chọn tỉnh/thành --</option>
+                {provinces.map((p) => (
+                  <option key={p.code} value={p.code}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Quận/Huyện */}
+            <div className="form-field">
+              <label>Quận/Huyện</label>
+              <select
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  transition: "border 0.3s, box-shadow 0.3s",
+                }}
+                value={districts.find((d) => d.name === formData.district)?.code || ""}
+                onChange={handleDistrictChange}
+                disabled={!districts.length}
+              >
+                <option value="">-- Chọn quận/huyện --</option>
+                {districts.map((d) => (
+                  <option key={d.code} value={d.code}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Phường/Xã */}
+            <div className="form-field">
+              <label>Phường/Xã</label>
+              <select
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  transition: "border 0.3s, box-shadow 0.3s",
+                }}
+                value={wards.find((w) => w.name === formData.ward)?.code || ""}
+                onChange={handleWardChange}
+                disabled={!wards.length}
+              >
+                <option value="">-- Chọn phường/xã --</option>
+                {wards.map((w) => (
+                  <option key={w.code} value={w.code}>
+                    {w.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
               <label>Hình ảnh (có thể chọn nhiều ảnh)</label>

@@ -54,6 +54,8 @@ function Room() {
   ];
   const [activeTab, setActiveTab] = useState("Tất Cả");
   const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [expandedCardIds, setExpandedCardIds] = useState({});
+  const [showAllRooms, setShowAllRooms] = useState(false);
 
   const handleSortChange = (order) => {
     setSortOrder(order);
@@ -271,78 +273,134 @@ function Room() {
         {sortedRooms.length === 0 ? (
           <p>Không tìm thấy phòng trọ.</p>
         ) : (
-          sortedRooms.map((room) => (
-            <Link
-              to={`/ResultRoom/${room.id}`}
-              className="card-link"
-              key={room.id}
-            >
-              <div className="card">
-                <img
-                  src={getValidImageUrl(room.imageUrls)}
-                  alt="Room"
-                  className="card-image_big"
-                  onError={(e) => {
-                    e.target.src = getValidImageUrl([]);
-                  }}
-                />
-
-                <div className="card-body">
-                  <div className="card-top">
-                    <h2>{room.price?.toLocaleString() ?? "N/A"} vnđ</h2>
-                    <div className="status-badge">Cho thuê</div>
-                  </div>
-
-                  <div className="card-address">
-                    <i className="fas fa-map-marker-alt"></i>
-                    <span>{room.city}</span> <span>{room.district}</span>
-                    <span>{room.addressDetails ?? "Địa chỉ không có sẵn"}</span>
-                  </div>
-
-                  <div className="card-features">
-                    <div className="card-feature-item">
-                      <i className="fas fa-expand-arrows-alt"></i>
-                      <span>{room.roomSize} m²</span>
+          <>
+            {(showAllRooms ? sortedRooms : sortedRooms.slice(0, 12)).map((room) => (
+              <Link
+                to={`/ResultRoom/${room.id}`}
+                className="card-link"
+                key={room.id}
+              >
+                <div className="card">
+                  <img
+                    src={getValidImageUrl(room.imageUrls)}
+                    alt="Room"
+                    className="card-image_big"
+                    onError={(e) => {
+                      e.target.src = getValidImageUrl([]);
+                    }}
+                  />
+                  <div className="card-body">
+                    <div className="card-top">
+                      <h2>{room.price?.toLocaleString() ?? "N/A"} vnđ</h2>
+                      <div className="status-badge">Cho thuê</div>
                     </div>
-                    <div className="card-feature-item">
-                      <span>
-                        <img src={bedrooms} alt="" />
-                        {room.numBedrooms ?? "?"} <b>Giường</b>{" "}
-                      </span>
+                    <div className="card-address">
+                      <i className="fas fa-map-marker-alt"></i>
+                      <span>{room.city}</span> <span>{room.district}</span>
+                      <span>{room.addressDetails ?? "Địa chỉ không có sẵn"}</span>
                     </div>
-                    <div className="card-feature-item">
-                      <span>
-                        <img src={sink} alt="" />
-                        {room.numBathrooms ?? "?"} <b>Bồn tắm</b>{" "}
-                      </span>
+                    <div className="card-features">
+                      {(() => {
+                        const features = [
+                          {
+                            icon: <i className="fas fa-expand-arrows-alt"></i>,
+                            label: `${room.roomSize} m²`
+                          },
+                          {
+                            icon: <img src={bedrooms} alt="" />,
+                            label: `${room.numBedrooms ?? "?"} Giường`
+                          },
+                          {
+                            icon: <img src={sink} alt="" />,
+                            label: `${room.numBathrooms ?? "?"} Bồn tắm`
+                          },
+                        ];
+                        const isExpanded = expandedCardIds[room.id];
+                        const showFeatures = isExpanded ? features : features.slice(0, 3);
+                        return (
+                          <>
+                            {showFeatures.map((feature, idx) => (
+                              <div className="card-feature-item" key={idx}>
+                                {feature.icon}
+                                <span>{feature.label}</span>
+                              </div>
+                            ))}
+                            {features.length > 3 && (
+                              <button
+                                className="more-btn"
+                                onClick={e => {
+                                  e.preventDefault();
+                                  setExpandedCardIds(prev => ({
+                                    ...prev,
+                                    [room.id]: !prev[room.id]
+                                  }));
+                                }}
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  marginLeft: 8,
+                                  color: "#1976d2",
+                                  fontWeight: 600
+                                }}
+                              >
+                                {isExpanded ? (
+                                  <span>&#9650; Thu gọn</span>
+                                ) : (
+                                  <span>&#9660; Xem thêm</span>
+                                )}
+                              </button>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
-                  </div>
-
-                  <div className="card-footer">
-                    <img
-                      src={
-                        room.imageUrls?.length > 1
-                          ? baseURL + room.imageUrls[1]
-                          : getValidImageUrl([])
-                      }
-                      alt="user"
-                      onError={(e) => {
-                        e.target.src = getValidImageUrl([]);
-                      }}
-                    />
-                    <div className="contact-info">
-                      <div className="owner-name">
-                        {room.ownerName || "Chủ phòng"}
-                      </div>
-                      <div className="owner-phone">
-                        {room.ownerPhone || "Chưa có số điện thoại"}
+                    <div className="card-footer">
+                      <img
+                        src={
+                          room.imageUrls?.length > 1
+                            ? baseURL + room.imageUrls[1]
+                            : getValidImageUrl([])
+                        }
+                        alt="user"
+                        onError={(e) => {
+                          e.target.src = getValidImageUrl([]);
+                        }}
+                      />
+                      <div className="contact-info">
+                        <div className="owner-name">
+                          {room.ownerName || "Chủ phòng"}
+                        </div>
+                        <div className="owner-phone">
+                          {room.ownerPhone || "Chưa có số điện thoại"}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </Link>
+            ))}
+            {sortedRooms.length > 12 && (
+              <div style={{ width: "100%", display: "flex", justifyContent: "center", marginTop: 16 }}>
+                <button
+                  className="more-btn"
+                  onClick={() => setShowAllRooms((prev) => !prev)}
+                  style={{
+                    background: "none",
+                    border: "1px solid #1976d2",
+                    borderRadius: 8,
+                    color: "#1976d2",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    padding: "8px 24px",
+                    cursor: "pointer"
+                  }}
+                >
+                  {showAllRooms ? "Thu gọn ▲" : "Xem thêm ▼"}
+                </button>
               </div>
-            </Link>
-          ))
+            )}
+          </>
         )}
       </div>
     </div>

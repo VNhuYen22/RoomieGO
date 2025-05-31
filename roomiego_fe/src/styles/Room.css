@@ -256,3 +256,12 @@
   height: 20px;
   margin-right: 5px;
 }
+
+.more-btn {
+  color: #1976d2;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
