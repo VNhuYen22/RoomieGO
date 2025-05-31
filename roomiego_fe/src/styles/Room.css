@@ -46,7 +46,7 @@
 /* Thẻ chính */
 /* Card tổng thể */
 .card {
-  height: 390px;
+  height: 420px;
   width: 14vw;              /* 260px ≈ 18vw trên màn hình desktop ~1440px */
   border-radius: 2.5vh;      /* 20px ≈ 2.5vh nếu chiều cao màn hình khoảng 800px */
   background: #fff;
@@ -163,7 +163,7 @@
 .swiper-container1 {
   margin-top: 2rem;
   width: 100%;
-  height: 70vh; /* Điều chỉnh độ cao của banner */
+  height: 90vh; /* Điều chỉnh độ cao của banner */
 }
 .swiper-container1 img {
   width: 100%;
@@ -255,4 +255,30 @@
   width: 20px;
   height: 20px;
   margin-right: 5px;
+}
+
+.more-btn {
+  color: #1976d2;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.district_find {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.district_find:hover {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  background: #f0f8ff;
+  border-radius: 50%;
+}
+.district_find img {
+  transition: filter 0.2s;
+}
+.district_find:hover img {
+  filter: brightness(1.2) drop-shadow(0 0 4px #1976d2);
 }
