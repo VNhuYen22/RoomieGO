@@ -6,8 +6,9 @@ import  minimal  from "../../assets/minimal.jpg";
 import openly from "../../assets/openly.jpg";
 import warm from "../../assets/clean&warm.jpg";
 import friend_video from "../../assets/4k_building.mp4";
+import openly2 from "../../assets/openly2.jpg";
 import Select from "react-select"; // Import Select component from react-select
-import {getProvinces} from "sub-vn"; // Import getProvinces function
+import {getProvinces, getDistrictsByProvinceCode} from "sub-vn"; // Import getProvinces and getDistrictsByProvinceCode functions
 const provincesOptions = getProvinces().map((province) => ({
   value: province.name,
   label: province.name,
@@ -75,27 +76,56 @@ const StepOne = ({ formData, errors, handleChange }) => (
   </>
 );
 
-const StepTwo = ({ formData, errors, handleChange }) => (
-  <>
-    <label>Thành phố:</label>
-    <input type="text" name="city" value={formData.city} onChange={handleChange} />
-    {errors.city && <div className="error">{errors.city}</div>}
+const StepTwo = ({ formData, errors, handleProvinceChange, handleDistrictChange, districts }) => {
+  const provinces = getProvinces();
+  const provinceOptions = provinces.map((province) => ({
+    value: province.code,
+    label: province.name,
+  }));
 
-    <label>Quận:</label>
-    <input type="text" name="district" value={formData.district} onChange={handleChange} />
-    {errors.district && <div className="error">{errors.district}</div>}
-  </>
-);
+  const districtOptions = districts.map((district) => ({
+    value: district.code,
+    label: district.name,
+  }));
+
+  return (
+    <>
+      <label>Thành phố:</label>
+      <Select
+        options={provinceOptions}
+        value={provinceOptions.find((opt) => 
+          provinces.find((p) => p.code === opt.value)?.name === formData.city
+        )}
+        onChange={handleProvinceChange}
+        placeholder="Chọn thành phố"
+      />
+      {errors.city && <div className="error">{errors.city}</div>}
+
+      <label>Quận:</label>
+      <Select
+        options={districtOptions}
+        value={districtOptions.find((opt) => 
+          districts.find((d) => d.code === opt.value)?.name === formData.district
+        )}
+        onChange={handleDistrictChange}
+        placeholder="Chọn quận"
+        isDisabled={!formData.city}
+      />
+      {errors.district && <div className="error">{errors.district}</div>}
+    </>
+  );
+};
 
 const StepThree = ({ formData, errors, handleChange }) => {
   const hobbiesList = ["Nuôi thú cưng", 
-    "Hút thuốc", "Ăn Chay"];
+    "Hút thuốc", "Ăn Chay","Làm việc nhà"];
 
   // Mảng chứa thông tin các phòng với tiêu chí cụ thể
   const roomTypes = [
     { value: "1", label: "" , image: minimal },
     { value: "2", label: "" , image: warm },
     { value: "3", label: "",  image: openly },
+    { value: "4", label: "",  image: openly2 },
   ];
 
   return (
@@ -126,7 +156,7 @@ const StepThree = ({ formData, errors, handleChange }) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              margin: "10px",
+              margin: "5px",
             }}
           >
             <input
@@ -136,7 +166,7 @@ const StepThree = ({ formData, errors, handleChange }) => {
               checked={formData.rateImage === room.value}
               onChange={handleChange}
             />
-            <img src={room.image} alt=""  style={{ width: "100px", height: "auto"} }/>
+            <img src={room.image} alt=""  style={{ width: "100px", height: "133px"} }/>
             <span>{room.label}</span>
           </label>
         ))}
@@ -159,9 +189,10 @@ const StepThree = ({ formData, errors, handleChange }) => {
 const RoommateForm = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [districts, setDistricts] = useState([]);
 
   const initialFormData = {
-    sex: "Nam",  // Default to Vietnamese
+    sex: "Nam",
     hometown: "",
     city: "",
     district: "",
@@ -192,6 +223,27 @@ const RoommateForm = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
     setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleProvinceChange = (selected) => {
+    const provinceCode = selected.value;
+    const selectedProvince = getProvinces().find((p) => p.code === provinceCode);
+    setFormData((prev) => ({
+      ...prev,
+      city: selectedProvince?.name || "",
+      district: "",
+    }));
+    const newDistricts = getDistrictsByProvinceCode(provinceCode);
+    setDistricts(newDistricts);
+  };
+
+  const handleDistrictChange = (selected) => {
+    const districtCode = selected.value;
+    const selectedDistrict = districts.find((d) => d.code === districtCode);
+    setFormData((prev) => ({
+      ...prev,
+      district: selectedDistrict?.name || "",
+    }));
   };
 
   const validateStep = () => {
@@ -394,7 +446,9 @@ const RoommateForm = () => {
             <StepTwo
               formData={formData}
               errors={errors}
-              handleChange={handleChange}
+              handleProvinceChange={handleProvinceChange}
+              handleDistrictChange={handleDistrictChange}
+              districts={districts}
             />
           )}
           {step === 3 && (
