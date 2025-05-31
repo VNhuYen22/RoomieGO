@@ -21,15 +21,15 @@ import java.util.List;
 public class ConversationController {
     private final ConversationService conversationService;
 
-    @PostMapping("/start")
-    public ResponseEntity<Conversation> startConversation(@RequestBody StartChatRequest request) {
-        Conversation conversation = conversationService.startConversation(request.getUser1Id(), request.getUser2Id());
-        return ResponseEntity.ok(conversation);
-    }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<User>> getUsersChattedWith(@PathVariable Long userId) {
-        List<User> users = conversationService.getUsersChattedWith(userId);
-        return ResponseEntity.ok(users);
-    }
+//    @PostMapping("/start")
+//    public ResponseEntity<Conversation> startConversation(@RequestBody StartChatRequest request) {
+//        Conversation conversation = conversationService.startConversation(request.getUser1Id(), request.getUser2Id());
+//        return ResponseEntity.ok(conversation);
+//    }
+//
+//    @GetMapping("/{userId}")
+//    public ResponseEntity<List<User>> getUsersChattedWith(@PathVariable Long userId) {
+//        List<User> users = conversationService.getUsersChattedWith(userId);
+//        return ResponseEntity.ok(users);
+//    }
 }

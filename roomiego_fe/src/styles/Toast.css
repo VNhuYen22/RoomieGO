@@ -16,13 +16,13 @@
   overflow: hidden;
 }
 .success-toast {
-  background: linear-gradient(
-   to right,
-    #27bc10 10%,
-    #6ff56a 30%,
-    #86f284 60%,
-        rgba(0, 198, 255, 0.0) 100%
-  ); /* Green for success */
+   background: linear-gradient(
+    to right,
+    #143a11 5%,
+    #1bac05 35%,
+    #5bf658 60%,
+    rgba(255, 255, 255, 0.0) 100%
+  );
   color: #ffffff; /* White text */
 }
 
@@ -30,33 +30,22 @@
 .error-toast {
   background: linear-gradient(
    to right,
-    #fb6969 10%,
-    #f99090 30%,
-    #ffc3c3 60%,
+    #5d1414 10%,
+    #981b1b 30%,
+    #ed3535 60%,
         rgba(0, 198, 255, 0.0) 100%
   ); /* Red for error */
   color: #ffffff; /* White text */
 }
 
-/* Info toast */
-.info-toast {
-  background: linear-gradient(
-   to right,
-    #1e1e2f 10%,
-    #0072ff 30%,
-    #00c6ff 60%,
-        rgba(0, 198, 255, 0.0) 100%
-  ); /* Cyan for info */
-  color: #ffffff; /* White text */
-}
 
 /* Warning toast */
 .warning-toast {
   background: linear-gradient(
    to right,
-    #fbf857 10%,
-    #f8e27f 30%,
-    #f9f69d 60%,
+    #7b6210 10%,
+    #c5a51b 30%,
+    #f9e230 60%,
         rgba(0, 198, 255, 0.0) 100%
   );/* Yellow for warning */
   color: #212529; /* Dark text for contrast */

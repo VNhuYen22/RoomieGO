@@ -4,6 +4,9 @@ import vidBeach from "../assets/beach.mp4";
 import '../styles/Register.css';
 import { useNavigate } from "react-router-dom"; 
 import bulding from "../assets/4k_building.mp4"; // Import icon nếu cần
+import { Navigate } from "react-router-dom";
+import { showErrorToast, showSuccessToast } from "../components/toast"; // Import toast thông báo
+
 export default function Register() {
   const genderOptions = [
     { value: "MALE", label: "Nam" },
@@ -25,6 +28,8 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const navigate = useNavigate();
+
   const handleRegister = async (e) => {
     e.preventDefault();
     const phoneRegex = /^[0-9]{10,}$/;
@@ -42,7 +47,12 @@ export default function Register() {
       setError("Vui lòng nhập đầy đủ thông tin và mật khẩu phải có ít nhất 6 ký tự.");
       return;
     }
-
+    
+    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).+$/;
+    if (!strongPasswordRegex.test(password)) {
+    setError("Mật khẩu phải chứa ít nhất một chữ hoa và một ký tự đặc biệt.");
+    return;
+  }
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -83,7 +93,12 @@ export default function Register() {
       setDob(""); 
       setBio(""); 
       setRole("");
-      navigate ("/login");
+      
+            showSuccessToast("Đăng ký thành công!");
+         
+                 setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
       console.error("Lỗi khi đăng ký:", err);
       setError(err.message || "Không thể kết nối đến máy chủ. Vui lòng thử lại.");
@@ -101,7 +116,7 @@ export default function Register() {
       <div className="video-overlay"></div>
 
       <div className="register-container">
-        <div className="login-box">
+        <div className="register-box">
           <div className="login-image">
             <img 
               src="https://storage.googleapis.com/a1aa/image/pIX598hLKNAAlo-PMfaRY2XfJQXo-I6fQbAqm6H-2T4.jpg" 
@@ -149,6 +164,9 @@ export default function Register() {
                     onChange={(e) => setPassword(e.target.value)} 
                     required 
                   />
+                  <small style={{ color: "white", fontSize: "12px" }}>
+                  Mật khẩu cần ít nhất 6 ký tự, bao gồm 1 chữ hoa và 1 ký tự đặc biệt.
+                  </small>
                 </div>
               </div>
 

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./css/RegisterForm.css";
+import { getProvinces, getDistrictsByProvinceCode, getWardsByDistrictCode } from "sub-vn";
 
 const RegisterForm = ({ onClose, onRegister }) => {
   const [formData, setFormData] = useState({
@@ -15,25 +16,40 @@ const RegisterForm = ({ onClose, onRegister }) => {
     district: "",
     ward: "",
     street: "",
-    imageFile: null,
+    imageFiles: [],
     description: "",
     isRoomAvailable: true,
   });
 
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
   const handleChange = (e) => {
     const { name, value, files, type, checked } = e.target;
     
-    if (name === "image" && files.length > 0) {
+    if (name === "images" && files.length > 0) {
+      const newImageFiles = Array.from(files);
       setFormData((prev) => ({
         ...prev,
-        imageFile: files[0],
+        imageFiles: newImageFiles,
       }));
+
+      const newPreviews = newImageFiles.map(file => URL.createObjectURL(file));
+      setImagePreviews(newPreviews);
     } else if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+
+  React.useEffect(() => {
+    return () => {
+      imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
+    };
+  }, [imagePreviews]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +60,6 @@ const RegisterForm = ({ onClose, onRegister }) => {
     };
   
     try {
-      // Always use FormData for consistency
       const form = new FormData();
       form.append("title", formData.title);
       form.append("location", formData.location);
@@ -61,14 +76,13 @@ const RegisterForm = ({ onClose, onRegister }) => {
       form.append("description", formData.description);
       form.append("isRoomAvailable", formData.isRoomAvailable);
       
-      // Only append image if it exists
-      if (formData.imageFile) {
-        form.append("image", formData.imageFile);
-      }
+        formData.imageFiles.forEach(file => {
+        form.append("images", file);
+      });
   
       const response = await fetch("http://localhost:8080/api/rooms", {
         method: "POST",
-        headers: headers, // Don't set Content-Type with FormData
+        headers: headers,
         body: form,
       });
   
@@ -78,33 +92,84 @@ const RegisterForm = ({ onClose, onRegister }) => {
       }
   
       const data = await response.json();
-      onRegister(data.data); // Assuming the response structure is { data: roomData }
-      onClose(); // Close the form after successful submission
+      onRegister(data.data);
+      onClose();
     } catch (error) {
       console.error("Error creating room:", error);
       alert("Tạo phòng thất bại: " + error.message);
     }
   };
 
+  const removeImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      imageFiles: prev.imageFiles.filter((_, i) => i !== index)
+    }));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  useEffect(() => {
+    setProvinces(getProvinces());
+  }, []);
+
+  const handleProvinceChange = (e) => {
+    const provinceCode = e.target.value;
+    const province = provinces.find((p) => p.code === provinceCode);
+    setFormData((prev) => ({
+      ...prev,
+      city: province ? province.name : "",
+      district: "",
+      ward: "",
+    }));
+    if (provinceCode) {
+      setDistricts(getDistrictsByProvinceCode(provinceCode));
+      setWards([]);
+    } else {
+      setDistricts([]);
+      setWards([]);
+    }
+  };
+
+  const handleDistrictChange = (e) => {
+    const districtCode = e.target.value;
+    const district = districts.find((d) => d.code === districtCode);
+    setFormData((prev) => ({
+      ...prev,
+      district: district ? district.name : "",
+      ward: "",
+    }));
+    if (districtCode) {
+      setWards(getWardsByDistrictCode(districtCode));
+    } else {
+      setWards([]);
+    }
+  };
+
+  const handleWardChange = (e) => {
+    const wardCode = e.target.value;
+    const ward = wards.find((w) => w.code === wardCode);
+    setFormData((prev) => ({
+      ...prev,
+      ward: ward ? ward.name : "",
+    }));
+  };
+
   return (
     <div className="register-form-overlay">
       <div className="register-form">
-        <h2>Register Your Room</h2>
+        <h2>Đăng ký phòng trọ của bạn</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-section">
             {[ 
-              { label: "Title", name: "title" },
-              { label: "Location", name: "location" },
-              { label: "Address", name: "addressDetails" },
-              { label: "Price", name: "price" },
-              { label: "Room Size", name: "roomSize" },
-              { label: "Number Of Bedrooms", name: "numBedrooms" },
-              { label: "Number Of Bathrooms", name: "numBathrooms" },
-              { label: "Available From", name: "availableFrom", type: "date" },
-              { label: "City", name: "city" },
-              { label: "District", name: "district" },
-              { label: "Ward", name: "ward" },
-              { label: "Street", name: "street" },
+              { label: "Tiêu đề", name: "title" },
+              { label: "Vị trí", name: "location" },
+              { label: "Địa Chỉ", name: "addressDetails" },
+              { label: "Giá", name: "price" },
+              { label: "Diện tích phòng", name: "roomSize" },
+              { label: "Số phòng ngủ", name: "numBedrooms" },
+              { label: "Số phòng tắm", name: "numBathrooms" },
+              { label: "Có sẵn từ", name: "availableFrom", type: "date" },
+              { label: "Đường phố", name: "street" },
             ].map(({ label, name, type = "text" }) => (
               <div className="form-field" key={name}>
                 <label>{label}</label>
@@ -118,41 +183,129 @@ const RegisterForm = ({ onClose, onRegister }) => {
               </div>
             ))}
 
+            {/* Thành phố */}
             <div className="form-field">
-              <label>Image</label>
+              <label>Thành phố</label>
+              <select
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  transition: "border 0.3s, box-shadow 0.3s",
+                }}
+                value={provinces.find((p) => p.name === formData.city)?.code || ""}
+                onChange={handleProvinceChange}
+              >
+                <option value="">-- Chọn tỉnh/thành --</option>
+                {provinces.map((p) => (
+                  <option key={p.code} value={p.code}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Quận/Huyện */}
+            <div className="form-field">
+              <label>Quận/Huyện</label>
+              <select
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  transition: "border 0.3s, box-shadow 0.3s",
+                }}
+                value={districts.find((d) => d.name === formData.district)?.code || ""}
+                onChange={handleDistrictChange}
+                disabled={!districts.length}
+              >
+                <option value="">-- Chọn quận/huyện --</option>
+                {districts.map((d) => (
+                  <option key={d.code} value={d.code}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Phường/Xã */}
+            <div className="form-field">
+              <label>Phường/Xã</label>
+              <select
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  transition: "border 0.3s, box-shadow 0.3s",
+                }}
+                value={wards.find((w) => w.name === formData.ward)?.code || ""}
+                onChange={handleWardChange}
+                disabled={!wards.length}
+              >
+                <option value="">-- Chọn phường/xã --</option>
+                {wards.map((w) => (
+                  <option key={w.code} value={w.code}>
+                    {w.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-field" style={{ gridColumn: "1 / -1" }}>
+              <label>Hình ảnh (có thể chọn nhiều ảnh)</label>
               <input
                 type="file"
-                name="image"
+                name="images"
                 accept="image/*"
+                multiple
                 onChange={handleChange}
               />
-              {/* Preview image */}
-              {formData.imageFile && (
-                <img
-                  src={URL.createObjectURL(formData.imageFile)}
-                  alt="Preview"
-                  style={{
-                    marginTop: "10px",
-                    maxWidth: "100%",
-                    height: "auto",
-                    borderRadius: "8px",
-                  }}
-                />
+              {imagePreviews.length > 0 && (
+                <div className="image-preview-grid">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="image-preview-container">
+                      <img
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="image-preview"
+                      />
+                      <button
+                        type="button"
+                        className="remove-image-btn"
+                        onClick={() => removeImage(index)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
-              <label>Description</label>
+              <label>Mô tả</label>
               <textarea
                 name="description"
-                placeholder="Description"
+                placeholder="Mô tả chi tiết"
                 value={formData.description || ""}
                 onChange={handleChange}
               />
             </div>
 
             <div className="form-field" style={{ gridColumn: "1 / -1" }}>
-              <label>Room Availability</label>
+              <label>Tình trạng phòng trọ</label>
               <input
                 type="checkbox"
                 name="isRoomAvailable"
@@ -164,10 +317,10 @@ const RegisterForm = ({ onClose, onRegister }) => {
 
           <div style={{ marginTop: "20px", display: "flex", gap: "12px" }}>
             <button type="submit" className="register-btn1">
-              Register
+              Đăng Ký
             </button>
             <button type="button" onClick={onClose}>
-              Close
+              Đóng
             </button>
           </div>
         </form>

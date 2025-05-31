@@ -312,7 +312,7 @@ h1 {
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-  width: 450px;
+  width: 700px;
   max-width: 90%;
   position: relative;
   animation: slideIn 0.3s ease-in-out;
@@ -472,4 +472,105 @@ h1 {
 .signature input[type="file"] {
   margin: 0 auto; /* Căn giữa input file */
   display: block;
+}
+
+.loading-container,
+.error-container,
+.empty-state-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  width: 100%;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.loading-container p {
+  color: #666;
+  font-size: 16px;
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  margin: 20px 0;
+  border: 1px solid #dc3545;
+}
+
+.error-content {
+  text-align: center;
+  padding: 30px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 16px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff5f5;
+  border-radius: 4px;
+  border: 1px solid #ffcdd2;
+}
+
+.retry-button {
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: #c82333;
+}
+
+.empty-state-container {
+  background-color: #fff;
+  border: 1px dashed #dee2e6;
+}
+
+.empty-state-content {
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-state-content h3 {
+  color: #495057;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.empty-state-content p {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+}
+
+.tenant-info {
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.tenant-info p {
+  margin: 5px 0;
+  color: #495057;
+  font-size: 14px;
+}
+
+.tenant-info strong {
+  color: #212529;
+  margin-right: 5px;
 }

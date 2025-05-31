@@ -54,7 +54,7 @@ public class RoomController {
             @RequestParam(value = "ward", required = false) String ward,
             @RequestParam(value = "street", required = false) String street,
             @RequestParam(value = "addressDetails", required = false) String addressDetails,
-            @RequestParam(value = "image", required = false) MultipartFile image) {
+            @RequestParam(value = "images", required = false) MultipartFile[] images) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -84,11 +84,15 @@ public class RoomController {
         roomDTO.setStreet(street);
         roomDTO.setAddressDetails(addressDetails);
 
-        // Handle image upload if present
+        // Handle multiple image uploads
         List<String> imageUrls = new ArrayList<>();
-        if (image != null && !image.isEmpty()) {
-            String imageUrl = fileStorageService.storeFile(image);
-            imageUrls.add(imageUrl);
+        if (images != null && images.length > 0) {
+            for (MultipartFile image : images) {
+                if (image != null && !image.isEmpty()) {
+                    String imageUrl = fileStorageService.storeFile(image);
+                    imageUrls.add(imageUrl);
+                }
+            }
         }
         roomDTO.setImageUrls(imageUrls);
 
@@ -126,8 +130,14 @@ public class RoomController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa phòng thành công", null));
     }
 
-    @GetMapping("/my")
-    public ResponseEntity<ApiResponse<List<RoomDTO>>> getRoomsByOwner() {
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<ApiResponse<List<RoomDTO>>> getRoomsByOwnerId(@PathVariable Long ownerId) {
+        List<RoomDTO> rooms = roomService.getRoomsByOwner(ownerId);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Danh sách phòng của owner", rooms));
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<ApiResponse<List<RoomDTO>>> getMyRooms() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
@@ -136,7 +146,6 @@ public class RoomController {
 
         return ResponseEntity.ok(new ApiResponse<>(200, "Danh sách phòng của owner", rooms));
     }
-
 
     @PostMapping("/{roomId}/hide")
     public String hideRoom(@PathVariable Long roomId) {

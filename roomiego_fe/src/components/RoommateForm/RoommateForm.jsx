@@ -56,7 +56,7 @@ const StepOne = ({ formData, errors, handleChange }) => (
     {errors.hometown && <div className="error">{errors.hometown}</div>}
 
     <label>Năm sinh:</label>
-    <input type="number" name="dob" value={formData.dob} onChange={handleChange} />
+    <input type="number" name="dob" min="0" value={formData.dob} onChange={handleChange} />
     {errors.dob && <div className="error">{errors.dob}</div>}
 
     <label>Nghề nghiệp:</label>
@@ -196,15 +196,29 @@ const RoommateForm = () => {
 
   const validateStep = () => {
     let newErrors = {};
-    if (step === 1) {
-      if (!formData.hometown.trim())
-        newErrors.hometown = "Vui lòng nhập quê quán";
-      if (!formData.dob) newErrors.dob = "Vui lòng nhập năm sinh";
-      if (!formData.job.trim())
-        newErrors.job = "Vui lòng nhập nghề nghiệp";
-      if (!formData.phone.trim())
-        newErrors.phone = "Vui lòng nhập số điện thoại";
-    } else if (step === 2) {
+   if (step === 1) {
+  if (!formData.hometown.trim()) {
+    newErrors.hometown = "Vui lòng nhập quê quán";
+  }
+
+  const dob = Number(formData.dob);
+  const currentYear = new Date().getFullYear();
+  if (!dob) {
+    newErrors.dob = "Vui lòng nhập năm sinh";
+  } else if (dob < 1900 || dob > currentYear) {
+    newErrors.dob = `Năm sinh phải từ 1900 đến ${currentYear}`;
+  }
+
+  if (!formData.job.trim()) {
+    newErrors.job = "Vui lòng nhập nghề nghiệp";
+  }
+
+  if (!formData.phone.trim()) {
+    newErrors.phone = "Vui lòng nhập số điện thoại";
+  }else if (!/^\d{10}$/.test(formData.phone)) {
+    newErrors.phone = "Số điện thoại phải gồm 10 chữ số";
+  }
+} else if (step === 2) {
       if (!formData.city.trim()) newErrors.city = "Vui lòng nhập thành phố";
       if (!formData.district.trim())
         newErrors.district = "Vui lòng nhập quận";
@@ -253,12 +267,14 @@ const RoommateForm = () => {
       const response = await userResponse.json();
       console.log("User profile response:", response);
 
-      if (!response || !response.user || !response.user.id) {
+      // Check if response has the correct structure
+      if (!response || typeof response.id !== 'number') {
         console.error("User data structure:", JSON.stringify(response, null, 2));
         throw new Error("User ID not found in response");
       }
 
-      const userId = response.user.id;
+      const userId = response.id;
+      console.log("Found user ID:", userId);
 
       // Convert Vietnamese gender to English for backend
       const genderMap = {
@@ -306,8 +322,8 @@ const RoommateForm = () => {
         "FEMALE": "Nữ"
       };
 
-      // 2. Get AI model recommendations
-      const recommendResponse = await fetch(`http://localhost:8000/recommend?user_id=${responseData.userId}`, {
+      // 2. Get AI model recommendations using the original user ID
+      const recommendResponse = await fetch(`http://localhost:8000/recommend?user_id=${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -12,11 +12,11 @@ const Footer = () => {
           <a href="https://youtube.com"target="_blank" rel="noopener noreferrer"><i className="fab fa-youtube"></i></a>
         </div>
         <div className="nav-links">
-          <a href="/">Home</a>
-          <a href="/news">News</a>
-          <a href="/about">About</a>
-          <a href="/contact">Contact Us</a>
-          <a href="/team">Our Team</a>
+          <a href="/">Trang chủ</a>
+          <a href="/news">Tin tức</a>
+          <a href="/about">Giới thiệu</a>
+          <a href="/contact">Liên hệ</a>
+          <a href="/team">Đội ngũ</a>
         </div>
         <div className="footer-copy">
           <p>Copyright ©2025; Designed by C1SE.01</p>

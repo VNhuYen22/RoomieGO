@@ -11,8 +11,6 @@ public enum NotificationType {
     RENT_REQUEST_VIEW_ROOM,
     OWNER_REJECTED,
     OWNER_APPROVED,
-    NOTIFICATION_TYPE,
     BREACH,
-    NON_BREACH,
-
+    NON_BREACH
 }

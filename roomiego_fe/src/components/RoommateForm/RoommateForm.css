@@ -350,11 +350,15 @@
 
 .match-card-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 8px;
+  justify-content: center;
+  width: 100%;
 }
 .match-card-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
   font-size: 1.25rem;
   font-weight: 700;
   color: #222;
@@ -463,4 +467,29 @@
   color: #1976d2;
   font-weight: 600;
   margin-right: 4px;
+}
+
+.message-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-button:hover {
+    background-color: #e3e3e3;
+}
+
+.message-icon {
+    color: #4a90e2;
+    font-size: 1.2rem;
+}
+
+.message-button:hover .message-icon {
+    color: #2c5282;
 }

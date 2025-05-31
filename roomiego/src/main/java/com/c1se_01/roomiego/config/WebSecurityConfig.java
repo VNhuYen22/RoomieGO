@@ -35,19 +35,19 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms/**","/api/roommates/export-to-file", "/ws/**").permitAll() // ✅ Cho phép API này truy cập công khai
-                        .requestMatchers("/owner/**", "/api/rooms/**", "/api/contracts").hasAnyAuthority("OWNER")
-                        .requestMatchers("/renter/**", "/api/roommates/**", "/api/contracts/**").hasAnyAuthority("RENTER")
-                        .requestMatchers("/api/rent-requests/**").hasAnyAuthority("RENTER", "OWNER", "ADMIN")
-                        .requestMatchers("/renterowner/**", "/api/reports/**").hasAnyAuthority("OWNER", "RENTER", "ADMIN")
-                        .requestMatchers("/images/**", "/api/socket", "/api/socket/**", "/api/notifications").permitAll()
+                        .requestMatchers("/auth/**", "/public/**", "/api/markers","/api/roommates/**","/api/rooms","/api/rooms/{id}","/api/roommates/export-to-file", "/ws/**").permitAll() // ✅ Cho phép API này truy cập công khai
+                        .requestMatchers( "/api/rooms/owner", "/api/rooms/owner/{ownerId}", "/owner/get-all-users").hasAnyAuthority("OWNER","ADMIN")
+                        .requestMatchers("/renter/**", "/api/roommates/**").hasAnyAuthority("RENTER")
+                        .requestMatchers("/api/rent-requests/**", "/api/contracts/**").hasAnyAuthority("RENTER", "OWNER", "ADMIN") // Specific rule for get-users endpoint
+                        .requestMatchers("/renterowner/**", "/api/reports/**","/owner/get-users/{userId}","/owner/**").hasAnyAuthority("OWNER", "RENTER", "ADMIN")
+                        .requestMatchers("/images/**", "/api/socket", "/api/socket/**", "/api/notifications", "/messages/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return httpSecurity.build();
+        return httpSecurity.build();    
     }
     @Bean
     public AuthenticationProvider authenticationProvider(){

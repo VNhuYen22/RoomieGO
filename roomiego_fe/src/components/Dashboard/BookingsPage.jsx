@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import BookingCard from "./BookingCard";
 import FilterBar from "./FilterBar";
 import RegisterForm from "./RegisterForm";
@@ -13,10 +13,21 @@ const BookingsPage = () => {
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem("authToken");
+  const userRole = localStorage.getItem("userRole");
 
   useEffect(() => {
+    console.log("Current user role:", userRole); // Debug log
+
     if (!token) {
       setError("Vui lòng đăng nhập để xem danh sách phòng");
+      setLoading(false);
+      return;
+    }
+
+    // Kiểm tra role chính xác hơn
+    if (userRole !== "ADMIN" && userRole !== "OWNER") {
+      console.log("Invalid role:", userRole); // Debug log
+      setError("Bạn không có quyền truy cập trang này");
       setLoading(false);
       return;
     }
@@ -24,14 +35,27 @@ const BookingsPage = () => {
     const fetchMyRooms = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:8080/api/rooms/my", {
+        // Nếu là ADMIN thì dùng endpoint khác
+        const endpoint = userRole === "ADMIN" 
+          ? "http://localhost:8080/api/rooms" 
+          : "http://localhost:8080/api/rooms/owner";
+
+        console.log("Fetching from endpoint:", endpoint); // Debug log
+        const response = await fetch(endpoint, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         
         if (!response.ok) {
-          throw new Error("Không thể lấy danh sách phòng");
+          const errorData = await response.json();
+          // Không throw error nếu không tìm thấy phòng
+          if (response.status === 404) {
+            setHotels([]);
+            setLoading(false);
+            return;
+          }
+          throw new Error(errorData.message || "Không thể lấy danh sách phòng");
         }
         
         const result = await response.json();
@@ -55,7 +79,7 @@ const BookingsPage = () => {
     };
 
     fetchMyRooms();
-  }, [token]);
+  }, [token, userRole]);
 
   const handleAddHotel = (newHotel) => {
     if (newHotel && newHotel.id) {
@@ -107,7 +131,7 @@ const BookingsPage = () => {
     return <div className="BookingsPage-content">Đang tải...</div>;
   }
 
-  if (error) {
+  if (error && error !== "Không có phòng nào được tìm thấy cho owner này") {
     return <div className="BookingsPage-content error">{error}</div>;
   }
 
@@ -141,7 +165,9 @@ const BookingsPage = () => {
             />
           ))
         ) : (
-          <p>Chưa có phòng nào được đăng.</p>
+          <div className="no-rooms-message">
+            <p>Chưa có phòng nào được đăng.</p>
+          </div>
         )}
       </div>
     </div>

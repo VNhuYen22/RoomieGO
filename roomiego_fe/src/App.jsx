@@ -3,6 +3,7 @@ import SettingsPage from "./pages/SettingsPage";
 import Chatbox from "./pages/Chatbox";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import ChatPage2 from "./pages/ChatPage2";
 
 // import SearchBar from "./components/SearchBar";
 import Footer from "./components/Footer";
@@ -98,10 +99,11 @@ const App = () => {
         <Route path="/q" element={<ReportPage />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/chat" element={<ChatPage2 />} />
          
         {/* Add other routes here */}
       </Routes>
-       <ToastContainer position="top-right" autoClose={5000} />
+       <ToastContainer position="top-right" autoClose={3000} />
       {/* Conditionally render Footer */}
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}
       <Toaster />

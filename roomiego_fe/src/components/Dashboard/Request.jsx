@@ -3,6 +3,7 @@ import { showErrorToast, showInfoToast } from "../toast";
 import { useNavigate } from "react-router-dom";
 // import { useNotifications } from "../NotificationComponent/NotificationContext";
 import "./css/Request.css";
+import InvoiceForm from "../Invoices/InvoiceForm";
 
 const Request = () => {
   const [requests, setRequests] = useState([]);
@@ -14,6 +15,10 @@ const Request = () => {
   const [requestType, setRequestType] = useState("VIEW");
   const [userRole, setUserRole] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [selectedTenantId, setSelectedTenantId] = useState(null);
+  const [tenantNames, setTenantNames] = useState({});
   const navigate = useNavigate();
   // const { sendNotification } = useNotifications();
 
@@ -92,11 +97,28 @@ const Request = () => {
         throw new Error("Failed to fetch room details");
       }
 
-      const data = await response.json();
-      console.log("Room data:", data.data);
+      // Read response as text first
+      const text = await response.text();
+      console.log("Raw room response:", text);
+
+      // Clean the response text
+      const cleanedText = text
+        .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      // Try to parse the cleaned JSON
+      let data;
+      try {
+        data = JSON.parse(cleanedText);
+        console.log("Parsed room data:", data);
+      } catch (parseError) {
+        console.error("Initial JSON parse failed:", parseError);
+        throw new Error("Invalid JSON response format");
+      }
 
       // Fetch owner information
-      if (data.data.ownerId) {
+      if (data.data?.ownerId) {
         try {
           const ownerResponse = await fetch(`http://localhost:8080/owner/get-users/${data.data.ownerId}`, {
             headers: {
@@ -105,14 +127,36 @@ const Request = () => {
           });
 
           if (ownerResponse.ok) {
-            const ownerData = await ownerResponse.json();
-            const ownerInfo = ownerData.usersList?.[0];
-            if (ownerInfo) {
-              data.data.ownerName = ownerInfo.fullName;
+            const ownerText = await ownerResponse.text();
+            console.log("Raw owner response:", ownerText);
+
+            // Clean the owner response text and remove circular references
+            const cleanedOwnerText = ownerText
+              .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
+              .replace(/\s+/g, ' ')
+              .replace(/"rooms":\[[^\]]*\]/g, '"rooms":[]')
+              .replace(/"contracts":\[[^\]]*\]/g, '"contracts":[]')
+              .replace(/"roomImages":\[[^\]]*\]/g, '"roomImages":[]')
+              .replace(/"room":\{[^}]*\}/g, '"room":{}')
+              .trim();
+
+            try {
+              const ownerData = JSON.parse(cleanedOwnerText);
+              console.log("Parsed owner data:", ownerData);
+              
+              if (ownerData.usersList && ownerData.usersList.length > 0) {
+                const ownerInfo = ownerData.usersList[0];
+                data.data.ownerName = ownerInfo.fullName;
+                console.log("Updated room data with owner name:", data.data);
+              }
+            } catch (parseError) {
+              console.error("Error parsing owner data:", parseError);
+              // Continue without owner name if parsing fails
             }
           }
         } catch (error) {
           console.error("Error fetching owner info:", error);
+          // Continue without owner name if fetch fails
         }
       }
 
@@ -262,6 +306,15 @@ const Request = () => {
         total: allRequests.length
       });
 
+      // Create a map of tenant names
+      const newTenantNames = {};
+      for (const req of allRequests) {
+        if (req.renterId && req.renterName) {
+          newTenantNames[req.renterId] = req.renterName;
+        }
+      }
+      setTenantNames(newTenantNames);
+
       // Fetch room details for each request
       const requestsWithRoomDetails = await Promise.all(
         allRequests.map(async (request) => {
@@ -322,16 +375,52 @@ const Request = () => {
         throw new Error("Failed to fetch renter information");
       }
 
-      const renterData = await response.json();
-      console.log("Raw renter data:", renterData);
+      // Read response as text first
+      const text = await response.text();
+      console.log("Raw renter response length:", text.length);
 
-      const userData = renterData.usersList?.[0] || {};
+      // Clean the response text and remove circular references
+      const cleanedText = text
+        .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
+        .replace(/\s+/g, ' ')
+        .replace(/"rooms":\[[^\]]*\]/g, '"rooms":[]')
+        .replace(/"contracts":\[[^\]]*\]/g, '"contracts":[]')
+        .replace(/"roomImages":\[[^\]]*\]/g, '"roomImages":[]')
+        .replace(/"room":\{[^}]*\}/g, '"room":{}')
+        .trim();
+
+      // Try to parse the cleaned JSON
+      let renterData;
+      try {
+        renterData = JSON.parse(cleanedText);
+        console.log("Parsed renter data:", renterData);
+      } catch (parseError) {
+        console.error("Initial JSON parse failed:", parseError);
+        // Try to find the last valid JSON structure
+        const lastBrace = cleanedText.lastIndexOf('}');
+        if (lastBrace > 0) {
+          try {
+            const truncatedText = cleanedText.substring(0, lastBrace + 1);
+            renterData = JSON.parse(truncatedText);
+            console.log("Successfully parsed truncated JSON");
+          } catch (e) {
+            console.error("Failed to parse truncated JSON:", e);
+            throw new Error("Invalid JSON response format");
+          }
+        } else {
+          throw new Error("Invalid JSON response format");
+        }
+      }
+
+      // Extract user data safely
+      const userData = renterData?.usersList?.[0] || {};
       console.log("User data:", userData);
 
       if (!userData || Object.keys(userData).length === 0) {
         throw new Error("No user data found");
       }
 
+      // Extract only the necessary user information
       const renterInfo = {
         fullName: userData.fullName || "Chưa cập nhật",
         email: userData.email || "Chưa cập nhật",
@@ -409,8 +498,14 @@ const Request = () => {
       showInfoToast(accept ? "Đã chấp nhận yêu cầu thuê phòng" : "Đã từ chối yêu cầu thuê phòng");
       
       if (accept) {
-        // Chuyển hướng đến trang invoices trong dashboard
-        navigate(`/dashboard/invoices?requestId=${requestId}`);
+        // Find the request to get roomId and tenantId
+        const request = requests.find(req => req.id === requestId);
+        if (request) {
+          // Show contract form directly instead of navigating
+          setIsCreatingNew(true);
+          setSelectedRoomId(request.roomId);
+          setSelectedTenantId(request.renterId);
+        }
       }
       
       await fetchRequests();
@@ -423,6 +518,13 @@ const Request = () => {
   // Handle cancel rental request
   const handleCancelRental = async (requestId) => {
     try {
+      // Find the request to get roomId
+      const request = requests.find(req => req.id === requestId);
+      if (!request) {
+        throw new Error("Không tìm thấy yêu cầu thuê phòng");
+      }
+
+      // Cancel rental request
       const response = await fetch(`http://localhost:8080/api/rent-requests/${requestId}/cancel`, {
         method: "POST",
         headers: {
@@ -435,6 +537,24 @@ const Request = () => {
         throw new Error("Failed to cancel rental request");
       }
 
+      // Update room status back to available
+      const updateRoomResponse = await fetch(`http://localhost:8080/api/rooms/${request.roomId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        body: JSON.stringify({
+          ...request.room,
+          isRoomAvailable: true
+        })
+      });
+
+      if (!updateRoomResponse.ok) {
+        console.error("Failed to update room status");
+        showErrorToast("Không thể cập nhật trạng thái phòng");
+      }
+
       showInfoToast("Đã hủy cho thuê phòng thành công");
       await fetchRequests();
     } catch (error) {
@@ -443,19 +563,127 @@ const Request = () => {
     }
   };
 
+  // Handle saving new contract
+  const handleSaveContract = async (contractData) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        showInfoToast("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/login");
+        return;
+      }
+
+      // Check if user is owner or admin
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      if (!userData || (userData.role !== "OWNER" && userData.role !== "ADMIN")) {
+        showErrorToast("Bạn không có quyền thực hiện thao tác này");
+        return;
+      }
+
+      // Ensure we have the required data
+      if (!selectedRoomId || !selectedTenantId) {
+        throw new Error("Missing required data for contract creation");
+      }
+
+      // Find the room details from the requests list
+      const roomDetails = requests.find(req => req.roomId === selectedRoomId)?.room;
+      if (!roomDetails) {
+        throw new Error("Không tìm thấy thông tin phòng");
+      }
+
+      // Validate dates
+      const startDate = new Date(contractData.startDate);
+      const endDate = new Date(contractData.endDate);
+      const today = new Date();
+
+      if (startDate < today) {
+        throw new Error("Ngày bắt đầu không được trước ngày hiện tại");
+      }
+
+      if (endDate <= startDate) {
+        throw new Error("Ngày kết thúc phải sau ngày bắt đầu");
+      }
+
+      // Create contract using the same endpoint as InvoiceForm
+      const contractResponse = await fetch("http://localhost:8080/api/contracts", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          tenantId: selectedTenantId,
+          roomId: selectedRoomId,
+          startDate: contractData.startDate,
+          endDate: contractData.endDate,
+          pricePerMonth: roomDetails.price,
+          status: "ACTIVE"
+        }),
+      });
+
+      if (contractResponse.status === 401 || contractResponse.status === 403) {
+        showInfoToast("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/login");
+        return;
+      }
+
+      if (!contractResponse.ok) {
+        const errorData = await contractResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to create contract');
+      }
+
+      // Update room status to not available
+      console.log("Attempting to hide room:", selectedRoomId);
+      const updateRoomResponse = await fetch(`http://localhost:8080/api/rooms/${selectedRoomId}/hide`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      console.log("Hide room response status:", updateRoomResponse.status);
+      const hideResponseText = await updateRoomResponse.text();
+      console.log("Hide room response:", hideResponseText);
+
+      if (updateRoomResponse.status === 401 || updateRoomResponse.status === 403) {
+        showInfoToast("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/login");
+        return;
+      }
+
+      if (!updateRoomResponse.ok) {
+        console.error("Failed to update room status:", hideResponseText);
+        showErrorToast("Không thể cập nhật trạng thái phòng");
+      } else {
+        console.log("Room hidden successfully");
+      }
+
+      const responseData = await contractResponse.json();
+      showInfoToast(responseData.message || "Tạo hợp đồng thành công");
+      setIsCreatingNew(false);
+      setSelectedRoomId(null);
+      setSelectedTenantId(null);
+      await fetchRequests(); // Refresh the requests list
+    } catch (error) {
+      console.error('Error creating contract:', error);
+      showErrorToast(error.message || 'Có lỗi xảy ra khi tạo hợp đồng');
+    }
+  };
+
   // Show loading or error state if not authenticated
   if (!isAuthenticated) {
     return (
       <div className="request-container">
-        <h2>Room Requests</h2>
-        <p>Please log in to view your requests.</p>
+        <h2>Yêu cầu phòng trọ</h2>
+        <p>Vui lòng đăng nhập để xem yêu cầu của bạn.</p>
       </div>
     );
   }
 
   return (
     <div className="request-container">
-      <h2>Room Requests</h2>
+      <h2>Yêu cầu phòng trọ</h2>
       <div className="request-type-selector">
         <button 
           className={requestType === "VIEW" ? "active" : ""} 
@@ -471,7 +699,7 @@ const Request = () => {
         </button>
       </div>
       {loading ? (
-        <p>Loading...</p>
+        <p>Đang tải...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : currentRequests.length === 0 ? (
@@ -502,7 +730,7 @@ const Request = () => {
                   </td>
                   <td>
                     <span style={{ fontWeight: 500, color: '#333' }}>
-                      {req.renterName || "Chưa có thông tin"}
+                      {tenantNames[req.renterId] || "Đang tải..."}
                     </span>
                   </td>
                   {requestType === "VIEW" && <td>{req.message}</td>}
@@ -654,6 +882,17 @@ const Request = () => {
               &times;
             </button>
           </div>
+        </div>
+      )}
+
+      {isCreatingNew && (
+        <div className="form-overlay">
+          <InvoiceForm 
+            onSave={handleSaveContract} 
+            onCancel={() => setIsCreatingNew(false)}
+            roomId={selectedRoomId}
+            tenantId={selectedTenantId}
+          />
         </div>
       )}
     </div>
