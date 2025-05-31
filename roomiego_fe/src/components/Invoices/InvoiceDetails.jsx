@@ -113,9 +113,9 @@ const InvoiceDetails = ({ invoiceId, onClose }) => {
             <h3>Thông tin phòng</h3>
             {roomInfo ? (
               <div className="room-info">
-                <p><strong>ID Phòng:</strong> {roomInfo.id}</p>
+                {/* <p><strong>ID Phòng:</strong> {roomInfo.id}</p> */}
                 <p><strong>Địa chỉ:</strong> {roomInfo.addressDetails}</p>
-                <p><strong>Giá phòng:</strong> {roomInfo.price?.toLocaleString()} VNĐ/tháng</p>
+                <p><strong>Giá phòng:</strong> {roomInfo.price?.toLocaleString()} VNĐ/Tháng</p>
               </div>
             ) : (
               <p>Đang tải thông tin phòng...</p>
