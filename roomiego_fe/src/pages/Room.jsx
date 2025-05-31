@@ -303,7 +303,7 @@ function Room() {
                   />
                   <div className="card-body">
                     <div className="card-top">
-                      <h2>{room.price?.toLocaleString() ?? "N/A"} vnđ</h2>
+                      <h2>{room.price?.toLocaleString() ?? "N/A"} VND</h2>
                       <div className="status-badge">Cho thuê</div>
                     </div>
                     <div className="card-address">

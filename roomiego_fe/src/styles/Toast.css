@@ -18,9 +18,9 @@
 .success-toast {
    background: linear-gradient(
     to right,
-    #d1f7ce 5%,
-    #b6f8ac 35%,
-    #c3f7c2 60%,
+    #143a11 5%,
+    #1bac05 35%,
+    #5bf658 60%,
     rgba(255, 255, 255, 0.0) 100%
   );
   color: #ffffff; /* White text */
@@ -30,9 +30,9 @@
 .error-toast {
   background: linear-gradient(
    to right,
-    #fb6969 10%,
-    #f99090 30%,
-    #ffc3c3 60%,
+    #5d1414 10%,
+    #981b1b 30%,
+    #ed3535 60%,
         rgba(0, 198, 255, 0.0) 100%
   ); /* Red for error */
   color: #ffffff; /* White text */
@@ -43,9 +43,9 @@
 .warning-toast {
   background: linear-gradient(
    to right,
-    #fbf857 10%,
-    #f8e27f 30%,
-    #f9f69d 60%,
+    #7b6210 10%,
+    #c5a51b 30%,
+    #f9e230 60%,
         rgba(0, 198, 255, 0.0) 100%
   );/* Yellow for warning */
   color: #212529; /* Dark text for contrast */

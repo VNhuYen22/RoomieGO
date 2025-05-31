@@ -244,7 +244,7 @@ function Result_Room() {
         <div className="detail_price-booking">
           <h4>Gửi yêu cầu</h4>
 
-          <span>{room.price.toLocaleString()}vnđ/Tháng </span>
+          <span>{room.price.toLocaleString()}VND/Tháng </span>
           {/* <button onClick={() => setShowViewRequestForm(true)}>Gửi yêu cầu xem phòng</button>
           <button onClick={() => setShowRentalRequestForm(true)}>Gửi yêu cầu thuê phòng</button> */}
           <button onClick={() => {
@@ -276,12 +276,12 @@ function Result_Room() {
             return;
           }
           setShowReportForm(true);
-        }}> Báo cáo bài viết </button>
+        }}> <i className="fa-solid fa-flag"> </i> Báo cáo bài viết </button>
 
         {showReportForm && (
           <div className="report-overlay">
             <div className="report-form">
-              <h3><b>Báo cáo bài viết</b></h3>
+              <h3 className="text-red-600"><i className="fa-solid fa-flag"> </i> <b>Báo cáo bài viết</b></h3>
               <textarea
                 value={reportReason}
                 onChange={(e) => setReportReason(e.target.value)}
