@@ -286,6 +286,14 @@ const handleDeleteNotification = (indexToDelete) => {
                         <div className="notification-content">
                           <p className="notification-title">{translateNotificationType(note.type)}</p>
                           <p className="notification-message">{note.message}</p>
+                          <a
+                            href={`https://zalo.me/${note.message.match(/\b0\d{9}\b/)?.[0]}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 font-medium underline hover:underline-offset-2 transition duration-150"
+                          >
+                            Nhắn Zalo
+                          </a>
                           <div className="notification-footer">
                             <span className="notification-time">{note.timestamp}</span>
                           </div>
